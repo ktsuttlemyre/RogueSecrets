@@ -2,6 +2,11 @@
 #custom image name
 source ./params.env
 
+env_vars
+save_env () {
+  env_vars=$(echo "$1")
+}
+
 git_pull () {
   git stash
   git pull
@@ -34,7 +39,8 @@ else
   fi
 fi
 
-#actual run parameters
+#Run image
+save_env env
 docker compose -f <( echo "$yaml" ) --env-file <( env ) up
 if ! [ -z "$is_service" ]; then
   docker compose -f <( echo "$yaml" ) down
