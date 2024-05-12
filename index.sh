@@ -36,6 +36,7 @@ fi
 
 #Run image
 tmpfile=$(mktemp /tmp/$project-$image.XXXXXX)
+env > $tmpfile
 docker compose -f <( echo "$yaml" ) --env-file $tmpfile up
 if ! [ -z "$is_service" ]; then
   docker compose -f <( echo "$env_vars" ) down
