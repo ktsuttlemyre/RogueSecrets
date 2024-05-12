@@ -1,7 +1,6 @@
 #!/bin/bash
 #custom image name
-image='rogueos/roguescrets'
-tag='latest'
+source ./params
 
 git_pull () {
   git stash
