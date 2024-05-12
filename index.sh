@@ -35,4 +35,9 @@ else
 fi
 
 #actual run parameters
-docker run $docker_run_args
+docker run --interactive --init --tty --rm \
+  --volume "${PWD}:/tmp" \
+  $volumes \
+  --workdir "/tmp" \
+  $image:$tag "$@"
+
