@@ -10,19 +10,19 @@ git_pull () {
 }
 
 docker_build () {
-  local log; log="$(docker build . -t $image:$tag $1)"
+  local log; log="$(docker build . -t $project/$image:$tag $1)"
   if [ $? -ne 0 ]; then
-    echo "Error building image = $image:$tag" > /dev/stderr
+    echo "Error building image = $project/$image:$tag" > /dev/stderr
     echo "$log" > /dev/stderr
   fi
 }
 
 #if image not already here
-if [ -z "$(docker images -q $image:$tag 2> /dev/null)" ]; then
+if [ -z "$(docker images -q $project/$image:$tag 2> /dev/null)" ]; then
   docker_build
 else
   #cache to rebuild image evey week hard rebuild every month
-  created_date="$(docker inspect -f '{{ .Created }}' $image:$tag)"
+  created_date="$(docker inspect -f '{{ .Created }}' $project/$image:$tag)"
   created_week=$(date +'%V' -d +'%Y-%m-%dT%H:%M:%S' --date="$created_date")
   created_month=$(date +'%m' -d +'%Y-%m-%dT%H:%M:%S' --date="$created_date")
   current_week=$(date +'%V')
@@ -37,9 +37,11 @@ fi
 #actual run parameters
 file_descriptor=<( echo "$yaml" )
 docker compose -f $file_descriptor --env-file <( env ) up
-docker compose -f $file_descriptor down
+if ! [ -z "$is_service" ]; then
+  docker compose -f $file_descriptor down
+fi
 
-rogue_envvars="${PWD}/.roguesecrets.env"
+rogue_envvars="${PWD}/.exported_envs.env"
 if [ -f $rogue_envvars ]; then
   unamestr=$(uname)
   if [ "$unamestr" = 'Linux' ]; then
