@@ -41,3 +41,13 @@ docker run --interactive --init --tty --rm \
   --workdir "/tmp" \
   $image:$tag "$@"
 
+rogue_envvars="${PWD}/.roguesecrets.env"
+if [ -f $rogue_envvars ]; then
+  unamestr=$(uname)
+  if [ "$unamestr" = 'Linux' ]; then
+    export $(grep -v '^#' $rogue_envvars | xargs -d '\n')
+  elif [ "$unamestr" = 'FreeBSD' ] || [ "$unamestr" = 'Darwin' ]; then
+    export $(grep -v '^#' $rogue_envvars | xargs -0)
+  fi
+  rm $rogue_envvars
+fi
