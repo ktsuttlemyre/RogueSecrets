@@ -37,11 +37,10 @@ else
 fi
 
 #Run image
-docker compose -f <( echo "$yaml" ) --env-file <( env ) up
+docker compose -f <( echo "$yaml" | envsubst ) --env-file <( env ) up
 if ! [ -z "$is_service" ]; then
   docker compose -f <( echo "$yaml" ) down
 fi
-rm "$tmpfile"
 
 rogue_envvars="${PWD}/.exported_envs.env"
 if [ -f $rogue_envvars ]; then
