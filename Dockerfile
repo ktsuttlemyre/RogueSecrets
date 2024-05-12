@@ -3,9 +3,13 @@
 # https://www.reddit.com/r/Bitwarden/comments/xhir0q/how_to_install_bw_cli_in_docker/
 FROM alpine:latest
 
-WORKDIR /
+WORKDIR /home/roguesecrets
 
-RUN apk update && apk add --no-cache curl --update npm jq bash && rm -rf /var/cache/apk/*
+RUN apk update && apk add --no-cache curl --update npm jq bash git && rm -rf /var/cache/apk/*
+
+COPY ./src ./
+
+RUN git clone https://github.com/fredpalmer/log4bash.git 
 
 RUN npm install -g @bitwarden/cli
 #  export url=$(curl -H "Accept: application/vnd.github+json" https://api.github.com/repos/bitwarden/cli/releas>
