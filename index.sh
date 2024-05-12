@@ -5,7 +5,7 @@ tag='latest'
 
 #if image not already here
 if [ -z "$(docker images -q $image:$tag 2> /dev/null)" ]; then
-  git pull
+  git pull -f
   git submodule update --init --recursive --remote
 fi
 
@@ -16,7 +16,7 @@ created_month=$(date +'%m' -d +'%Y-%m-%dT%H:%M:%S' --date="$created_date")
 current_week=$(date +'%V')
 current_month=$(date +'%m')
 if [ "$created_week" -ne "$current_week" ]; then
-  git pull
+  git pull -f
   git submodule update --init --recursive --remote
   if [ "$created_month" -ne "$current_month" ]; then
     log="$(docker build . -t $image:$tag --no-cache=true)"
