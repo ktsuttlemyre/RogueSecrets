@@ -116,6 +116,7 @@ while read -r name; do
 		# load as envirnment variable
 		log_info "exporting $name to shell environment"
 		export "$name=$data"
+  		echo "$name=$data" >> /tmp/roguesecrets/.roguesecrets.env
 	else
 		log_info "writing $name to $f_path"
 
