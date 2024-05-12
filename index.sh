@@ -36,9 +36,9 @@ fi
 
 #actual run parameters
 file_descriptor=<( echo "$yaml" )
-docker compose -f $file_descriptor --env-file <( env ) up
+docker compose -f "$file_descriptor" --env-file <( env ) up
 if ! [ -z "$is_service" ]; then
-  docker compose -f $file_descriptor down
+  docker compose -f "$file_descriptor" down
 fi
 
 rogue_envvars="${PWD}/.exported_envs.env"
