@@ -124,7 +124,7 @@ while read -r name; do
 		if [[ $f_path == ~* ]]; then
 			f_path="${f_path/#\~/$HOME}"
 		elif [[ $f_path == /* ]]; then
-			f_path="${f_path/#\///root/}"
+			f_path="${f_path/#\///host_root/}"
 		fi
 
 		#get path to parent dir
