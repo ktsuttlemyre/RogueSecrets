@@ -2,7 +2,7 @@
 #custom image name
 source ./params.env
 
-env_vars
+env_vars=''
 save_env () {
   env_vars=$(echo "$1")
 }
@@ -41,9 +41,9 @@ fi
 
 #Run image
 save_env env
-docker compose -f <( echo "$yaml" ) --env-file <( env ) up
+docker compose -f <( echo "$yaml" ) --env-file <( echo "$env_vars" ) up
 if ! [ -z "$is_service" ]; then
-  docker compose -f <( echo "$yaml" ) down
+  docker compose -f <( echo "$env_vars" ) down
 fi
 
 rogue_envvars="${PWD}/.exported_envs.env"
