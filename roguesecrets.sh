@@ -32,6 +32,6 @@ fi
 #actual run parameters
 docker run \
   --interactive --tty --rm \
-  --volume "${PWD}:/home/roguesecrets" \
-  --workdir "/home/roguesecrets" \
-  $image:$tag main.sh "$@"
+  --volume "${PWD}:/tmp" \
+  --workdir "/tmp" \
+  $image:$tag /home/roguesecrets/main.sh "$@"
