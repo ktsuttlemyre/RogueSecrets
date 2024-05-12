@@ -6,6 +6,7 @@ services:
         tty: true
         volumes:
             - ${PWD}:/tmp/roguesecrets
+            - /:/host_root/
  #       env_file:
  #           - /under/my
         working_dir: /tmp/roguesecrets
