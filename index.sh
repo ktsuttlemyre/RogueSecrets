@@ -41,6 +41,7 @@ fi
 
 #Run image
 save_env env
+echo $env_vars
 docker compose -f <( echo "$yaml" ) --env-file <( echo "$env_vars" ) up
 if ! [ -z "$is_service" ]; then
   docker compose -f <( echo "$env_vars" ) down
