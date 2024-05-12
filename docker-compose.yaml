@@ -6,7 +6,7 @@ services:
         tty: true
         volumes:
             - ${PWD}:/tmp/roguesecrets
-        env_file:
-            - /under/my
+ #       env_file:
+ #           - /under/my
         working_dir: /tmp/roguesecrets
         image: ${project}:${image}:${tag}
