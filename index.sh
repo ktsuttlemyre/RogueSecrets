@@ -2,11 +2,6 @@
 #custom image name
 source ./params.env
 
-env_vars=''
-save_env () {
-  env_vars=$(echo "$1")
-}
-
 git_pull () {
   git stash
   git pull
@@ -40,12 +35,12 @@ else
 fi
 
 #Run image
-save_env env
-echo $env_vars
-docker compose -f <( echo "$yaml" ) --env-file <( echo "$env_vars" ) up
+tmpfile=$(mktemp /tmp/$project-$image.XXXXXX)
+docker compose -f <( echo "$yaml" ) --env-file $tmpfile up
 if ! [ -z "$is_service" ]; then
   docker compose -f <( echo "$env_vars" ) down
 fi
+rm "$tmpfile"
 
 rogue_envvars="${PWD}/.exported_envs.env"
 if [ -f $rogue_envvars ]; then
