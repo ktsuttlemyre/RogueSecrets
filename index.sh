@@ -37,7 +37,7 @@ fi
 
 #actual run parameters
 docker run \
-  --interactive --tty --rm \
+  --interactive --init --tty --rm \
   --volume "${PWD}:/tmp" \
   --workdir "/tmp" \
   $image:$tag "$@"
