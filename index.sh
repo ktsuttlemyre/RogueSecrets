@@ -3,10 +3,16 @@
 image='rogueos/roguescrets'
 tag='latest'
 
+git_pull () {
+  git stash
+  git pull
+  git stash pop
+  git submodule update --init --recursive --remote
+}
+
 #if image not already here
 if [ -z "$(docker images -q $image:$tag 2> /dev/null)" ]; then
-  git pull -f
-  git submodule update --init --recursive --remote
+  git_pull
 fi
 
 #cache to rebuild image evey week hard rebuild every month
@@ -16,13 +22,9 @@ created_month=$(date +'%m' -d +'%Y-%m-%dT%H:%M:%S' --date="$created_date")
 current_week=$(date +'%V')
 current_month=$(date +'%m')
 if [ "$created_week" -ne "$current_week" ]; then
-  git pull -f
-  git submodule update --init --recursive --remote
-  if [ "$created_month" -ne "$current_month" ]; then
-    log="$(docker build . -t $image:$tag --no-cache=true)"
-  else
-    log="$(docker build . -t $image:$tag)"
-  fi
+  git_pull
+  [ "$created_month" -ne "$current_month" ] && cache='--no-cache'
+  log="$(docker build . -t $image:$tag $cache)"
   if $? ; then
     echo "Error building image = $image:$tag" > /dev/stderr
     echo "$log" > /dev/stderr
