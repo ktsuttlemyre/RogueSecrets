@@ -11,8 +11,8 @@ git_pull () {
 }
 
 docker_build () {
-  log="$(docker build . -t $image:$tag $1)"; exit_code=$?
-  if $exit_code ; then
+  local log; log="$(docker build . -t $image:$tag $1)"
+  if $? ; then
     echo "Error building image = $image:$tag" > /dev/stderr
     echo "$log" > /dev/stderr
   fi
