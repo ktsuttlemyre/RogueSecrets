@@ -36,9 +36,9 @@ fi
 
 #actual run parameters
 docker run --interactive --init --tty --rm \
-  --volume "${PWD}:/tmp" \
+  --volume "${PWD}:/tmp/roguesecrets" \
   $volumes \
-  --workdir "/tmp" \
+  --workdir "/tmp/roguesecrets" \
   $image:$tag "$@"
 
 rogue_envvars="${PWD}/.roguesecrets.env"
