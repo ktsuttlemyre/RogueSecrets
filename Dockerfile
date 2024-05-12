@@ -9,6 +9,7 @@ RUN apk update && apk add --no-cache curl --update npm jq bash git && rm -rf /va
 
 COPY ./src ./
 
+RUN chmod +x main.sh
 RUN git clone https://github.com/fredpalmer/log4bash.git 
 
 RUN npm install -g @bitwarden/cli
@@ -20,4 +21,4 @@ RUN npm install -g @bitwarden/cli
 
 Run bw --version
 
-#ENTRYPOINT ["bw"]
+ENTRYPOINT ["./main"]
