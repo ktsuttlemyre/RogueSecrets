@@ -6,9 +6,15 @@ tag='latest'
 #cache to rebuild image evey week
 created_date="$(docker inspect -f '{{ .Created }}' $image:$tag)"
 created_week=$(date +'%V' -d +'%Y-%m-%dT%H:%M:%S' --date="$created_date")
+created_month=$(date +'%m' -d +'%Y-%m-%dT%H:%M:%S' --date="$created_date")
 current_week=$(date +'%V')
+current_month=$(date +'%m')
 if [ "$created_week" -ne "$current_week" ]; then
-  log="$(docker build . -t $image:$tag --no-cache=true)"
+  if [ "$created_month" -ne "$current_month" ]; then
+    log="$(docker build . -t $image:$tag --no-cache=true)"
+  else
+    log="$(docker build . -t $image:$tag)"
+  fi
   if $? ; then
     echo "Error building image = $image:$tag" > /dev/stderr
     echo "$log" > /dev/stderr
