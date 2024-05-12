@@ -40,4 +40,4 @@ docker run \
   --interactive --tty --rm \
   --volume "${PWD}:/tmp" \
   --workdir "/tmp" \
-  $image:$tag /home/roguesecrets/main.sh "$@"
+  $image:$tag "$@"
