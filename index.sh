@@ -1,6 +1,6 @@
 #!/bin/bash
 #custom image name
-source ./params
+source ./params.env
 
 git_pull () {
   git stash
