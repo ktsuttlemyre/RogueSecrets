@@ -35,11 +35,9 @@ else
 fi
 
 #actual run parameters
-docker run --interactive --init --tty --rm \
-  --volume "${PWD}:/tmp/roguesecrets" \
-  $volumes \
-  --workdir "/tmp/roguesecrets" \
-  $image:$tag "$@"
+file_descriptor=<( echo "$yaml" )
+docker compose -f $file_descriptor --env-file <( env ) up
+docker compose -f $file_descriptor down
 
 rogue_envvars="${PWD}/.roguesecrets.env"
 if [ -f $rogue_envvars ]; then
