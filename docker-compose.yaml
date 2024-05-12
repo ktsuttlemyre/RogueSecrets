@@ -9,4 +9,4 @@ services:
  #       env_file:
  #           - /under/my
         working_dir: /tmp/roguesecrets
-        image: ${project}:${image}:${tag}
+        image: ${project}/${image}:${tag}
