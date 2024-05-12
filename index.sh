@@ -37,8 +37,8 @@ else
 fi
 
 #Run image
-docker compose build -f <( envsubst < docker-compose.yaml ) --env-file <( env )
-docker compose run $image
+docker compose up -f <( envsubst < docker-compose.yaml ) --env-file <( env )
+docker compose exec $image
 # if ! [ -z "$is_service" ]; then
 #   docker compose -f <( envsubst < docker-compose.yaml ) down
 # fi
