@@ -1,6 +1,8 @@
 #!/bin/bash
 #custom image name
+set -a      # turn on automatic exporting
 source ./params.env
+set +a      # turn off automatic exporting
 
 git_pull () {
   git stash
@@ -38,7 +40,7 @@ fi
 tmpfile=$(mktemp /tmp/$project-$image.XXXXXX)
 env > $tmpfile
 cat $tmpfile
-docker compose -f <( echo "$yaml" ) --env-file $tmpfile up
+docker compose -f <( echo "$yaml" ) --env-file <( env ) up
 if ! [ -z "$is_service" ]; then
   docker compose -f <( echo "$env_vars" ) down
 fi
