@@ -1,3 +1,4 @@
+#!/bin/bash
 cd ..
 rm -rf RogueSecrets/
 docker rmi $(docker images --filter=reference="rogueos/*:*" -q)
