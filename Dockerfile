@@ -21,4 +21,4 @@ RUN npm install -g @bitwarden/cli
 
 Run bw --version
 
-ENTRYPOINT ["./main"]
+ENTRYPOINT ["./main.sh"]
