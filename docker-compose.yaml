@@ -12,3 +12,6 @@ services:
  #           - /under/my
         working_dir: /tmp/roguesecrets
         image: ${project}/${image}:${tag}
+        build: 
+            context: .
+            dockerfile: Dockerfile
