@@ -38,8 +38,7 @@ fi
 
 #Run image
 tmpfile=$(mktemp /tmp/roguesecrets.XXXXXX)
-docker compose -f <( envsubst < docker-compose.yaml ) --env-file <( env ) up -d
-docker compose exec roguesecrets /home/roguesecrets/main.sh 
+docker compose -f <( envsubst < docker-compose.yaml ) --env-file <( env ) run --build roguesecrets /home/roguesecrets/main.sh
 if ! [ -z "$is_service" ]; then
    docker compose -f <( envsubst < docker-compose.yaml ) down
 fi
