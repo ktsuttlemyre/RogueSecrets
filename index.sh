@@ -37,11 +37,13 @@ else
 fi
 
 #Run image
+tmpfile=$(mktemp /tmp/roguesecrets.XXXXXX)
 docker compose -f <( envsubst < docker-compose.yaml ) --env-file <( env ) up -d
 docker compose exec roguesecrets /home/roguesecrets/main.sh 
 if ! [ -z "$is_service" ]; then
    docker compose -f <( envsubst < docker-compose.yaml ) down
 fi
+rm "$tmpfile"
 
 rogue_envvars="${PWD}/.exported_envs.env"
 if [ -f $rogue_envvars ]; then
