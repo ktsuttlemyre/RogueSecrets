@@ -37,7 +37,7 @@ else
 fi
 
 #Run image
-docker compose-f <( envsubst < docker-compose.yaml ) --env-file <( env ) up -d
+docker compose -f <( envsubst < docker-compose.yaml ) --env-file <( env ) up -d
 docker compose exec roguesecrets /home/roguesecrets/main.sh 
 if ! [ -z "$is_service" ]; then
    docker compose -f <( envsubst < docker-compose.yaml ) down
