@@ -4,6 +4,19 @@ set -a      # turn on automatic exporting
 source ./params.env
 set +a      # turn off automatic exporting
 
+
+if [ "$1" == "--" ]; then
+  if [ "$2" == "reset" ]; then
+    cd ..
+    rm -rf RogueSecrets/
+    docker rmi $(docker images --filter=reference="rogueos/*:*" -q) -f
+    git clone https://github.com/ktsuttlemyre/RogueSecrets.git
+    cd RogueSecrets/
+    chmod +x ./index.sh ./reset.sh
+    #./index.sh
+  fi
+fi
+
 git_pull () {
   git stash
   git pull
