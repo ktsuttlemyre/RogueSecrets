@@ -35,10 +35,9 @@ else
     docker_build $cache
   fi
 fi
-
+set -x
 #Run image
 tmpfile=$(mktemp /tmp/roguesecrets.XXXXXX)
-set -x
 docker compose -f <( envsubst < docker-compose.yaml ) --env-file <( env ) run --build roguesecrets /home/roguesecrets/main.sh
 if ! [ -z "$is_service" ]; then
    docker compose -f <( envsubst < docker-compose.yaml ) down
