@@ -2,9 +2,9 @@ version: "3"
 name: ${project}
 services:
     ${image}:
-#        stdin_open: true
+        stdin_open: true
         init: true
-#        tty: true
+        tty: true
         volumes:
             - ${PWD}:/tmp/roguesecrets
             - /:/host_root/
