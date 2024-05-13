@@ -21,4 +21,4 @@ RUN npm install -g @bitwarden/cli
 
 Run bw --version
 
-#ENTRYPOINT ["/home/roguesecrets/main.sh"]
+ENTRYPOINT ["/home/roguesecrets/main.sh"]
