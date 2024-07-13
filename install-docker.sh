@@ -11,6 +11,13 @@ function header () {
 }
 
 header "Installing libs..."
+if [ -f /etc/os-release ]; then
+  source /etc/os-release
+else
+  header "Can't find /etc/os-release"
+  exit 1
+ fi
+  
 linux_distro=false
 [ -z ${ID+x} ] && ID="$(uname -s)"
 
