@@ -46,7 +46,7 @@ fi
 header "Confirmed installing docker and compose on $linux_distro on processor type $processor_arch"
 
 
-header "Remove docker and install official build'
+header "Remove docker and install official build"
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
 #add repo
 # Add Docker's official GPG key:
