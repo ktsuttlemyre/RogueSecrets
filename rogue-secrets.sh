@@ -13,12 +13,12 @@ function header () {
 if ! command -v docker &> /dev/null; then
     header "Docker not found. Installing"
     set -euo pipefail
-    $script_dir/libs.sh
+    $script_dir/install-docker.sh
     set +euo pipefail
 elif [ -x "$(command -v docker-compose)" ]; then
     header "SUCCESS: docker-compose (v1) is installed."
     header " will attempt to use docker-compose but may have incompabitliby issues."
-    header "to force docker compose (v2) install. Run $script_dir/libs.sh"
+    header "to force docker compose (v2) install. Run $script_dir/install-docker.sh"
     d-compose=docker-compose
 elif $(docker compose &>/dev/null) && [ $? -eq 0 ]; then
     header "SUCCESS: docker compose (v2) is installed."
@@ -26,7 +26,7 @@ elif $(docker compose &>/dev/null) && [ $? -eq 0 ]; then
 else
     header "Docker not found. Installing"
     set -euo pipefail
-    $script_dir/libs.sh
+    $script_dir/install-docker.sh
     set +euo pipefail
 fi
 
