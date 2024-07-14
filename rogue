@@ -32,7 +32,6 @@ else
     set +euo pipefail
 fi
 
-
 #custom image name
 set -a      # turn on automatic exporting
 source ./params.env
@@ -64,6 +63,9 @@ docker_build () {
     echo "$log" > /dev/stderr
   fi
 }
+
+DOCKER_DEFAULT_PLATFORM=linux/amd64
+
 
 #if image not already here
 #if [ -z "$(docker images -q $project/$image:$tag 2> /dev/null)" ]; then
