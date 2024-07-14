@@ -29,9 +29,9 @@ secret_folder="${1:-rogue_secrets:$machine_name}"
 if [[ $secret_folder != rogue_secrets:* ]]; then
 	secret_folder="rogue_secrets:$secret_folder"
 fi
-echo "========================================="
-echo "Installing scripts from $secret_folder" 
-echo "========================================="
+echo "============================================="
+echo "Downloaing secrets from folder $secret_folder" 
+echo "============================================="
 bw logout || true
 unset BW_SESSION
 while [ -z "$BW_SESSION" ]; do
