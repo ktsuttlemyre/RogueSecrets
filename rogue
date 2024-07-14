@@ -3,7 +3,9 @@ script_name=$(basename "$0")
 (return 0 2>/dev/null) && sourced=true || sourced=false
 if ! $sourced; then
  script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
- source "$script_dir/env"
+ if [ -f ${script_dir}/env ];then
+  source "$script_dir/env"
+ fi
 fi
 
 function header () {
