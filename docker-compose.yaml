@@ -11,4 +11,4 @@ services:
  #       env_file:
  #           - /under/my
         working_dir: /tmp/roguesecrets
-        image: ${project}/${image}:${tag}
+        image: ${registry}${project}/${image}:${tag}
