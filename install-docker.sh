@@ -86,8 +86,6 @@ fi
 
 
 header 'docker emulation extentions'
-if [ ${processor_arch} == 'arm' ]; then
-  sudo apt-get install -y qemu-system-arm
-else
-  sudo apt-get install -y qemu qemu-user-static
-fi
+#if [ ${processor_arch} == 'arm' ]; then
+sudo apt-get install -y qemu-system-arm qemu qemu-user-static
+#fi
