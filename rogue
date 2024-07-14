@@ -4,7 +4,7 @@ script_name=$(basename "$0")
 if ! $sourced; then
  script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
  if [ -f ${script_dir}/env ];then
-  source "$script_dir/env"
+  source ${script_dir}/env
  fi
 fi
 
