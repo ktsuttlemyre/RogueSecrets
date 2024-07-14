@@ -9,6 +9,8 @@ fi
 function header () {
  echo -e "RogueSecrets[${script_name}]  $1"
 }
+reboot () { echo 'Would you like to reboot now? (y/n)' && read x && [[ "$x" == "y" ]] && /sbin/reboot; }
+
 
 header "Installing libs..."
 if [ -f /etc/os-release ]; then
@@ -46,7 +48,6 @@ fi
 
 header "Confirmed installing docker and compose on $linux_distro on processor type $processor_arch"
 
-
 header "Remove docker and install official build"
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
 #add repo
@@ -71,6 +72,18 @@ sudo groupadd docker
 #Add the connected user "$USER" to the docker group. Change the user name to match your preferred user if you do not want to use your current user:
 sudo usermod -aG docker $USER
 getent group docker || newgrp docker || true #continue if group exits
+sudo systemctl restart docker
+
+#if it doesn't connect try restarting the service
+if ! docker run hello-world &>/dev/null; then 
+  sudo systemctl restart docker
+fi
+#if it still doesn't connect then reboot
+if ! docker run hello-world &>/dev/null; then 
+  reboot
+fi
+
+
 
 header 'docker emulation extentions'
 if [ ${processor_arch} == 'arm' ]; then
