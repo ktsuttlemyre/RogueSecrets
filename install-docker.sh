@@ -28,6 +28,7 @@ case "$ID" in
   centos) linux_distro="centos" ;;
   Darwin*) linux_distro="mac" ;;
   steamos) linux_distro="steamos" ;;
+  debian) linux_distro="debian" ;;
   *) echo "This is an unknown distribution. Value observed is $ID";;
 esac
 
