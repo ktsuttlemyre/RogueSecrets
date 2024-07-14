@@ -21,7 +21,7 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-  DOCKERFILE: .
+  DOCKERFILE: '.'
 
 
 jobs:
