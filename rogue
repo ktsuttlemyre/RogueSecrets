@@ -64,7 +64,7 @@ docker_build () {
   fi
 }
 
-DOCKER_DEFAULT_PLATFORM=linux/amd64
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
 
 
 #if image not already here
