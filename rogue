@@ -21,10 +21,10 @@ elif [ -x "$(command -v docker-compose)" ]; then
     header "SUCCESS: docker-compose (v1) is installed."
     header " will attempt to use docker-compose but may have incompabitliby issues."
     header "to force docker compose (v2) install. Run ${script_dir}/install-docker.sh"
-    d-compose=('docker-compose')
+    d_compose=(docker-compose)
 elif $(docker compose &>/dev/null) && [ $? -eq 0 ]; then
     header "SUCCESS: docker compose (v2) is installed."
-    d-compose=('docker' 'compose')
+    d_compose=(docker compose)
 else
     header "Docker not found. Installing"
     set -euo pipefail
@@ -83,9 +83,9 @@ else
 fi
 
 #Run image
-${d-compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) run --build roguesecrets /home/roguesecrets/main.sh
+${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) run --build roguesecrets /home/roguesecrets/main.sh
 if ! [ -z "$is_service" ]; then
-   ${d-compose[@]} -f <( envsubst < docker-compose.yaml ) down
+   ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) down
 fi
 
 
