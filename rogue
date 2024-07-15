@@ -84,6 +84,8 @@ export DOCKER_DEFAULT_PLATFORM=linux/amd64
 #  fi
 #fi
 
+export PARENT=$(dirname "$PWD")
+
 #Run image
 ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) run --build roguesecrets /home/roguesecrets/main.sh
 if ! [ -z "$is_service" ]; then
@@ -91,7 +93,7 @@ if ! [ -z "$is_service" ]; then
 fi
 
 #export secrets into environment
-rogue_envvars="${PWD}/.exported_envs.env"
+rogue_envvars="/tmp/RogueCLI/.env"
 if [ -f $rogue_envvars ]; then
   header "Exporting secrets"
   echo "$rogue_envvars"
@@ -102,5 +104,3 @@ if [ -f $rogue_envvars ]; then
   esac
   rm $rogue_envvars
 fi
-
-#save secrets to hdd path
