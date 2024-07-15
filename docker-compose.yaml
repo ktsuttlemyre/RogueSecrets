@@ -6,8 +6,12 @@ services:
         init: true
         tty: true
         volumes:
-            - ${PWD}:/tmp/roguesecrets
-            - /:/host_root/
+            - /:/host/root/
+            - ${PWD}:/host/cwd/
+            - ${PARENT}:/host/parent/
+            - /tmp/RogueCLI:/host/session/
+            - ${HOME}:/host/home/
+
  #       env_file:
  #           - /under/my
         working_dir: /tmp/roguesecrets
