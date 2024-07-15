@@ -116,15 +116,15 @@ while read -r name; do
 		# load as envirnment variable
 		log_info "exporting $name to shell environment"
 		export "$name=$data"
-  		echo "$name=$data" >> /tmp/roguesecrets/.exported_envs.env
+  		echo "$name=$data" >> /host/session/.env
 	else
 		log_info "writing $name to $f_path"
 
-		#replace ~ with $HOME
+		#replace path with host locations
 		if [[ $f_path == ~* ]]; then
-			f_path="${f_path/#\~/$HOME}"
+			f_path="${f_path/#\~\///host/home/}"
 		elif [[ $f_path == /* ]]; then
-			f_path="${f_path/#\///host_root/}"
+			f_path="${f_path/#\///host/root/}"
 		fi
 
 		#get path to parent dir
