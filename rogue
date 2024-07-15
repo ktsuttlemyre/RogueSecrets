@@ -85,10 +85,11 @@ export DOCKER_DEFAULT_PLATFORM=linux/amd64
 #fi
 
 export PARENT=$(dirname "$PWD")
+export ENTRYPOINT=/home/roguesecrets/main.sh
 
 #Run image
 #d_compose_args=(-f <( envsubst < docker-compose.yaml ) --env-file <( env ))
-${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) up --pull always --build roguesecrets /home/roguesecrets/main.sh
+${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) up --pull always --build
 if ! [ -z "$is_service" ]; then
    ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) down
 fi
