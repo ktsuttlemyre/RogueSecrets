@@ -12,6 +12,21 @@ function header () {
  echo -e "RogueSecrets[${script_name}]  $1"
 }
 
+git_pull () {
+  git stash
+  git pull
+  git stash pop
+  git submodule update --init --recursive --remote
+}
+
+docker_build () {
+  local log; log="$(docker build . -t $project/$image:$tag $1)"
+  if [ $? -ne 0 ]; then
+    echo "Error building image = $project/$image:$tag" > /dev/stderr
+    echo "$log" > /dev/stderr
+  fi
+}
+
 if ! command -v docker &> /dev/null; then
     header "Docker not found. Installing"
     set -euo pipefail
@@ -37,6 +52,31 @@ set -a      # turn on automatic exporting
 source ./params.env
 set +a      # turn off automatic exporting
 
+#if first variable == --help then print readme.md
+if [ "$1" == "--help" ]; then
+	# if glow exists then use that
+	if command -v glow &> /dev/null; then
+		glow "$script_dir/README.md"
+	else
+		cat "$script_dir/README.md"
+	fi
+	exit 0
+fi
+
+inpath=$1
+# if [[ $inpath == ~* ]]; then
+# 	#inpath="${inpath/#\~/$HOME}"
+# 	echo "unaccepted path"
+# 	exit 1
+# fi
+# if [[ $inpath == /* ]]; then
+# 	#inpath="${inpath/#\/}"
+# 	echo "unaccepted path"
+# 	exit 1
+# fi
+
+#https://medium.com/oracledevs/creating-an-oracle-cloud-infrastructure-cli-toolkit-docker-image-35be0ca71aa
+
 if [ "$1" == "--" ]; then
   if [ "$2" == "reset" ]; then
     cd ..
@@ -49,23 +89,7 @@ if [ "$1" == "--" ]; then
   fi
 fi
 
-git_pull () {
-  git stash
-  git pull
-  git stash pop
-  git submodule update --init --recursive --remote
-}
-
-docker_build () {
-  local log; log="$(docker build . -t $project/$image:$tag $1)"
-  if [ $? -ne 0 ]; then
-    echo "Error building image = $project/$image:$tag" > /dev/stderr
-    echo "$log" > /dev/stderr
-  fi
-}
-
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
-
 
 #if image not already here
 #if [ -z "$(docker images -q $project/$image:$tag 2> /dev/null)" ]; then
@@ -87,24 +111,72 @@ export DOCKER_DEFAULT_PLATFORM=linux/amd64
 export PARENT=$(dirname "$PWD")
 export ENTRYPOINT=/home/roguesecrets/main.sh
 
-#Run image
-#d_compose_args=(-f <( envsubst < docker-compose.yaml ) --env-file <( env ))
-# up ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) up --pull always --build
-#run
-${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) pull && ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) run --build roguesecrets /home/roguesecrets/main.sh
-if ! [ -z "$is_service" ]; then
-   ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) down
-fi
 
-#export secrets into environment
-rogue_envvars="/tmp/RogueCLI/.env"
-if [ -f $rogue_envvars ]; then
-  header "Exporting secrets"
-  echo "$rogue_envvars"
-  case "$(uname)" in
-    LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d '\n') ;;
-    FreeBSD|Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
-    *) echo "Error exporting values" ;;
-  esac
-  rm $rogue_envvars
-fi
+
+path_array=$(echo "$inpath" | sed 's/\//\n/g')
+
+#echo $path_array
+
+path="$script_dir"
+while IFS= read -r path_e; do
+	path="$path/$path_e"
+	#check if path is a directory or file
+	if [[ -d $path ]]; then
+		#iterate all files in path that are hidden files and source them
+		for file in $path/.*; do
+			if [[ -f $file ]]; then 
+				#if file ends with .sh or .env
+				if [[ $file == *.sh || $file == *.env ]]; then
+					source $file
+				else
+					env $file
+				fi
+			fi
+		done
+		continue
+	fi
+
+	#if path variables is a file then source it
+	if [[ -f $path ]]; then
+  if [yaml]; then
+    #Run image
+    #d_compose_args=(-f <( envsubst < docker-compose.yaml ) --env-file <( env ))
+    # up ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) up --pull always --build
+    #run
+    ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) pull && ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) run --build roguesecrets /home/roguesecrets/main.sh
+    if ! [ -z "$is_service" ]; then
+       ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) down
+    fi
+    
+    #export secrets into environment
+    rogue_envvars="/tmp/RogueCLI/.env"
+    if [ -f $rogue_envvars ]; then
+      header "Exporting secrets"
+      echo "$rogue_envvars"
+      case "$(uname)" in
+        LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d '\n') ;;
+        FreeBSD|Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
+        *) echo "Error exporting values" ;;
+      esac
+      rm $rogue_envvars
+    fi
+    break
+  else
+   	exec env $path "${@:2}" < /dev/tty
+  		# if test ! -t 0; then
+  		#     #echo "Read from stdin"
+  		#     #currently doesnt work with decrypt
+  		#     exec env $path "${@:2}" < /dev/stdin # or < /proc/$$/fd/0 for stdin
+  		# else
+  		# 	exec env $path "${@:2}" < /dev/tty # or < /proc/$$/fd/0 for stdin
+  		# fi
+  		#if it fails then exit with the same error number as the previous command
+  		if [ $? -ne 0 ]; then
+  			exit $?
+  		fi
+  		break
+  fi
+	fi
+done <<< "$path_array"
+
+
