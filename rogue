@@ -90,10 +90,11 @@ if ! [ -z "$is_service" ]; then
    ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) down
 fi
 
-
+#export secrets into environment
 rogue_envvars="${PWD}/.exported_envs.env"
 if [ -f $rogue_envvars ]; then
   header "Exporting secrets"
+  echo "$rogue_envvars"
   case "$(uname)" in
     LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d '\n') ;;
     FreeBSD|Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
@@ -101,3 +102,5 @@ if [ -f $rogue_envvars ]; then
   esac
   rm $rogue_envvars
 fi
+
+#save secrets to hdd path
