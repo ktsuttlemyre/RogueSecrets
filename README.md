@@ -20,7 +20,7 @@ mkdir -p ${wdir}; cd ${wdir}; curl -LkSs 'https://api.github.com/repos/${repo}ta
 
 
 
-# Working inside docker comtainer
+# Working inside docker container
 ### Paths
 From in the docker image these paths map to host
  - /host/root is the root folder of the host
