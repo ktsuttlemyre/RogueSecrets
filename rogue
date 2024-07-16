@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ex
 script_name=$(basename "$0")
 (return 0 2>/dev/null) && sourced=true || sourced=false
 if ! $sourced; then
@@ -30,12 +31,12 @@ docker_build () {
 if ! command -v docker &> /dev/null; then
     header "Docker not found. Installing"
     set -euo pipefail
-    $script_dir/install-docker.sh
+    $script_dir/src/common/install-docker.sh
     set +euo pipefail
 elif [ -x "$(command -v docker-compose)" ]; then
     header "docker-compose (v1) is installed."
     header " will attempt to use docker-compose but may have incompabitliby issues."
-    header "to force docker compose (v2) install. Run ${script_dir}/install-docker.sh"
+    header "to force docker compose (v2) install. Run ${script_dir}/src/common/install-docker.sh"
     d_compose=(docker-compose)
 elif $(docker compose &>/dev/null) && [ $? -eq 0 ]; then
     header "docker compose (v2) is installed."
@@ -43,7 +44,7 @@ elif $(docker compose &>/dev/null) && [ $? -eq 0 ]; then
 else
     header "Docker not found. Installing"
     set -euo pipefail
-    $script_dir/install-docker.sh
+    $script_dir/src/common/install-docker.sh
     set +euo pipefail
 fi
 
