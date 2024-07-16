@@ -1,11 +1,5 @@
-# RogueSecrets
+# RogueCLI
 
-
-
-# RogueScripts
-
-
-# ./BASH
 ### Inject from Repo
 To use the bash scripts directly from the repo
 ```
