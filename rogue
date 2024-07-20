@@ -117,8 +117,8 @@ path_array=$(echo "$inpath" | sed 's/\//\n/g')
 
 #echo $path_array
 
-run_this_context=false
-[ ! -f is_docker ] && run_this_context=true
+#run_this_context=false
+#[ ! -f is_docker ] && run_this_context=true
 
 path="$script_dir"
 full_path="$script_dir/$inpath"
