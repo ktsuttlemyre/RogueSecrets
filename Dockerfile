@@ -9,6 +9,8 @@ RUN apk update && apk add --no-cache curl --update npm jq bash git && rm -rf /va
 
 COPY . ./
 
+RUN find . -type f -iname "*.sh" -exec chmod +x {} \;
+
 RUN git clone https://github.com/fredpalmer/log4bash.git 
 
 RUN npm install -g @bitwarden/cli
