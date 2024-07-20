@@ -169,14 +169,14 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#export secrets into environment
 	rogue_envvars="/tmp/RogueCLI/.env"
 	if [ -f $rogue_envvars ]; then
-		header "Exporting secrets"
-		echo "$rogue_envvars"
-		case "$(uname)" in
-			LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n') ;;
-			FreeBSD|Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
-			*) echo "Error exporting values" ;;
-			esac
-			rm $rogue_envvars
+                header "Exporting secrets"
+                echo "$rogue_envvars"
+                case "$(uname)" in
+                LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n') ;;
+                FreeBSD | Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
+                *) echo "Error exporting values" ;;
+                esac
+                rm $rogue_envvars
 	fi
 	exit
 fi
