@@ -113,7 +113,7 @@ export PARENT=$(dirname "$PWD")
 export ENTRYPOINT=/home/roguesecrets/main.sh
 
 #remove . if path starts with .
-in_path=${in_path#'.'}
+inpath=${inpath#'.'}
 
 path_array=$(echo "$inpath" | sed 's/\//\n/g')
 
