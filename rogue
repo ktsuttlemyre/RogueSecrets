@@ -142,20 +142,31 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#traverse backword looking for docker-compose.yaml or docker-compose.env for context
 	docker_compose_yaml='./docker-compose.yaml'
 	docker_compose_env='./docker-compose.env'
-
-	
-	#export secrets into environment
-	rogue_envvars="/tmp/RogueCLI/.env"
-	if [ -f $rogue_envvars ]; then
-                header "Exporting secrets"
-                echo "$rogue_envvars"
-                case "$(uname)" in
-                LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n' ;;
-		FreeBSD | Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
-		*) echo "Error exporting values from container" ;;
-                esac
-                rm $rogue_envvars
+	while
+		traverse=$(dirname "$traverse")
+		echo "path currently $traverse"
+		for file in $traverse/docker-compose.*; do
+			if [[ $file == *.yaml ]]; then
+			    docker_compose_yaml="$file"
+			elif [[ $file == *.env ]]; then
+			    docker_compose_env="$file"
+			fi
+		done
+	    [ ! -z "$traverse" ] && [ "$traverse" != '/' ]
+	do :; done
+	#Run image
+	#d_compose_args=(-f <( envsubst < "$docker_compose_yaml" ) --env-file <( env ))
+	# up ${d_compose[@]} -f <( envsubst < "$docker_compose_yaml" ) --env-file <( env ) up --pull always --build
+	#run
+	${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) pull
+	#get workdir from image
+	#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
+	${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --env IS_ROGUE_CONTEXT=true --build roguesecrets /home/roguesecrets/main.sh
+	if ! [ -z "$is_service" ]; then
+		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) down
 	fi
+	
+
 	exit
 fi
 
