@@ -3,13 +3,12 @@
 # https://www.reddit.com/r/Bitwarden/comments/xhir0q/how_to_install_bw_cli_in_docker/
 FROM alpine:latest
 
-WORKDIR /home/roguesecrets
+WORKDIR /rogue
 
 RUN apk update && apk add --no-cache curl --update npm jq bash git && rm -rf /var/cache/apk/*
 
 COPY ./src ./
 
-RUN chmod +x main.sh
 RUN git clone https://github.com/fredpalmer/log4bash.git 
 
 RUN npm install -g @bitwarden/cli
@@ -21,4 +20,4 @@ RUN npm install -g @bitwarden/cli
 
 Run bw --version
 
-ENTRYPOINT ["/home/roguesecrets/main.sh"]
+ENTRYPOINT ["./rogue"]
