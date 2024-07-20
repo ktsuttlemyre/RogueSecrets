@@ -15,7 +15,7 @@ source "$(dirname $script_dir)/env"
 debug=false
 
 #add log4bash and debug flag
-source $rogue_wdir/scripts/libs/log4bash/log4bash.sh
+source /rogue/libs/log4bash/log4bash.sh
 if $debug; then
 
 	log_warning "THIS WILL SHOW SECRETS TO STDOUT TERMINAL"
