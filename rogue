@@ -141,7 +141,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	traverse="$full_path"
 	#traverse backword looking for docker-compose.yaml or docker-compose.env for context
 	docker_compose_yaml='./docker-compose.yaml'
-	docker_compose_env='docker-compose.env
+	docker_compose_env='docker-compose.env'
 	while
 		traverse=$(dirname "$traverse")
 		echo "path currently $traverse"
@@ -171,11 +171,11 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	if [ -f $rogue_envvars ]; then
                 header "Exporting secrets"
                 echo "$rogue_envvars"
-                #case "$(uname)" in
-                #LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n' ;;
-		#FreeBSD | Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
-		#*) echo "Error exporting values from container" ;;
-                #esac
+                case "$(uname)" in
+                LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n' ;;
+		FreeBSD | Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
+		*) echo "Error exporting values from container" ;;
+                esac
                 rm $rogue_envvars
 	fi
 	exit
