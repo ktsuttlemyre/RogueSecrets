@@ -7,7 +7,7 @@ WORKDIR /rogue
 
 RUN apk update && apk add --no-cache curl --update npm jq bash git && rm -rf /var/cache/apk/*
 
-COPY ./src ./
+COPY . ./
 
 RUN git clone https://github.com/fredpalmer/log4bash.git 
 
