@@ -54,11 +54,6 @@ else
     set +euo pipefail
 fi
 
-#custom image name
-set -a      # turn on automatic exporting
-source ./params.env
-set +a      # turn off automatic exporting
-
 #if first variable == --help then print readme.md
 if [ "$1" == "--help" ]; then
 	# if glow exists then use that
@@ -115,9 +110,6 @@ export DOCKER_DEFAULT_PLATFORM=linux/amd64
 #  fi
 #fi
 
-export PARENT=$(dirname "$PWD")
-export ENTRYPOINT=/home/roguesecrets/main.sh
-
 #remove . if path starts with .
 inpath=${inpath#'./'}
 
@@ -154,6 +146,14 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		done
 	    [ ! -z "$traverse" ] && [ "$traverse" != '/' ]
 	do :; done
+	
+	export PARENT=$(dirname "$PWD")
+	#custom image name
+	set -a      # turn on automatic exporting
+	source ./params.env
+	set +a      # turn off automatic exporting
+	export ENTRYPOINT=/rogue
+
 	#Run image
 	#d_compose_args=(-f <( envsubst < "$docker_compose_yaml" ) --env-file <( env ))
 	# up ${d_compose[@]} -f <( envsubst < "$docker_compose_yaml" ) --env-file <( env ) up --pull always --build
