@@ -122,9 +122,10 @@ run_this_context=false
 
 path="$script_dir"
 echo "$script_dir and $path_array"
-exit
 while IFS= read -r path_e; do
 	path="$path/$path_e"
+	echo "doin path $path"
+	exit 
 	#check if path is a directory or file
 	if [[ -d $path ]]; then
 		#iterate all files in path that are hidden files and source them
