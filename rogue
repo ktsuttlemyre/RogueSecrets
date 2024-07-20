@@ -146,11 +146,11 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		done
 	    [ ! -z "$traverse" ] && [ "$traverse" != '/' ]
 	do :; done
-	
+
 	export PARENT=$(dirname "$PWD")
 	#custom image name
 	set -a      # turn on automatic exporting
-	source ./params.env
+	source "$docker_compose_env"
 	set +a      # turn off automatic exporting
 	export ENTRYPOINT=/rogue
 
@@ -165,7 +165,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	if ! [ -z "$is_service" ]; then
 		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) down
 	fi
-	
+
 	rogue_envvars="/tmp/RogueCLI/.env"
 	if [ -f rogue_envvars ]; then
 		header "Exporting secrets to current session"
@@ -188,16 +188,16 @@ while IFS= read -r path_e; do
     if [[ -d $path ]]; then
         #iterate all files in path that are hidden files and source them
         for file in $path/.*; do
-            if [[ -f $file ]]; then
-                #if file ends with .sh or .env
-                if [[ $file == *.sh || $file == *.env ]]; then
-                    source $file
-                else
-                    env $file
-                fi
+            if [[ ! -f $file ]]; then
+                continue
+            fi
+            #if file ends with .sh or .env
+            if [[ $file == *.sh || $file == *.env ]]; then
+                source $file
+            else
+                env $file
             fi
         done
-        continue
     elif [[ -f $path ]]; then #if path variable is a file then exec it
 	exec env $path "${@:2}" </dev/tty
 	# if test ! -t 0; then
