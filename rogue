@@ -117,7 +117,12 @@ path_array=$(echo "$inpath" | sed 's/\//\n/g')
 
 #echo $path_array
 
+run_this_context=false
+[ ! -f is_docker ] && run_this_context=true
+
 path="$script_dir"
+echo "$path_array"
+exit
 while IFS= read -r path_e; do
 	path="$path/$path_e"
 	#check if path is a directory or file
@@ -135,36 +140,36 @@ while IFS= read -r path_e; do
 		done
 		continue
 	fi
-
-	#if path variables is a file then source it
-	if [[ -f $path ]]; then
-  if [yaml]; then
-    #Run image
-    #d_compose_args=(-f <( envsubst < docker-compose.yaml ) --env-file <( env ))
-    # up ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) up --pull always --build
-    #run
-    ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) pull
-    #get workdir from image
-    #WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
-    ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) run --build roguesecrets /home/roguesecrets/main.sh
-    if ! [ -z "$is_service" ]; then
-       ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) down
-    fi
-    
-    #export secrets into environment
-    rogue_envvars="/tmp/RogueCLI/.env"
-    if [ -f $rogue_envvars ]; then
-      header "Exporting secrets"
-      echo "$rogue_envvars"
-      case "$(uname)" in
-        LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d '\n') ;;
-        FreeBSD|Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
-        *) echo "Error exporting values" ;;
-      esac
-      rm $rogue_envvars
-    fi
-    break
-  else
+	
+	
+	if [[ -f $path ]]; then #if path variable is a file then exec it
+		if [[ $file == *.yaml ]] && [[ "$run_this_context" = false ]]; then
+		#Run image
+		#d_compose_args=(-f <( envsubst < docker-compose.yaml ) --env-file <( env ))
+		# up ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) up --pull always --build
+		#run
+		${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) pull
+		#get workdir from image
+		#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
+		${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) run --build roguesecrets /home/roguesecrets/main.sh
+		if ! [ -z "$is_service" ]; then
+		${d_compose[@]} -f <( envsubst < docker-compose.yaml ) down
+		fi
+		
+		#export secrets into environment
+		rogue_envvars="/tmp/RogueCLI/.env"
+		if [ -f $rogue_envvars ]; then
+		header "Exporting secrets"
+		echo "$rogue_envvars"
+		case "$(uname)" in
+		LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d '\n') ;;
+		FreeBSD|Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
+		*) echo "Error exporting values" ;;
+		esac
+		rm $rogue_envvars
+		fi
+		break
+		else
    	exec env $path "${@:2}" < /dev/tty
   		# if test ! -t 0; then
   		#     #echo "Read from stdin"
