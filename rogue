@@ -166,18 +166,47 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) down
 	fi
 
-	rogue_envvars="/tmp/RogueCLI/.env"
-	if [ -f rogue_envvars ]; then
-		header "Exporting secrets to current session"
-		case "$(uname)" in
-			LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n' ) ;;
-			*) echo "Error exporing values from container"  ;;
-		esac
-		rm $rogue_envvars
-	fi
+
 	exit
 fi
 
+
+echo "$script_dir/$inpath"
+while IFS= read -r path_e; do
+    path="$path/$path_e"
+
+    #check if path is a directory or file
+    if [[ -d $path ]]; then
+        #iterate all files in path that are hidden files and source them
+        for file in $path/.*; do
+            if [[ ! -f $file ]]; then
+                continue
+            fi
+            #if file ends with .sh or .env
+            if [[ $file == *.sh || $file == *.env ]]; then
+                source $file
+            else
+                env $file
+            fi
+        done
+    elif [[ -f $path ]]; then #if path variable is a file then exec it
+	exec env $path "${@:2}" </dev/tty
+	# if test ! -t 0; then
+	#     #echo "Read from stdin"
+	#     #currently doesnt work with decrypt
+	#     exec env $path "${@:2}" < /dev/stdin # or < /proc/$$/fd/0 for stdin
+	# else
+	# 	exec env $path "${@:2}" < /dev/tty # or < /proc/$$/fd/0 for stdin
+	# fi
+	#if it fails then exit with the same error number as the previous command
+	if [ $? -ne 0 ]; then
+	exit $?
+	fi
+	break
+    else
+	header "Error unknown path type"
+    fi
+done <<<"$path_array"
 
 
 
