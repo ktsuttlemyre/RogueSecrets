@@ -172,9 +172,9 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
                 header "Exporting secrets"
                 echo "$rogue_envvars"
                 case "$(uname)" in
-                LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n') ;;
-                #FreeBSD | Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
-                *) echo "Error exporting values" ;;
+                LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n' ;;
+		FreeBSD | Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
+		*) echo "Error exporting values from container" ;;
                 esac
                 rm $rogue_envvars
 	fi
