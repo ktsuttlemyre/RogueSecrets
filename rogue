@@ -161,7 +161,11 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) pull
 	#get workdir from image
 	#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
-	${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --env IS_ROGUE_CONTEXT=true --build roguesecrets "${@:2}"
+	if [ -z "${registry}" ]; then
+		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --env IS_ROGUE_CONTEXT=true --build roguesecrets "${@:2}"
+	else
+		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --env IS_ROGUE_CONTEXT=true roguesecrets "${@:2}"
+	fi
 	if ! [ -z "$is_service" ]; then
 		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) down
 	fi
