@@ -125,7 +125,7 @@ run_this_context=false
 path="$script_dir"
 full_path="$script_dir/$inpath"
 parent_path=$(dirname "$full_path")
-if [[ -d full_path ]] || [[ ! -x full_path ]] then;
+if [[ -d full_path ]] || [[ ! -x full_path ]]; then
     header "Error must provide an executable file"
     exit 1
 fi
