@@ -13,6 +13,12 @@ function header () {
  echo -e "RogueSecrets[${script_name}]  $1"
 }
 
+make_all_executable {
+    dir=${1:-$PWD}
+    pattern=${2:-*.sh}
+    find $dir -type f -iname "$pattern" -exec chmod +x {} \;
+}
+
 git_pull () {
   git stash
   git pull
@@ -125,7 +131,7 @@ run_this_context=false
 path="$script_dir"
 full_path="$script_dir/$inpath"
 parent_path=$(dirname "$full_path")
-if [[ -d full_path ]] || [[ ! -x full_path ]]; then
+if [[ -d "$full_path" ]] || [[ ! -x "$full_path" ]]; then
     header "Error must provide an executable file"
     exit 1
 fi
