@@ -128,11 +128,54 @@ parent_path=$(dirname "$full_path")
 if [[ -d full_path ]] || [[ ! -x full_path ]] then;
     header "Error must provide an executable file"
     exit 1
-elif [[ -d parent_path ]]; then
-    # find a yaml file and run the docker 
-else
-    header Unknown error occured
 fi
+
+#if is_context isn't set then find the context to run this command
+if [ -z "${IS_ROGUE_CONTEXT}" ]; then
+	traverse="$full_path"
+	#traverse backword looking for docker-compose.yaml or docker-compose.env for context
+	docker_compose_yaml='./docker-compose.yaml'
+	docker_compose_env='docker-compose.env
+	while
+		traverse=$(dirname "$traverse")
+		echo "path currently $traverse"
+		for file in $traverse/docker-compose.*; do
+			if [[ $file == *.yaml ]]; then
+			    docker_compose_yaml="$file"
+			elif [[ $file == *.env ]]; then
+			    docker_compose_env="$file"
+			fi
+		done
+	    [ ! -z "$traverse" ] && [ "$traverse" != '/' ]
+	do :; done
+	#Run image
+	#d_compose_args=(-f <( envsubst < "$docker_compose_yaml" ) --env-file <( env ))
+	# up ${d_compose[@]} -f <( envsubst < "$docker_compose_yaml" ) --env-file <( env ) up --pull always --build
+	#run
+	${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) pull
+	#get workdir from image
+	#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
+	${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --env IS_ROGUE_CONTEXT=true --build roguesecrets /home/roguesecrets/main.sh
+	if ! [ -z "$is_service" ]; then
+	${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) down
+	fi
+	
+	#export secrets into environment
+	rogue_envvars="/tmp/RogueCLI/.env"
+	if [ -f $rogue_envvars ]; then
+		header "Exporting secrets"
+		echo "$rogue_envvars"
+		case "$(uname)" in
+			LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n') ;;
+			FreeBSD | Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
+			*) echo "Error exporting values" ;;
+			esac
+			rm $rogue_envvars
+	fi
+	exit
+fi
+
+
 
 echo "$script_dir/$inpath"
 while IFS= read -r path_e; do
@@ -152,50 +195,22 @@ while IFS= read -r path_e; do
             fi
         done
         continue
-    fi
-
-    if [[ -f $path ]]; then #if path variable is a file then exec it
-        if [[ $file == *.yaml ]] && [[ "$run_this_context" = false ]]; then
-            #Run image
-            #d_compose_args=(-f <( envsubst < docker-compose.yaml ) --env-file <( env ))
-            # up ${d_compose[@]} -f <( envsubst < docker-compose.yaml ) --env-file <( env ) up --pull always --build
-            #run
-            ${d_compose[@]} -f <(envsubst <docker-compose.yaml) --env-file <(env) pull
-            #get workdir from image
-            #WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
-            ${d_compose[@]} -f <(envsubst <docker-compose.yaml) --env-file <(env) run --build roguesecrets /home/roguesecrets/main.sh
-            if ! [ -z "$is_service" ]; then
-                ${d_compose[@]} -f <(envsubst <docker-compose.yaml) down
-            fi
-
-            #export secrets into environment
-            rogue_envvars="/tmp/RogueCLI/.env"
-            if [ -f $rogue_envvars ]; then
-                header "Exporting secrets"
-                echo "$rogue_envvars"
-                case "$(uname)" in
-                LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n') ;;
-                FreeBSD | Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
-                *) echo "Error exporting values" ;;
-                esac
-                rm $rogue_envvars
-            fi
-            break
-        else
-            exec env $path "${@:2}" </dev/tty
-            # if test ! -t 0; then
-            #     #echo "Read from stdin"
-            #     #currently doesnt work with decrypt
-            #     exec env $path "${@:2}" < /dev/stdin # or < /proc/$$/fd/0 for stdin
-            # else
-            # 	exec env $path "${@:2}" < /dev/tty # or < /proc/$$/fd/0 for stdin
-            # fi
-            #if it fails then exit with the same error number as the previous command
-            if [ $? -ne 0 ]; then
-                exit $?
-            fi
-            break
-        fi
+    elif [[ -f $path ]]; then #if path variable is a file then exec it
+	exec env $path "${@:2}" </dev/tty
+	# if test ! -t 0; then
+	#     #echo "Read from stdin"
+	#     #currently doesnt work with decrypt
+	#     exec env $path "${@:2}" < /dev/stdin # or < /proc/$$/fd/0 for stdin
+	# else
+	# 	exec env $path "${@:2}" < /dev/tty # or < /proc/$$/fd/0 for stdin
+	# fi
+	#if it fails then exit with the same error number as the previous command
+	if [ $? -ne 0 ]; then
+	exit $?
+	fi
+	break
+    else
+	header "Error unknown path type"
     fi
 done <<<"$path_array"
 
