@@ -3,7 +3,7 @@ name: ${project}
 services:
     ${image}:
         build:
-            context: ${CONTEXT:-.}
+            context: ${CONTEXT:-$PWD}
         stdin_open: true
         init: true
         tty: true
