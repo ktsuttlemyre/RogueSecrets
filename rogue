@@ -34,24 +34,26 @@ docker_build () {
   fi
 }
 
-if ! command -v docker &> /dev/null; then
-    header "Docker not found. Installing"
-    set -euo pipefail
-    $script_dir/src/common/install-docker.sh
-    set +euo pipefail
-elif [ -x "$(command -v docker-compose)" ]; then
-    header "docker-compose (v1) is installed."
-    header " will attempt to use docker-compose but may have incompabitliby issues."
-    header "to force docker compose (v2) install. Run ${script_dir}/src/common/install-docker.sh"
-    d_compose=(docker-compose)
-elif $(docker compose &>/dev/null) && [ $? -eq 0 ]; then
-    header "docker compose (v2) is installed."
-    d_compose=(docker compose)
-else
-    header "Docker not found. Installing"
-    set -euo pipefail
-    $script_dir/src/common/install-docker.sh
-    set +euo pipefail
+if [ -z "${IS_ROGUE_CONTEXT}" ]; then
+	if ! command -v docker &> /dev/null; then
+	    header "Docker not found. Installing"
+	    set -euo pipefail
+	    $script_dir/src/common/install-docker.sh
+	    set +euo pipefail
+	elif [ -x "$(command -v docker-compose)" ]; then
+	    header "docker-compose (v1) is installed."
+	    header " will attempt to use docker-compose but may have incompabitliby issues."
+	    header "to force docker compose (v2) install. Run ${script_dir}/src/common/install-docker.sh"
+	    d_compose=(docker-compose)
+	elif $(docker compose &>/dev/null) && [ $? -eq 0 ]; then
+	    header "docker compose (v2) is installed."
+	    d_compose=(docker compose)
+	else
+	    header "Docker not found. Installing"
+	    set -euo pipefail
+	    $script_dir/src/common/install-docker.sh
+	    set +euo pipefail
+	fi
 fi
 
 #if first variable == --help then print readme.md
