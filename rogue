@@ -166,19 +166,15 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) down
 	fi
 	
-	#export secrets into environment
-	#rogue_envvars="/tmp/RogueCLI/.env"
-	#if [ -f $rogue_envvars ]; then
-        #        header "Exporting secrets"
-        #        echo "$rogue_envvars"
-        #        case "$(uname)" in
-        #        LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n' ;;
-	#	FreeBSD | Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
-	#	*) echo "Error exporting values from container" ;;
-        #        esac
-        #        rm $rogue_envvars
-	#fi
-
+	rogue_envvars="/tmp/RogueCLI/.env"
+	if [ -f rogue_envvars ]; then
+		header "Exporting secrets to current session"
+		case "$(uname)" in
+			LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n' );;
+			*) echo "Error exporing values from container"
+		esac
+		rm $rogue_envvars
+	fi
 	exit
 fi
 
