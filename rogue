@@ -163,7 +163,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
 	${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --env IS_ROGUE_CONTEXT=true --build roguesecrets /home/roguesecrets/main.sh
 	if ! [ -z "$is_service" ]; then
-	${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) down
+		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) down
 	fi
 	
 	#export secrets into environment
@@ -173,7 +173,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		echo "$rogue_envvars"
 		case "$(uname)" in
 			LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n') ;;
-			FreeBSD | Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
+			FreeBSD|Darwin) export $(grep -v '^#' $rogue_envvars | xargs -0) ;;
 			*) echo "Error exporting values" ;;
 			esac
 			rm $rogue_envvars
