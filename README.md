@@ -18,6 +18,9 @@ mkdir -p ${wdir}; cd ${wdir}; curl -LkSs 'https://api.github.com/repos/${repo}ta
 ```
 
 
+docker run -it --entrypoint ./secrets/get.sh ghcr.io/ktsuttlemyre/roguesecrets:main
+
+
 
 
 # Working inside docker container
