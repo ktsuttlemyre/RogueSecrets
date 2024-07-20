@@ -170,7 +170,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	if [ -f rogue_envvars ]; then
 		header "Exporting secrets to current session"
 		case "$(uname)" in
-			LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n' );;
+			LINUX) export $(grep -v '^#' $rogue_envvars | xargs -d 'n' ) ;;
 			*) echo "Error exporing values from container"  ;;
 		esac
 		rm $rogue_envvars
