@@ -121,7 +121,7 @@ run_this_context=false
 [ ! -f is_docker ] && run_this_context=true
 
 path="$script_dir"
-echo "$path_array"
+echo "$script_dir and $path_array"
 exit
 while IFS= read -r path_e; do
 	path="$path/$path_e"
