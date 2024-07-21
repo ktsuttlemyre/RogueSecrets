@@ -127,6 +127,7 @@ full_path="$script_dir/$inpath"
 parent_path=$(dirname "$full_path")
 if [[ -d "$full_path" ]] || [[ ! -x "$full_path" ]]; then
     header "Error must provide an executable file"
+    header "got arguments ${@}"
     exit 1
 fi
 
