@@ -43,10 +43,14 @@ else
 	log_debug()  { :; }
 fi
 
-secret_folder="${1:-rogue_secrets:$machine_name}"
-if [[ $secret_folder != rogue_secrets:* ]]; then
-	secret_folder="rogue_secrets:$secret_folder"
+
+secret_folder="${1:-$machine_name}"
+if [[ -z "$secret_folder" ]]; then
+	echo "need to provide a secret folder name"
+ 	exit 1
 fi
+secret_folder="rogue_secrets:${secret_folder}"
+
 echo "============================================="
 echo "Downloaing secrets from folder $secret_folder" 
 echo "============================================="
