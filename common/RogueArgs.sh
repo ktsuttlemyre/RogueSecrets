@@ -67,6 +67,7 @@ if [ ! -z "${debug}" ];then
   [ "$debug" = 'strict' ] && set -euo pipefail
 fi
 [ ! -z "${help}"] && tail -n +1 $script_dir/$script_name | sed '/^#/!q' && exit 0;
+:;
 
 # echo "FILE EXTENSION  = ${EXTENSION}"
 # echo "SEARCH PATH     = ${SEARCHPATH}"
