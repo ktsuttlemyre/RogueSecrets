@@ -67,13 +67,13 @@ if [ ! -z "${debug}" ];then
 fi
 [ ! -z "${help}"] && tail -n +1 $script_dir/$script_name | sed '/^#/!q' && exit 0
 
-echo "FILE EXTENSION  = ${EXTENSION}"
-echo "SEARCH PATH     = ${SEARCHPATH}"
-echo "DEFAULT         = ${DEFAULT}"
-echo "Number files in SEARCH PATH with EXTENSION:" $(ls -1 "${SEARCHPATH}"/*."${EXTENSION}" | wc -l)
+# echo "FILE EXTENSION  = ${EXTENSION}"
+# echo "SEARCH PATH     = ${SEARCHPATH}"
+# echo "DEFAULT         = ${DEFAULT}"
+# echo "Number files in SEARCH PATH with EXTENSION:" $(ls -1 "${SEARCHPATH}"/*."${EXTENSION}" | wc -l)
 
-if [[ -n $1 ]]; then
-    echo "Last line of file specified as non-opt/last argument:"
-    tail -1 "$1"
-fi
-EOF
+# if [[ -n $1 ]]; then
+#     echo "Last line of file specified as non-opt/last argument:"
+#     tail -1 "$1"
+# fi
+# EOF
