@@ -142,8 +142,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#traverse backword looking for docker-compose.yaml or docker-compose.env for context
 	docker_compose_yaml='./docker-compose.yaml'
 	docker_compose_env='./docker-compose.env'
-	while
-		traverse=$(dirname "$traverse")
+	for folder in $(echo "$traverse" | sed 's/\//\n/g' | cat  <(echo '/') - ); do
 		echo "path currently $traverse"
 		for file in $traverse/docker-compose.*; do
 			if [[ $file == *.yaml ]]; then
@@ -152,8 +151,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 			    docker_compose_env="$file"
 			fi
 		done
-	    [ ! -z "$traverse" ] && [ "$traverse" != '/' ]
-	do :; done
+		traverse=$(dirname "$traverse")
+	done
 
 	export PARENT=$(dirname "$PWD")
 	#custom image name
