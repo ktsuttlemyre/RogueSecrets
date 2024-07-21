@@ -68,6 +68,8 @@ if [ ! -z "${debug}" ];then
 fi
 [ ! -z "${help}"] && tail -n +1 $script_dir/$script_name | sed '/^#/!q' && exit 0
 
+echo "done"
+
 # echo "FILE EXTENSION  = ${EXTENSION}"
 # echo "SEARCH PATH     = ${SEARCHPATH}"
 # echo "DEFAULT         = ${DEFAULT}"
