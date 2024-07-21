@@ -4,7 +4,7 @@
 #
 
 version_tag="1.0"
-version=false
+version=''
 debug=false
 flags=( "h:help"
         "d:debug"
