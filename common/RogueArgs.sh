@@ -15,9 +15,9 @@ script_name=$(basename "$0")
 # https://stackoverflow.com/questions/65349069/testing-whether-stdin-is-a-file-vs-a-pipe-vs-a-tty
 is_interactive () { [[ $- == *i* ]]; }
 is_stdin_redirected () { [[ $- == *s* ]]; }
-if [ -f /dev/stdin ] || [[ stat -f %HT == *"Regular"* ]]; then
+if [ -f /dev/stdin ] || [ stat -f %HT == *"Regular"* ]; then
   is_stdin="file"
-elif [ -p /dev/stdin ] || [[ stat -f %HT == *"Fifo"* ]]; then
+elif [ -p /dev/stdin ] || [ stat -f %HT == *"Fifo"* ]; then
   is_stdin="pipe"
 else # stat -f %HT == Character Device
   is_stdin=false
