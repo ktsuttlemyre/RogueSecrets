@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+#set -euo pipefail
 IFS=$'\n\t'
 script_name=$(basename "$0")
 (return 0 2>/dev/null) && sourced=true || sourced=false
