@@ -11,9 +11,16 @@ flags=( "h:help"
         "d:debug"
         "v:version"
         )
-
+        
+#set -euo pipefail
+set -ex
+IFS=$'\n\t'
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 script_name=$(basename "$0")
+(return 0 2>/dev/null) && sourced=true || sourced=false
+if ! $sourced; then
+        echo "This script is expected to be sourced. Please use . or source commands to call $script_name"
+fi
 # https://stackoverflow.com/questions/65349069/testing-whether-stdin-is-a-file-vs-a-pipe-vs-a-tty
 is_interactive () { [[ $- == *i* ]]; }
 is_stdin_redirected () { [[ $- == *s* ]]; }
