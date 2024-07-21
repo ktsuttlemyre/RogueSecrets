@@ -13,7 +13,6 @@ flags=( "h:help"
         )
         
 #set -euo pipefail
-set -ex
 IFS=$'\n\t'
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 script_name=$(basename "$0")
