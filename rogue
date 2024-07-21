@@ -1,4 +1,6 @@
 #!/bin/bash
+source ./common/RogueArgs.sh "${@}"
+
 #set -euo pipefail
 set -ex
 IFS=$'\n\t'
@@ -10,9 +12,6 @@ if ! $sourced; then
   source ${script_dir}/env
  fi
 fi
-
-source ./common/RogueArgs.sh "${@}"
-
 
 function header () {
  echo -e "RogueSecrets[${script_name}]  $1"
