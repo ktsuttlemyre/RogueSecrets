@@ -155,6 +155,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	source "$docker_compose_env"
 	set +a      # turn off automatic exporting
 	export ENTRYPOINT=./rogue
+	export CMD="${@:2}"
 
 	#Run image
 	#d_compose_args=(-f <( envsubst < "$docker_compose_yaml" ) --env-file <( env ))
@@ -163,10 +164,11 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) pull
 	#get workdir from image
 	#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
+
 	if [ -z "${registry}" ]; then
-		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --env IS_ROGUE_CONTEXT=true --build roguesecrets "${@:2}"
+		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --env IS_ROGUE_CONTEXT=true --build roguesecrets
 	else
-		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --env IS_ROGUE_CONTEXT=true roguesecrets "${@:2}"
+		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --env IS_ROGUE_CONTEXT=true roguesecrets
 	fi
 	if ! [ -z "$is_service" ]; then
 		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) down
