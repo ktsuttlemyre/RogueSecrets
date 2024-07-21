@@ -4,6 +4,7 @@
 #
 
 version_tag="1.0"
+version=false
 debug=false
 flags=( "h:help"
         "d:debug"
@@ -59,7 +60,7 @@ while [[ $# -gt 0 ]]; do
 done
 set -- "${positional_args[@]}" # restore positional parameters
 [ ! -z "${version}" ] echo "$version_tag"; exit 0
-if[ ! -z "${debug}" ];then
+if [ ! -z "${debug}" ];then
   [ "$debug" = true ] set +x
   #other debug values parse here
 fi
