@@ -62,7 +62,7 @@ done
 set -- "${positional_args[@]}" # restore positional parameters
 [ ! -z "${version}" ] && echo "$version_tag" && exit 0
 if [ ! -z "${debug}" ];then
-  [ "$debug" = true ] && set +x
+  [ "$debug" = true ] && set +xe
   #other debug values parse here
   [ "$debug" = 'strict' ] && set -euo pipefail
 fi
