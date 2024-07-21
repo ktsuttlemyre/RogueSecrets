@@ -59,7 +59,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 set -- "${positional_args[@]}" # restore positional parameters
-[ ! -z "${version}" ] echo "$version_tag"; exit 0
+[ ! -z "${version}" ] && echo "$version_tag" && exit 0
 if [ ! -z "${debug}" ];then
   [ "$debug" = true ] set +x
   #other debug values parse here
