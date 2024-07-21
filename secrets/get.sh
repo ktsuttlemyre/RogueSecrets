@@ -1,5 +1,6 @@
 #!/bin/bash
-set -euo pipefail
+source $( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/common/RogueArgs.sh "${@}"
+#set -euo pipefail
 IFS=$'\n\t'
 #script metadata values
 script_name=$(basename "$0")
