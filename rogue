@@ -155,7 +155,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	set -a      # turn on automatic exporting
 	source "$docker_compose_env"
 	set +a      # turn off automatic exporting
-	export ENTRYPOINT=./rogue
+	export ENTRYPOINT="${@}"
 	export CMD="${@:2}"
 
 	#Run image
