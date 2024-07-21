@@ -58,12 +58,12 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 set -- "${positional_args[@]}" # restore positional parameters
-[ "$version" = true ] echo "$version_tag"; exit 0
-if ! [ -z "${debug}" ];then
+[ ! -z "${version}" ] echo "$version_tag"; exit 0
+if[ ! -z "${debug}" ];then
   [ "$debug" = true ] set +x
   #other debug values parse here
 fi
-[ "$help" = true ]; tail -n +1 $script_dir/$script_name | sed '/^#/!q'; exit 0
+[ ! -z "${help}"]; tail -n +1 $script_dir/$script_name | sed '/^#/!q'; exit 0
 
 echo "FILE EXTENSION  = ${EXTENSION}"
 echo "SEARCH PATH     = ${SEARCHPATH}"
