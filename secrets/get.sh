@@ -1,4 +1,18 @@
-#! /bin/bash
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+script_name=$(basename "$0")
+(return 0 2>/dev/null) && sourced=true || sourced=false
+if ! $sourced; then
+ script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+ if [ -f ${script_dir}/env ];then
+  source ${script_dir}/env
+ fi
+fi
+
+function header () {
+ echo -e "RogueSecrets[${script_name}]  $1"
+}
 #reads all secrets from a bitwarden folder and loads them based on their path field
 #notes is the value
 #f_path is where to put the value (- is shell environment)
