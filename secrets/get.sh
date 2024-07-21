@@ -8,7 +8,6 @@ script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 (return 0 2>/dev/null) && sourced=true || sourced=false
 
 if ! $sourced; then
-  script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
   #do not use set -a because it will cause all these secret values to be sent to terminal
   #set -a      # turn on automatic exporting
   [ -f ${script_dir}/env ] && source ${script_dir}/env
