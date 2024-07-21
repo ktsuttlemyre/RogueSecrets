@@ -10,6 +10,9 @@ if ! $sourced; then
  fi
 fi
 
+source ./common/RogueArgs.sh "${@}"
+
+
 function header () {
  echo -e "RogueSecrets[${script_name}]  $1"
 }
