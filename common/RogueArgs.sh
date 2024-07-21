@@ -64,7 +64,7 @@ if [ ! -z "${debug}" ];then
   [ "$debug" = true ] && set +x
   #other debug values parse here
 fi
-[ ! -z "${help}"]; tail -n +1 $script_dir/$script_name | sed '/^#/!q'; exit 0
+[ ! -z "${help}"] && tail -n +1 $script_dir/$script_name | sed '/^#/!q' && exit 0
 
 echo "FILE EXTENSION  = ${EXTENSION}"
 echo "SEARCH PATH     = ${SEARCHPATH}"
