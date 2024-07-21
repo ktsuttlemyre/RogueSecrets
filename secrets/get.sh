@@ -1,13 +1,19 @@
 #!/bin/bash
 set -euo pipefail
 IFS=$'\n\t'
+#script metadata values
 script_name=$(basename "$0")
+script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+#Detect if sourced
 (return 0 2>/dev/null) && sourced=true || sourced=false
+
 if ! $sourced; then
- script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
- if [ -f ${script_dir}/env ];then
-  source ${script_dir}/env
- fi
+  script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+  #do not use set -a because it will cause all these secret values to be sent to terminal
+  #set -a      # turn on automatic exporting
+  [ -f ${script_dir}/env ] && source ${script_dir}/env
+  [ -f "$host_wd/env" ] && source "$host_wd/env"
+  #set +a      # turn off automatic exporting
 fi
 
 function header () {
@@ -19,19 +25,11 @@ function header () {
 #f_base64 means it is base 64 encoded
 #f_gzip means it is gzipped
 
-script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-#do not use this because it will cause all these values to be sent to terminal
-#set -a      # turn on automatic exporting
-source "$(dirname $script_dir)/env"
-[ -f "$host_wd/env" ] && source "$host_wd/env"
-#set +a      # turn off automatic exporting
-
 debug=false
 
 #add log4bash and debug flag
 source /rogue/libs/log4bash/log4bash.sh
 if $debug; then
-
 	log_warning "THIS WILL SHOW SECRETS TO STDOUT TERMINAL"
 	  log_debug "====      debug logging enabled      ===="
 	log_warning "THIS WILL SHOW SECRETS TO STDOUT TERMINAL"
