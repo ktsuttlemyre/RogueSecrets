@@ -64,6 +64,7 @@ set -- "${positional_args[@]}" # restore positional parameters
 if [ ! -z "${debug}" ];then
   [ "$debug" = true ] && set +x
   #other debug values parse here
+  [ "$debug" = 'strict' ] && set -euo pipefail
 fi
 [ ! -z "${help}"] && tail -n +1 $script_dir/$script_name | sed '/^#/!q' && exit 0
 
