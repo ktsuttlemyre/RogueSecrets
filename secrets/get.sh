@@ -1,7 +1,7 @@
 #!/bin/bash
 
 traverse=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-for folder in $(echo "$traverse" | sed 's/\//\n/g'); do
+for folder in $(echo "$traverse" | sed 's/\//\n/g' | cat - <(echo '\n')); do
     [ -f "$traverse/common/RogueArgs.sh" ] && source "$traverse/common/RogueArgs.sh" "${@}" && break
     traverse=$(dirname "$traverse")
 done
