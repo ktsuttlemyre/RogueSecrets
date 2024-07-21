@@ -61,7 +61,7 @@ done
 set -- "${positional_args[@]}" # restore positional parameters
 [ ! -z "${version}" ] && echo "$version_tag" && exit 0
 if [ ! -z "${debug}" ];then
-  [ "$debug" = true ] set +x
+  [ "$debug" = true ] && set +x
   #other debug values parse here
 fi
 [ ! -z "${help}"]; tail -n +1 $script_dir/$script_name | sed '/^#/!q'; exit 0
