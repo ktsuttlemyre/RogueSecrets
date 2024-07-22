@@ -174,9 +174,9 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
 	service="${image}"
 	if [ -z "${registry}" ]; then
-		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --env IS_ROGUE_CONTEXT=true --build "${service}"
+		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --remove-orphans --env IS_ROGUE_CONTEXT=true --build "${service}"
 	else
-		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --env IS_ROGUE_CONTEXT=true "${service}"
+		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --remove-orphans --env IS_ROGUE_CONTEXT=true "${service}"
 	fi
 	if ! [ -z "$is_service" ]; then
 		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) down
