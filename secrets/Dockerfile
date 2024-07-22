@@ -5,6 +5,13 @@ FROM alpine:latest
 
 RUN apk update && apk add --no-cache curl --update npm jq bash git && rm -rf /var/cache/apk/*
 
+RUN npm install -g @bitwarden/cli
+#  export url=$(curl -H "Accept: application/vnd.github+json" https://api.github.com/repos/bitwarden/cli/releas>
+#  && curl -LO "$url" \
+#  && unzip *.zip \
+#  && chmod +x ./bw \
+#  && rm bw-linux-*.zip
+
 WORKDIR /rogue/libs
 RUN git clone https://github.com/fredpalmer/log4bash.git 
 
