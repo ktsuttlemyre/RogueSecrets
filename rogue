@@ -166,7 +166,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#export CMD="${@:2}"
 
 	#create ramdisk
-	ramdisk="/tmp/RogueCLI/ramdisk$$/"
+	ramdisk="/mnt/RogueCLI_$$/ramdisk/"
 	$script_dir/common/make-ramdisk.sh 250MB "$ramdisk"
 
 	#Run image
