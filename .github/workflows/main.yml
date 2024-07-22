@@ -35,9 +35,9 @@ jobs:
       matrix:
         include:
           - IMAGE: ktsuttlemyre/roguecli
-            DOCKERFILE: .
+            DOCKERFILE: ./Dockerfile
           - IMAGE: ktsuttlemyre/roguesecrets
-            DOCKERFILE: secrets/
+            DOCKERFILE: ./secrets/Dockerfile
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
