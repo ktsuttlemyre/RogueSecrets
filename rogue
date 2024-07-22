@@ -166,8 +166,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#export CMD="${@:2}"
 
 	#create ramdisk
-	ramdisk="/mnt/RogueCLI_$$/ramdisk/"
-	$script_dir/common/make-ramdisk.sh 250MB "$ramdisk"
+	RAMDISK="/mnt/RogueCLI_$$/ramdisk/"
+	$script_dir/common/make-ramdisk.sh 250MB "$RAMDISK"
 
 	#Run image
 	#d_compose_args=(-f <( envsubst < "$docker_compose_yaml" ) --env-file <( env ))
@@ -185,7 +185,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	if ! [ -z "$is_service" ]; then
 		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) down
 	fi
-	rogue_envvars="$ramdisk.env"
+	rogue_envvars="$RAMDISK.env"
 	if [ -f rogue_envvars ]; then
 		header "Exporting secrets to current session"
 		case "$(uname)" in
@@ -194,7 +194,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		esac
 		rm "$rogue_envvars"
 	fi
- 	sudo umount "$ramdisk"
+ 	sudo umount "$RAMDISK"
 
 	exit
 fi
