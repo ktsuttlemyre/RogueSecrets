@@ -8,7 +8,7 @@ services:
         init: true
         tty: true
         entrypoint: ${ENTRYPOINT}
-        command: ${CMD}
+        #command: ${CMD}
         volumes:
             - /:/host/root/
             - ${PWD}:/host/cwd/
