@@ -52,7 +52,7 @@ fi
 secret_folder="rogue_secrets:${secret_folder}"
 
 echo "============================================="
-echo "Downloaing secrets from folder $secret_folder" 
+echo "Requesting secrets from folder $secret_folder" 
 echo "============================================="
 bw logout || true
 unset BW_SESSION
