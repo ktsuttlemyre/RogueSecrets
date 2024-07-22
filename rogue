@@ -140,17 +140,20 @@ fi
 if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	traverse="$full_path"
 	#traverse backword looking for docker-compose.yaml or docker-compose.env for context
-	docker_compose_yaml='./docker-compose.yaml'
-	docker_compose_env='./docker-compose.env'
+	docker_compose_yaml=''
+	docker_compose_env=''
 	for folder in $(echo "$traverse" | sed 's/\//\n/g' | cat  <(echo '/') - ); do
 		echo "path currently $traverse"
 		for file in $traverse/docker-compose.*; do
-			if [[ $file == *.yaml ]]; then
+			if [[ $file == *.yaml ]] && [[ -z "$docker_compose_yaml" ]]; then
 			    docker_compose_yaml="$file"
-			elif [[ $file == *.env ]]; then
+			elif [[ $file == *.env ]] && [[ -z "$docker_compose_env" ]]; then
 			    docker_compose_env="$file"
 			fi
 		done
+		if [[ ! -z "$docker_compose_yaml" ]] && [[ ! -z "$docker_compose_env" ]]; then
+			break
+		fi
 		traverse=$(dirname "$traverse")
 	done
 
