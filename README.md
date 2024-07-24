@@ -1,4 +1,15 @@
 # RogueCLI
+I need to run docker images a lot on different computers. This is a way to convert all my `functions` into `command line calls`
+
+RogueCli examples
+Get  secrets from bitwarden and inject them into the current session or save the files to disk (depending on how you have them saved in bitwarden
+```bash
+./rogue ./secrets/get.sh folder-name
+```
+```bash
+RAMDISK="/mnt/RogueCLI_$$/ramdisk/"
+rogue ./create/ramdisk.sh 250MB "$RAMDISK" -- local
+```
 
 ### Inject from Repo
 To use the bash scripts directly from the repo
@@ -20,11 +31,22 @@ mkdir -p ${wdir}; cd ${wdir}; curl -LkSs 'https://api.github.com/repos/${repo}ta
 
 docker run -it --entrypoint ./secrets/get.sh ghcr.io/ktsuttlemyre/roguesecrets:main
 
+# Logic
+when running 
+```bash
+./rogue ./secrets/get.sh folder-name
+```
+.The wrapper `/rogue` will search backwards through the path to find docker-compose .yaml and .env files. if they are found then those containers are ran
+If not found then the root of the repo has a catch all docker-compse yaml and env that will run and a temporary ramdisk is created for communicating back to the host.
+when the container runs it sends the same command to the container but sets environment varialbe `IS_ROGUE_CONTEXT=true` which will run the roguerunner portion of the `./rogue` script
+this will search through the path going from root to child looking for .env and .sh files that need to run in order to handle logins, env setup, etc till finally the .sh requested will run
+The container has access to the host folders listed below See # Host Folders
+anything left in the ramdisk location at /host/ramdisk will be available to the wrapper for a short time. This is currently used to transfer secrets from ./secrets/get.sh into the environment
 
 
 
 # Working inside docker container
-### Paths
+### Host folders
 From in the docker image these paths map to host
  - /host/root is the root folder of the host
  - /host/home is the home of the current user
