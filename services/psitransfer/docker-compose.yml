@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+    psitransfer:
+        ports:
+            - 0.0.0.0:3000:3000
+        environment:
+            - PSITRANSFER_ADMIN_PASS=secret
+        volumes:
+            - ${psitranser_volume_data:-$HOME/psitransfer}:/data
+        image: psitrax/psitransfer
+# data volume needs UID 1000

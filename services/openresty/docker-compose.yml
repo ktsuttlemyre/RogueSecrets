@@ -1,0 +1,16 @@
+services:
+    openresty:
+        restart: unless-stopped
+        ports:
+          # These ports are in format <host-port>:<container-port>
+          - ${openresty_http:-82}:80 # Public HTTP Port
+          - ${openresty_https:-445}:443 # Public HTTPS Port
+        volumes:
+            - ${openresty_conf:-~/openresty/conf}:/usr/local/openresty/nginx/conf/
+            - ${openresty_static_files:-~/openresty/static_files}:/usr/share/nginx/html
+            - ${openresty_scripts:-~/openresty/scripts}:/scripts
+
+            #this is for the npm index
+            #- /opt/RogueOS/service-containers/nginx-proxy-manager/scripts:/npm_scripts
+            #- ${nginx_proxy_manager_volume_data:-~/nginx-proxy-manager/data}:/npm_data
+        image: openresty/openresty:jammy

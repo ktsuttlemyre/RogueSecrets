@@ -1,0 +1,5 @@
+services:
+  novnc:
+    deploy:
+      labels:
+        service.rogue: "RogueService"

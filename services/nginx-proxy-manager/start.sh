@@ -1,0 +1,7 @@
+export nginx_proxy_manager_http=80
+export nginx_proxy_manager_https=443
+export nginx_proxy_manager_portal=81
+export nginx_proxy_manager_db_password=
+export nginx_proxy_manager_volume_data=~/nginx-proxy-manager/data
+export nginx_proxy_manager_volume_letsencrypt=~/RogueServices/nginx-proxy-manager/letsencrypt
+export nginx_proxy_manager_volume_database=~/RogueServices/nginx-proxy-manager/mysql

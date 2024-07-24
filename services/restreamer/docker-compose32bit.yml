@@ -1,0 +1,30 @@
+#32 bit services
+version: "3.8"
+services:
+    restreamer:
+        container_name: restreamer
+        restart: unless-stopped
+        privileged: true
+        volumes:
+            - /opt/core/config:/core/config
+            - /opt/core/data:/core/data
+        ports:
+            - 80:8080
+            - 443:8181
+            - 1935:1935
+            - 1936:1936
+            - 6000:6000/udp
+        image: datarhei/restreamer:rpi-latest
+       # network_mode: host
+
+    cloudflared:
+        container_name: cloudflared
+        restart: unless-stopped
+        image: zoeyvid/cloudflared:dns-2023.8.2
+        command:
+            - tunnel
+            - --no-autoupdate
+            - run
+            - --token
+            - ${CLOUDFLARED_TUNNEL_TOKEN}
+       # network_mode: host

@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  app:
+    # Variables
+    container_name: discord-shell
+    hostname: discord-shell
+    #command: python3 pyDiscordShellBot.py
+    image: rogueos/discord-shell
+    restart: unless-stopped
+    # ports:
+    #     - ${discord_shell_port:-6080}:6080
+    build: .
+    environment:
+      variable: "value"
+    volumes:
+      - ${discord_shell_config:-~/discord-shell}:/app/data
+
+

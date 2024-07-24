@@ -1,0 +1,49 @@
+#https://github.com/gotget/docker-novnc/
+version: '3'
+
+services:
+
+    novnc:
+        # Variables
+        container_name: novnc
+        hostname: novnc
+        command: --vnc host.docker.internal:5900
+        networks:
+            - novnc_network
+        # Constants
+        image: rogueos/novnc
+        restart: unless-stopped
+        ports:
+            - ${novnc_http:-6080}:6080
+        build: .
+
+    # websockify:
+    #     stdin_open: true
+    #     tty: true
+    #     ports:
+    #         - 6081:80
+    #     image: novnc/websockify
+    #     command: 80 127.0.0.1:5900
+
+    # web:
+
+    #     # Variables
+    #     container_name: nginx
+    #     volumes:
+    #         - /srv/letsencrypt/etc/:/etc/letsencrypt/:ro
+    #         - /srv/nginx/etc/:/etc/nginx/:ro
+    #         - /srv/nginx/log/:/var/log/nginx/
+    #         - /srv/sites/:/sites/:ro
+    #         - /srv/sites/default/:/usr/share/nginx/html/:ro
+    #     networks:
+    #         - novnc_network
+    #     # Constants
+    #     image: nginx:latest
+    #     restart: always
+    #     ports:
+    #         - 80:80      # HTTP
+    #         - 443:443    # HTTPS
+
+networks:
+    novnc_network:
+        driver: bridge
