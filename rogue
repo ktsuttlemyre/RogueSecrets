@@ -91,7 +91,8 @@ inpath=$1
 #https://medium.com/oracledevs/creating-an-oracle-cloud-infrastructure-cli-toolkit-docker-image-35be0ca71aa
 
 if [ "$1" == "--" ]; then
-  if [ "$2" == "reset" ]; then
+case $2 in
+  reset)
     cd ..
     rm -rf RogueSecrets/
     docker rmi $(docker images --filter=reference="rogueos/*:*" -q) -f
@@ -99,7 +100,14 @@ if [ "$1" == "--" ]; then
     cd RogueSecrets/
     chmod +x ./index.sh ./reset.sh
     #./index.sh
-  fi
+    ;;
+
+  local | is_rogue_context | use_current_context )
+    IS_ROGUE_CONTEXT=true
+    ;;
+  *)
+    echo -n "unknown argument"
+    ;;
 fi
 
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
@@ -167,7 +175,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 
 	#create ramdisk
 	RAMDISK="/mnt/RogueCLI_$$/ramdisk/"
-	$script_dir/common/make-ramdisk.sh 250MB "$RAMDISK"
+	rogue ./create/ramdisk.sh 250MB "$RAMDISK" -- local
 
 	#Run image
 	#d_compose_args=(-f <( envsubst < "$docker_compose_yaml" ) --env-file <( env ))
