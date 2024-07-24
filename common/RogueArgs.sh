@@ -72,7 +72,20 @@ if [ ! -z "${debug}" ];then
   #other debug values parse here
   [ "$debug" = 'strict' ] && set -euo pipefail
 fi
-[ ! -z "${help}"] && tail -n +1 $script_dir/$script_name | sed '/^#/!q' && exit 0;
+if [ ! -z "${help}"]; then
+  #todo make readme case insensitive
+  if [ -f $script_dir/README.md ]; then
+    # if glow exists then use that
+    if command -v glow &> /dev/null; then
+      glow "$script_dir/README.md"
+    else
+      cat "$script_dir/README.md"
+    fi
+  else
+    tail -n +1 $script_dir/$script_name | sed '/^#/!q'
+  fi
+exit 0;
+fi
 :;
 
 # echo "FILE EXTENSION  = ${EXTENSION}"
