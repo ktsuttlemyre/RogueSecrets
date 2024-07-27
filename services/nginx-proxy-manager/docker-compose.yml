@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  app:
+  rogue-gateway:
     image: 'jc21/nginx-proxy-manager:latest'
     restart: unless-stopped
     ports:
@@ -29,6 +29,8 @@ services:
       #- ${nginx_proxy_manager_volume_configs:-/opt/RogueOS/service-containers/nginx-proxy-manager/configs}:/data/nginx/custom
     depends_on:
       - db
+    networks:
+      - rogue-network
 
   db:
     image: 'jc21/mariadb-aria:latest'
@@ -40,3 +42,10 @@ services:
       MYSQL_PASSWORD: ${nginx_proxy_manager_db_password:?error}
     volumes:
       - ${nginx_proxy_manager_volume_database:-~/nginx-proxy-manager/mysql}:/var/lib/mysql
+    networks:
+      - rogue-network
+
+networks:
+  rogue-network:
+    driver: bridge
+    
