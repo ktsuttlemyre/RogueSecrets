@@ -1,9 +1,47 @@
 version: "3"
-
+name: ${project}
 services:
-    client:
-        image: nginx
-        ports:
-            - 8000:80
+    ${image}: #this is the service name
+        image: ${registry}${project}/${image}:${tag}
+        name: ${image}-${PID}
+        container_name: ${image}-${PID}
+        hostname: ${image} #optional
+        environment:
+          - PUID=${PUID:-1000}
+          - PGID=${GUID:-1000}
+          #- USER=${USERNAME} #not sure if this should be done?
+          - TZ=Etc/UTC
+        restart: unless-stopped
+        network: rogue-gateway_rogue-network
+        build:
+            context: ${CONTEXT:-$PWD}
+        stdin_open: true
+        init: true
+        tty: true
+        entrypoint: ${ENTRYPOINT}
+        #command: ${CMD}
         volumes:
-            - ~/restreamer:/usr/share/nginx/html
+            - /:/host/root/
+            - ${PWD}:/host/cwd/
+            - ${PARENT}:/host/parent/
+            - ${RAMDISK}:/host/ramdisk/
+            - ${HOME:-~}:/host/home/
+
+ #       env_file:
+ #           - /under/my
+ #       working_dir: /tmp/roguesecrets
+networks:
+  rogue-gatway_rogue-network:
+    external: true
+
+
+    
+# version: "3"
+
+# services:
+#     client:
+#         image: nginx
+#         ports:
+#             - 8000:80
+#         volumes:
+#             - ~/restreamer:/usr/share/nginx/html
