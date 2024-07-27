@@ -144,6 +144,11 @@ if [[ -d "$full_path" ]] || [[ ! -x "$full_path" ]]; then
     exit 1
 fi
 
+export PID=$$
+export USERNAME=${USER:-$(whoami)}
+export PUID=${UID:-$(id -u $USERNAME)}
+export PGID=$(id -g $USERNAME)
+
 #if is_context isn't set then find the context to run this command
 if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	traverse="$full_path"
