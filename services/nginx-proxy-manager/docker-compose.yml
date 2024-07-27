@@ -1,16 +1,18 @@
 version: '3.8'
+name: ${project:-rogue-gateway}
 services:
   rogue-gateway:
     image: 'jc21/nginx-proxy-manager:latest'
-    restart: unless-stopped
-    ports:
-      # These ports are in format <host-port>:<container-port>
-      - ${nginx_proxy_manager_http:-80}:80 # Public HTTP Port
-      - ${nginx_proxy_manager_https:-443}:443 # Public HTTPS Port
-      - ${nginx_proxy_manager_portal:-81}:81 # Admin Web Port
-      # Add any other Stream port you want to expose
-      # - '21:21' # FTP
+    build:
+      context: ${CONTEXT:-$PWD}
+    name: ${image}-${PID}
+    container_name: ${image}-${PID}
+    hostname: ${image} #optional
     environment:
+      #- PUID=${PUID:-1000}
+      #- PGID=${GUID:-1000}
+      #- USER=${USERNAME} #not sure if this should be done?
+      - TZ=Etc/UTC
       # Mysql/Maria connection parameters:
       DB_MYSQL_HOST: "db"
       DB_MYSQL_PORT: 3306
@@ -19,14 +21,27 @@ services:
       DB_MYSQL_NAME: "npm"
       # Uncomment this if IPv6 is not enabled on your host
       # DISABLE_IPV6: 'true'
+    restart: unless-stopped
+    ports:
+      # These ports are in format <host-port>:<container-port>
+      - ${nginx_proxy_manager_http:-80}:80 # Public HTTP Port
+      - ${nginx_proxy_manager_https:-443}:443 # Public HTTPS Port
+      - ${nginx_proxy_manager_portal:-81}:81 # Admin Web Port
+      # Add any other Stream port you want to expose
+      # - '21:21' # FTP
     volumes:
       - ${nginx_proxy_manager_volume_data:-~/nginx-proxy-manager/data}:/data
       - ${nginx_proxy_manager_volume_letsencrypt:-~/nginx-proxy-manager/letsencrypt}:/etc/letsencrypt
       #for communicating what services are awake,asleep,sleeping,waking
-      - ${ramdisk:?error}/nginx_fsocket:/nginx_fsocket
+      - ${RAMDISK:?error}/nginx_fsocket:/nginx_fsocket
       #TODO dont use /opt/rogueos hardcode
       - ${nginx_proxy_manager_volume_scripts:-/opt/RogueOS/service-containers/nginx-proxy-manager/scripts}:/scripts
       #- ${nginx_proxy_manager_volume_configs:-/opt/RogueOS/service-containers/nginx-proxy-manager/configs}:/data/nginx/custom
+      # - /:/host/root/
+      # - ${PWD}:/host/cwd/
+      # - ${PARENT}:/host/parent/
+      # - ${RAMDISK}:/host/ramdisk/
+      # - ${HOME:-~}:/host/home/
     depends_on:
       - db
     networks:
