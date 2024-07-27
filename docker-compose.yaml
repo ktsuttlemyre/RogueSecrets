@@ -1,7 +1,18 @@
 version: "3"
 name: ${project}
 services:
-    ${image}:
+    ${image}: #this is the service name
+        image: ${registry}${project}/${image}:${tag}
+        name: ${image}-${PID}
+        container_name: ${image}-${PID}
+        hostname: ${image} #optional
+        environment:
+          - PUID=${PUID:-1000}
+          - PGID=${GUID:-1000}
+          #- USER=${USERNAME} #not sure if this should be done?
+          - TZ=Etc/UTC
+        restart: unless-stopped
+        #network: rogue-gateway_rogue-network
         build:
             context: ${CONTEXT:-$PWD}
         stdin_open: true
@@ -19,4 +30,6 @@ services:
  #       env_file:
  #           - /under/my
  #       working_dir: /tmp/roguesecrets
-        image: ${registry}${project}/${image}:${tag}
+#networks:
+#  rogue-gatway_rogue-network:
+#    external: true
