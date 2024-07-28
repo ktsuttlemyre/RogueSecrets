@@ -172,7 +172,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#export CMD="${@:2}"
 
 	#create ramdisk
-	RAMDISK="/tmp/RogueCLI_$$/ramdisk/"
+	RAMDISK="RogueCLI_ramdisk_$$"
 	#TODO run local scripts through rougue cause its neat
 	#IS_ROGUE_CONTEXT=true ./rogue ./create/ramdisk.sh .250G "$RAMDISK" -- local
 	#./rogue ./create/ramdisk.sh .250G "$RAMDISK" -- local
