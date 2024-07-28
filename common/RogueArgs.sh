@@ -32,6 +32,14 @@ else # stat -f %HT == Character Device
   is_stdin=false
 fi
 
+#functions
+header () {
+ echo -e "RogueSecrets[${script_name}]  $1"
+}
+debugger () {
+  read -p "Press key to continue.. " -n1 -s
+}
+
 positional_args=()
 while [[ $# -gt 0 ]]; do
   case $1 in
