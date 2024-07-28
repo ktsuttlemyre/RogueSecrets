@@ -14,8 +14,8 @@ else
 		# the requested size. The script errors out when less RAM is free that the RAM-disk should be in size because that would lead to 
 		# an impossible combination that is oddly enough still executable. E.g. my system has 16G of RAM and I could create a RAM-disk of 20G 
 		# using the command below and it would be created... This should not be possible.
-		echo Too big of a RAM-disk to fit into your available RAM. No RAM-disk was created.
-		echo The maximum size of a RAM-disk currently possible is `grep 'MemFree' /proc/meminfo | cut -d: -f2`
+		echo 'Too big of a RAM-disk to fit into your available RAM. No RAM-disk was created.'
+		echo "The maximum size of a RAM-disk currently possible is $(grep 'MemFree' /proc/meminfo | cut -d: -f2)"
 	else
  		if [ "$OSTYPE" == "darwin"* ]; then
 			#https://superuser.com/questions/1480144/creating-a-ram-disk-on-macos
