@@ -55,7 +55,7 @@ jobs:
         # check this thread to understand why its needed:
         # https://stackoverflow.com/a/70447517
         run: |
-          find $PWD -type f -iname *.sh -exec chmod +x {} \;
+          find $PWD -type f -iname "*.sh" -exec chmod +x {} \;
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
