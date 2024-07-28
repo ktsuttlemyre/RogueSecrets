@@ -178,16 +178,15 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#./rogue ./create/ramdisk.sh .250G "$RAMDISK" -- local
 	./create/ramdisk.sh 250M "$RAMDISK"
 	#Create dynamic docker-compose.yaml
-	#TODO
-	#${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config 
+	service="${image}"
+	${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config 
 	#d_compose_args=${docker_compose_yamls[@]} --env-file <(env)
 	# ${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config | ${d_compose[@]} -f - up --pull always --build
 	#run
 	${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config | ${d_compose[@]} -f - pull
 	#get workdir from image
 	#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
-	service="${image}"
-        ${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config
+
 	debugger 
 	if [ -z "${registry}" ]; then
 		${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config | ${d_compose[@]} -f - run --remove-orphans --env IS_ROGUE_CONTEXT=true --build "${service}"
