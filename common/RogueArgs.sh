@@ -39,7 +39,7 @@ header () {
  echo -e "Rogue[${parent_name}]  $1"
 }
 debugger () {
-  read -p "Press key to continue.. " -n1 -s
+  read -p "RogueDebugger[${parent_name}] continue? " -n1 -s
 }
 
 positional_args=()
