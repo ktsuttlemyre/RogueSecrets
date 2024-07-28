@@ -4,7 +4,7 @@ if [ "$#" -gt 2 ]; then
 	echo "No more than 2 arguments allowed"
 else
 	ramdisk="${2:-/mnt/ramdisk}"
-	if [[ df | grep "$ramdisk" > /dev/null ]]; then
+	if df | grep "$ramdisk" > /dev/null; then
 		echo "$ramdisk already mounted"
 	elif [ $(grep 'MemFree' /proc/meminfo | grep -o [0-9]*) -lt $(numfmt --from=iec $1 --to-unit=1024) ]; then
 		# /proc/meminfo contains lots of information on your memory including the amount of available free memory
