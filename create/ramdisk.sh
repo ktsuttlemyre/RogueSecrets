@@ -6,7 +6,7 @@ else
 	ramdisk="${2:-/mnt/ramdisk}"
 	if df | grep "$ramdisk" > /dev/null; then
 		echo "$ramdisk already mounted"
-	elif [ `grep 'MemFree' /proc/meminfo | grep -o [0-9]*` -lt `numfmt --from=iec $1 --to-unit=1024` ]; then
+	elif [ $(grep 'MemFree' /proc/meminfo | grep -o [0-9]*) -lt $(numfmt --from=iec $1 --to-unit=1024) ]; then
 		# /proc/meminfo contains lots of information on your memory including the amount of available free memory
 		# this information is put through grep to find that exact line that contains the free memory then grep is used again to 
 		# remove everything but the numbers (leading to a number with no whitespaces and no unit). That is then compared with the requested RAM-disksize
