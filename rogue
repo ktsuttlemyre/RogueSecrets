@@ -174,7 +174,6 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#create ramdisk
 	RAMDISK="/mnt/RogueCLI_$$/ramdisk/"
 	./rogue ./create/ramdisk.sh 250MB "$RAMDISK" -- local
-	debugger
 	#Create dynamic docker-compose.yaml
 	#TODO
 	#${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config 
@@ -185,6 +184,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#get workdir from image
 	#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
 	service="${image}"
+        ${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config
+	debugger 
 	if [ -z "${registry}" ]; then
 		${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config | ${d_compose[@]} -f - run --remove-orphans --env IS_ROGUE_CONTEXT=true --build "${service}"
 	else
