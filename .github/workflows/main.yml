@@ -20,9 +20,16 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-  
+
 jobs:
+  #prepare:
+    #runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+    #steps:
+      # upload the file here for later use
+      #- name: precomile stuff
+      #uses: actions/upload-artifact
   build:
+    #needs: prepare
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     permissions:
       contents: read
@@ -39,6 +46,9 @@ jobs:
           - IMAGE: ktsuttlemyre/roguesecrets
             DOCKERFILE: ./secrets/Dockerfile
     steps:
+      # download the file here so you can use it
+      #- name: download artifact
+      #  uses: actions/download-artifact
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: request pull
@@ -120,8 +130,16 @@ jobs:
       #     subject-name: ${{ env.REGISTRY }}/${{ matrix.IMAGE }}
       #     subject-digest: ${{ steps.push.outputs.digest }}
       #     push-to-registry: true
+  complete:
+    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+    steps:
       - name: Send out message to hosts
         # check this thread to understand why its needed:
         # https://stackoverflow.com/a/70447517
         run: |
-          wget -O- -q --header="X-Auth-Token: ${{ secrets.KQSFL_UPDATE_TOKEN }}" https://cab1.kqsfl.com/update > /dev/null
+          # secret=${{ secrets.KQSFL_UPDATE_TOKEN }}
+          # if [ "$secret" == '' ]; then
+          #   echo "available=false" >> $GITHUB_OUTPUT;
+          # fi
+
+          wget -O- -q --header="X-Auth-Token: ${{ secrets.KQSFL_UPDATE_TOKEN }}" https://cab1.kqsfl.com/update > /dev/null || true #always return true
