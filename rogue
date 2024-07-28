@@ -173,7 +173,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 
 	#create ramdisk
 	RAMDISK="/mnt/RogueCLI_$$/ramdisk/"
-	./rogue ./create/ramdisk.sh 250MB "$RAMDISK" -- local
+	IS_ROGUE_CONTEXT=true ./rogue ./create/ramdisk.sh 250MB "$RAMDISK" -- local
 	#Create dynamic docker-compose.yaml
 	#TODO
 	#${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config 
