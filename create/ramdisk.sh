@@ -30,5 +30,5 @@ case "$OSTYPE" in
   ;; 
   msys*)    echo "WINDOWS";exit 1 ;;
   cygwin*)  echo "ALSO WINDOWS";exit 1 ;;
-  *)        sudo mkdir -p "$ramdisk" && sudo mount -t tmpfs -o size=$1 $ramdisk && echo "RAM-disk of $1 created" ;;
+  *)        sudo mkdir -p "$ramdisk" && sudo mount -t tmpfs tmpfs $ramdisk -o size=$1 && echo "RAM-disk of $1 created" ;;
 esac
