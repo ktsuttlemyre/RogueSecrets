@@ -147,6 +147,7 @@ export PGID=$(id -g $USERNAME)
 
 #if is_context isn't set then find the context to run this command
 if [ -z "${IS_ROGUE_CONTEXT}" ]; then
+	debugger
 	traverse="$full_path" #todo this should not be exact path but relative to current working directory
 	path=''
 	#traverse backword looking for docker-compose.yaml or docker-compose.env for context
@@ -173,7 +174,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#create ramdisk
 	RAMDISK="/mnt/RogueCLI_$$/ramdisk/"
 	./rogue ./create/ramdisk.sh 250MB "$RAMDISK" -- local
-
+	debugger
 	#Create dynamic docker-compose.yaml
 	#TODO
 	#${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config 
