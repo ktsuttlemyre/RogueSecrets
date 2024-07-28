@@ -91,22 +91,23 @@ inpath=$1
 #https://medium.com/oracledevs/creating-an-oracle-cloud-infrastructure-cli-toolkit-docker-image-35be0ca71aa
 
 if [ "$1" == "--" ]; then
-case $2 in
-  reset)
-    cd ..
-    rm -rf RogueSecrets/
-    docker rmi $(docker images --filter=reference="rogueos/*:*" -q) -f
-    git clone https://github.com/ktsuttlemyre/RogueSecrets.git
-    cd RogueSecrets/
-    chmod +x ./index.sh ./reset.sh
-    #./index.sh
-    ;;
-  local | is_rogue_context | use_current_context )
-    IS_ROGUE_CONTEXT=true
-    ;;
-  *)
-    echo -n "unknown argument"
-    ;;
+  case $2 in
+    reset)
+      cd ..
+      rm -rf RogueSecrets/
+      docker rmi $(docker images --filter=reference="rogueos/*:*" -q) -f
+      git clone https://github.com/ktsuttlemyre/RogueSecrets.git
+      cd RogueSecrets/
+      chmod +x ./index.sh ./reset.sh
+      #./index.sh
+      ;;
+    local | is_rogue_context | use_current_context )
+      IS_ROGUE_CONTEXT=true
+      ;;
+    *)
+      echo -n "unknown argument"
+      ;;
+  esac
 fi
 
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
