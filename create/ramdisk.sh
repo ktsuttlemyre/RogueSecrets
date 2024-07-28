@@ -19,12 +19,13 @@ if [ $(grep 'MemFree' /proc/meminfo | grep -o [0-9]*) -lt $(numfmt --from=iec $1
 	# using the command below and it would be created... This should not be possible.
 	echo 'Too big of a RAM-disk to fit into your available RAM. No RAM-disk was created.'
 	echo "The maximum size of a RAM-disk currently possible is $(grep 'MemFree' /proc/meminfo | cut -d: -f2)"
+ 	exit 1
+fi
+
+if [ "$OSTYPE" == "darwin"* ]; then
+	#https://superuser.com/questions/1480144/creating-a-ram-disk-on-macos
+	#brew install entr
+	diskutil apfs create $(hdiutil attach -nomount ram://8192) RogueOSRam && touch $ramdisk/.metadata_never_index
 else
-	if [ "$OSTYPE" == "darwin"* ]; then
-		#https://superuser.com/questions/1480144/creating-a-ram-disk-on-macos
-		#brew install entr
-		diskutil apfs create $(hdiutil attach -nomount ram://8192) RogueOSRam && touch $ramdisk/.metadata_never_index
-	else
-		sudo mount -t tmpfs tmpfs "$ramdisk" -o size=$1 && echo RAM-disk of $1 created
-	fi
+	sudo mount -t tmpfs tmpfs "$ramdisk" -o size=$1 && echo RAM-disk of $1 created
 fi
