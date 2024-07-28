@@ -1,7 +1,7 @@
 #!/bin/bash
 source $( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/common/RogueArgs.sh "${@}"
 
-#set -euo pipefail
+set -euo pipefail
 set -ex
 IFS=$'\n\t'
 #script metadata values
@@ -101,7 +101,6 @@ case $2 in
     chmod +x ./index.sh ./reset.sh
     #./index.sh
     ;;
-
   local | is_rogue_context | use_current_context )
     IS_ROGUE_CONTEXT=true
     ;;
