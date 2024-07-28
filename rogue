@@ -151,30 +151,26 @@ export PGID=$(id -g $USERNAME)
 
 #if is_context isn't set then find the context to run this command
 if [ -z "${IS_ROGUE_CONTEXT}" ]; then
-	traverse="$full_path"
+	traverse="$full_path" #todo this should not be exact path but relative to current working directory
+	path=''
 	#traverse backword looking for docker-compose.yaml or docker-compose.env for context
-	docker_compose_yaml=''
-	docker_compose_env=''
+	docker_compose_yamls=()
 	for folder in $(echo "$traverse" | sed 's/\//\n/g' | cat  <(echo '/') - ); do
-		echo "path currently $traverse"
-		for file in $traverse/docker-compose.*; do
-			if [[ $file == *.yaml ]] && [[ -z "$docker_compose_yaml" ]]; then
-			    docker_compose_yaml="$file"
-			elif [[ $file == *.env ]] && [[ -z "$docker_compose_env" ]]; then
-			    docker_compose_env="$file"
+		path="$path$folder${path:0:1}"
+		#echo "$path ===== $folder===== $traverse";
+		for file in $path/docker-compose.*; do
+			if [[ $file == *.yaml ]]; then
+			    docker_compose_yamls+=('-f' "<( envsubst < $file )" "$docker_compose_yamls[@]}")
+			elif [[ $file == *.env ]]; then
+			    set -a      # turn on automatic exporting
+			    source "$file"
+			    set +a      # turn off automatic exporting
 			fi
 		done
-		if [[ ! -z "$docker_compose_yaml" ]] && [[ ! -z "$docker_compose_env" ]]; then
-			break
-		fi
 		traverse=$(dirname "$traverse")
 	done
 
 	export PARENT=$(dirname "$PWD")
-	#custom image name
-	set -a      # turn on automatic exporting
-	source "$docker_compose_env"
-	set +a      # turn off automatic exporting
 	export ENTRYPOINT="${@}"
 	#export CMD="${@:2}"
 
@@ -182,21 +178,23 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	RAMDISK="/mnt/RogueCLI_$$/ramdisk/"
 	rogue ./create/ramdisk.sh 250MB "$RAMDISK" -- local
 
-	#Run image
-	#d_compose_args=(-f <( envsubst < "$docker_compose_yaml" ) --env-file <( env ))
-	# up ${d_compose[@]} -f <( envsubst < "$docker_compose_yaml" ) --env-file <( env ) up --pull always --build
+	#Create dynamic docker-compose.yaml
+	#TODO
+	#${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config 
+	#d_compose_args=${docker_compose_yamls[@]} --env-file <(env)
+	# ${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config | ${d_compose[@]} up --pull always --build
 	#run
-	${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) pull
+	${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config | ${d_compose[@]} pull
 	#get workdir from image
 	#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
 	service="${image}"
 	if [ -z "${registry}" ]; then
-		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --remove-orphans --env IS_ROGUE_CONTEXT=true --build "${service}"
+		${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config | ${d_compose[@]} run --remove-orphans --env IS_ROGUE_CONTEXT=true --build "${service}"
 	else
-		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) --env-file <(env) run --remove-orphans --env IS_ROGUE_CONTEXT=true "${service}"
+		${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config | ${d_compose[@]} run --remove-orphans --env IS_ROGUE_CONTEXT=true "${service}"
 	fi
 	if ! [ -z "$is_service" ]; then
-		${d_compose[@]} -f <(envsubst < "$docker_compose_yaml" ) down
+		${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config | ${d_compose[@]} down
 	fi
 	rogue_envvars="$RAMDISK.env"
 	if [ -f rogue_envvars ]; then
