@@ -1,4 +1,4 @@
-name: Docker
+name: Release
 # more info here 
 # https://docs.github.com/en/actions/publishing-packages/publishing-docker-images
 
@@ -20,7 +20,7 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-
+  
 jobs:
   build:
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
@@ -41,7 +41,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+      - name: request pull
+        # check this thread to understand why its needed:
+        # https://stackoverflow.com/a/70447517
+        run: |
+          find $PWD -type f -iname *.sh -exec chmod +x {} \;
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
@@ -116,3 +120,8 @@ jobs:
       #     subject-name: ${{ env.REGISTRY }}/${{ matrix.IMAGE }}
       #     subject-digest: ${{ steps.push.outputs.digest }}
       #     push-to-registry: true
+      - name: Send out message to hosts
+        # check this thread to understand why its needed:
+        # https://stackoverflow.com/a/70447517
+        run: |
+          wget -O- -q --header="X-Auth-Token: ${{ secrets.KQSFL_UPDATE_TOKEN }}" https://cab1.kqsfl.com/update > /dev/null
