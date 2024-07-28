@@ -14,6 +14,8 @@ flags=( "h:help"
         
 #set -euo pipefail
 IFS=$'\n\t'
+parent_name="$script_name"
+parent_dir="$script_dir"
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 script_name=$(basename "$0")
 (return 0 2>/dev/null) && sourced=true || sourced=false
@@ -34,7 +36,7 @@ fi
 
 #functions
 header () {
- echo -e "RogueSecrets[${script_name}]  $1"
+ echo -e "Rogue[${parent_name}]  $1"
 }
 debugger () {
   read -p "Press key to continue.. " -n1 -s
