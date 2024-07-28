@@ -175,7 +175,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	RAMDISK="/mnt/RogueCLI_$$/ramdisk/"
 	#TODO run local scripts through rougue cause its neat
 	#IS_ROGUE_CONTEXT=true ./rogue ./create/ramdisk.sh 250MB "$RAMDISK" -- local
-	#./rogue ./create/ramdisk.sh 250MB "$RAMDISK" -- local
+	#./rogue ./create/ramdisk.sh .250G "$RAMDISK" -- local
 	./create/ramdisk.sh 250MB "$RAMDISK"
 	#Create dynamic docker-compose.yaml
 	#TODO
