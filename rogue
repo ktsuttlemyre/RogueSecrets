@@ -176,7 +176,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#TODO run local scripts through rougue cause its neat
 	#IS_ROGUE_CONTEXT=true ./rogue ./create/ramdisk.sh .250G "$RAMDISK" -- local
 	#./rogue ./create/ramdisk.sh .250G "$RAMDISK" -- local
-	./create/ramdisk.sh .250G "$RAMDISK"
+	./create/ramdisk.sh .25G "$RAMDISK"
 	#Create dynamic docker-compose.yaml
 	#TODO
 	#${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config 
