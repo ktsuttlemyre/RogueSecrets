@@ -22,4 +22,10 @@ if [ "$(grep 'MemFree' /proc/meminfo | grep -o [0-9]*)" -lt "$(numfmt --from=iec
  	exit 1
 fi
 
-
+if[ "$OSTYPE" == "darwin"* ]; then
+	#https://superuser.com/questions/1480144/creating-a-ram-disk-on-macos
+	#brew install entr
+	diskutil apfs create $(hdiutil attach -nomount ram://8192) RogueOSRam && touch $ramdisk/.metadata_never_index
+else
+	sudo mount -t tmpfs tmpfs "$ramdisk" -o size=$1 && echo RAM-disk of $1 created
+fi
