@@ -145,20 +145,22 @@ export USERNAME=${USER:-$(whoami)}
 export PUID=${UID:-$(id -u $USERNAME)}
 export PGID=$(id -g $USERNAME)
 
+export PARENT=$(dirname "$PWD")
+export ENTRYPOINT="${@}"
+#export CMD="${@:2}"
+
+envvars=$(env || printenv)
+
 #if is_context isn't set then find the context to run this command
 if [ -z "${IS_ROGUE_CONTEXT}" ]; then
-	debugger
 	traverse="$full_path" #todo this should not be exact path but relative to current working directory
 	path=''
-	#traverse backword looking for docker-compose.yaml or docker-compose.env for context
-	docker_compose_yamls=()
+	#set env correctly (iterate from parent to child)
 	for folder in $(echo "$traverse" | sed 's/\//\n/g' | cat  <(echo '/') - ); do
 		path="$path$folder${path:0:1}"
 		#echo "$path ===== $folder===== $traverse";
 		for file in $path/docker-compose.*; do
-			if [[ $file == *.yaml ]]; then
-			    docker_compose_yamls+=('-f <(envsubst < $file)') # "$docker_compose_yamls[@]}"
-			elif [[ $file == *.env ]]; then
+			if [[ $file == *.env ]]; then
 			    set -a      # turn on automatic exporting
 			    source "$file"
 			    set +a      # turn off automatic exporting
@@ -167,10 +169,25 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		traverse=$(dirname "$traverse")
 	done
 
-	export PARENT=$(dirname "$PWD")
-	export ENTRYPOINT="${@}"
-	#export CMD="${@:2}"
-
+	#generate docker_compose_yaml (iterate from parent to child)
+	traverse="$full_path" #todo this should not be exact path but relative to current working directory
+	path=''
+	docker_compose_yaml=''
+	for folder in $(echo "$traverse" | sed 's/\//\n/g' | cat  <(echo '/') - ); do
+		path="$path$folder${path:0:1}"
+		#echo "$path ===== $folder===== $traverse";
+		for file in $path/docker-compose.*; do
+			if [[ $file == *.yaml ]]; then
+			    docker_compose_yaml=$(${d_compose[@]} -f <("$docker_compose_yaml") -f <( envsubst < $file ) --env-file <("$envvars") config)
+			fi
+		done
+		traverse=$(dirname "$traverse")
+	done
+	echo $envvars
+	echo "============"
+	echo "============"
+	echo "$docker_compose_yaml"
+	exit
 	#create ramdisk
 	RAMDISK="RogueCLI_ramdisk_$$"
 	#TODO run local scripts through rougue cause its neat
@@ -207,7 +224,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	fi
  	sudo umount "$RAMDISK"
 
-	exit
+	exit 0
 fi
 
 
