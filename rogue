@@ -164,12 +164,10 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	for folder in $(echo "$traverse" | sed 's/\//\n/g' | cat  <(echo '/') - ); do
 		path="$path$folder${path:0:1}"
 		#echo "$path ===== $folder===== $traverse";
-		for file in $path/docker-compose.*; do
-			if [[ $file == *.env ]]; then
-			    set -a      # turn on automatic exporting
-			    source "$file"
-			    set +a      # turn off automatic exporting
-			fi
+		for file in $path/docker-compose.env; do
+		    set -a      # turn on automatic exporting
+		    source "$file"
+		    set +a      # turn off automatic exporting
 		done
 		traverse=$(dirname "$traverse")
 	done
@@ -181,17 +179,16 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	for folder in $(echo "$traverse" | sed 's/\//\n/g' | cat  <(echo '/') - ); do
 		path="$path$folder${path:0:1}"
 		#echo "$path ===== $folder===== $traverse";
-		for file in $path/docker-compose.*; do
-			if [[ $file == *.yaml ]]; then
-			    echo "DEBUGG::: $docker_compose_yaml"
-			    echo "DEBUGG::: $envvars"
-		    	    echo "DEBUGG::: $file"
-			    if [ -z "${docker_compose_yaml}" ]; then
-			        docker_compose_yaml="$(${d_compose[@]} -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
-			    else
-				docker_compose_yaml="$(${d_compose[@]} -f <(envsubst < "$docker_compose_yaml") -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
-			    fi
-			fi
+		for file in $path/docker-compose.yaml; do
+		    echo "DEBUGG::: $docker_compose_yaml"
+		    echo "DEBUGG::: $envvars"
+		    echo "DEBUGG::: $file"
+		    if [ -z "${docker_compose_yaml}" ]; then
+			docker_compose_yaml="$(${d_compose[@]} -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
+		    else
+			docker_compose_yaml="$(${d_compose[@]} -f <(envsubst < "$docker_compose_yaml") -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
+
+		    fi
 		done
 		traverse=$(dirname "$traverse")
 	done
