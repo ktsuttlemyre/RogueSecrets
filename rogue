@@ -185,7 +185,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 			if [[ $file == *.yaml ]]; then
 			    echo "DEBUGG::: $docker_compose_yaml"
 			    echo "DEBUGG::: $envvars"
-			    docker_compose_yaml="$(${d_compose[@]} -f <(echo "$docker_compose_yaml") -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
+			    docker_compose_yaml="$(${d_compose[@]} -f <(envsubst < "$docker_compose_yaml") -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
 			fi
 		done
 		traverse=$(dirname "$traverse")
