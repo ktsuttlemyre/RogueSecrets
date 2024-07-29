@@ -157,7 +157,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		#echo "$path ===== $folder===== $traverse";
 		for file in $path/docker-compose.*; do
 			if [[ $file == *.yaml ]]; then
-			    docker_compose_yamls+=('-f' <( envsubst < $file )) # "$docker_compose_yamls[@]}"
+			    docker_compose_yamls+=('-f' "<(envsubst < $file)") # "$docker_compose_yamls[@]}"
 			elif [[ $file == *.env ]]; then
 			    set -a      # turn on automatic exporting
 			    source "$file"
@@ -174,8 +174,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#create ramdisk
 	RAMDISK="RogueCLI_ramdisk_$$"
 	#TODO run local scripts through rougue cause its neat
-	#IS_ROGUE_CONTEXT=true ./rogue ./create/ramdisk.sh .250G "$RAMDISK" -- local
-	#./rogue ./create/ramdisk.sh .250G "$RAMDISK" -- local
+	#IS_ROGUE_CONTEXT=true ./rogue ./create/ramdisk.sh 250M "$RAMDISK" -- local
+	#./rogue ./create/ramdisk.sh 250M "$RAMDISK" -- local
 	./create/ramdisk.sh 250M "$RAMDISK"
 	#Create dynamic docker-compose.yaml
 	service="${image}"
