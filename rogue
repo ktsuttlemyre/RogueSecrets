@@ -183,7 +183,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		#echo "$path ===== $folder===== $traverse";
 		for file in $path/docker-compose.*; do
 			if [[ $file == *.yaml ]]; then
-			    docker_compose_yaml="$(${d_compose[@]} -f <( envsubst < "$file" ) --env-file <("$envvars") config)"
+			    docker_compose_yaml="$(${d_compose[@]} -f <(echo "$docker_compose_yaml") -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
 			fi
 		done
 		traverse=$(dirname "$traverse")
