@@ -30,7 +30,11 @@ git_pull () {
   git stash pop
   git submodule update --init --recursive --remote
 }
-
+install_docker () {
+   set -euo pipefail
+   $script_dir/common/install-docker.sh
+   set +euo pipefail
+}
 docker_build () {
   local log; log="$(docker build . -t $project/$image:$tag $1)"
   if [ $? -ne 0 ]; then
@@ -38,26 +42,27 @@ docker_build () {
     echo "$log" > /dev/stderr
   fi
 }
-
+export d_compose=(docker-compose)
 if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	if ! command -v docker &> /dev/null; then
 	    header "Docker not found. Installing"
-	    set -euo pipefail
-	    $script_dir/common/install-docker.sh
-	    set +euo pipefail
-	elif [ -x "$(command -v docker-compose)" ]; then
+	    no_docker=true
+	    install_docker
+	fi
+	if [ -x "$(command -v docker-compose)" ]; then
 	    header "docker-compose (v1) is installed."
 	    header " will attempt to use docker-compose but may have incompabitliby issues."
 	    header "to force docker compose (v2) install. Run ${script_dir}/common/install-docker.sh"
-	    d_compose=(docker-compose)
 	elif $(docker compose &>/dev/null) && [ $? -eq 0 ]; then
 	    header "docker compose (v2) is installed."
 	    d_compose=(docker compose)
 	else
-	    header "Docker not found. Installing"
-	    set -euo pipefail
-	    $script_dir/common/install-docker.sh
-	    set +euo pipefail
+	    if [ -z "${no_docker}" ]; then
+		echo "Please restart your computer"
+		exit 1
+	    fi
+	    header "Docker compose not found. Installing"
+            install_docker
 	fi
 fi
 
