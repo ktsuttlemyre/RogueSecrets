@@ -185,6 +185,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 			if [[ $file == *.yaml ]]; then
 			    echo "DEBUGG::: $docker_compose_yaml"
 			    echo "DEBUGG::: $envvars"
+		    	    echo "DEBUGG::: $file"
 			    if [ -z "${docker_compose_yaml}" ]; then
 			        docker_compose_yaml="$(${d_compose[@]} -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
 			    else
