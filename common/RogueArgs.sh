@@ -69,7 +69,7 @@ debugger () {
         return 1
         ;;
       ::*) # this will print the value bare
-        eval "echo \$${response:1}"
+        eval "echo \$${response:2}"
         ;;
       :*) # this will print the value
         eval "echo \"\$${response:1}\""
