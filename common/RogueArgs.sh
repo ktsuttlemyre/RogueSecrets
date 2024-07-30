@@ -68,8 +68,11 @@ debugger () {
         eval "$setstate"
         return 1
         ;;
-      :*)
-        eval "\$${response:1}"
+      :*) # this will print the value
+        eval "echo \"\$${response:1}\""
+        ;;
+      ::*) # this will print the value bare
+        eval "echo \$${response:1}"
         ;;
       *)
         eval "$response"
