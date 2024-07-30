@@ -1,6 +1,6 @@
 #!/bin/bash
 source $( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/common/RogueArgs.sh "${@}"
-setopt null_glob
+
 #set -euo pipefail
 set -ex
 IFS=$'\n\t'
@@ -168,7 +168,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	path=''
 	for path_e in ${array_path[@]}; do
     		path="$path$path_e"
-		for file in $path/*compose.env; do
+		for file in "$(shopt -s nullglob; echo $path/*compose.env)"; do
 		    echo "$file"
 		    debugger
 		    set -a      # turn on automatic exporting
@@ -183,7 +183,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	path=''
 	for path_e in ${array_path[@]}; do
     		path="$path$path_e"
-		for file in $path/*compose.*; do
+		for file in "$(shopt -s nullglob; echo $path/*compose.*)"; do
 		    if [[ $file == *.yml  || $file == *.yaml ]]; then
 		        echo "DEBUGG::: $docker_compose_yaml"
 		        echo "DEBUGG::: $envvars"
@@ -249,7 +249,7 @@ for path_e in ${array_path[@]}; do
     #check if path is a directory or file
     if [[ -d $path ]]; then
         #iterate all files in path that are hidden files and source them
-        for file in $path/.*; do
+        for file in "$(shopt -s nullglob; echo $path/*)"; do
             if [[ ! -f $file ]]; then
                 continue
             fi
