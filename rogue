@@ -167,7 +167,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#Add env vars to session (iterate from parent to child)
 	path=''
 	for path_e in ${array_path[@]}; do
-    		path="$path/$path_e"
+    		path="$path$path_e/"
 		for file in "$path"/*compose.env; do
 		    set -a      # turn on automatic exporting
 		    source "$file"
@@ -179,7 +179,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	docker_compose_yaml=''
 	path=''
 	for path_e in ${array_path[@]}; do
-    		path="$path/$path_e"
+    		path="$path$path_e/"
 		for file in "$path"/*compose.*; do
 		    if [[ $file == *.yml  || $file == *.yaml ]]; then
 		        echo "DEBUGG::: $docker_compose_yaml"
