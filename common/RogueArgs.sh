@@ -49,7 +49,7 @@ debugger () {
     echo "RogueDebugger[${parent_name}]:::${@}"
   fi
   while true; do
-    read -r -p "Input: " response
+    read -r -p "RogueDebugger>>> " response
     case "$response" in
       [Dd][Oo][Nn][Ee]|[Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee])
         eval "$setstate"
@@ -107,9 +107,9 @@ done
 set -- "${positional_args[@]}" # restore positional parameters
 [ ! -z "${version}" ] && echo "$version_tag" && exit 0
 if [ ! -z "${debug}" ];then
-  [ "$debug" = true ] && set +xe
+  [ "$debug" = true ] && header "Debug set to true" && set +xe
   #other debug values parse here
-  [ "$debug" = 'strict' ] && set -euo pipefail
+  [ "$debug" = 'strict' ] && header "Debug set to strict" && set -euo pipefail
 fi
 if [ ! -z "${help}"]; then
   #todo make readme case insensitive
