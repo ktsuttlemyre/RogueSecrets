@@ -164,7 +164,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	path='.'
 	for path_e in $(echo "$inpath" | sed 's/\//\n/g'); do
     		path="$path/$path_e"
-		for file in "$path"/*compose.env; do
+		for [[ file in "$path"/*compose.env ]]; do
 		    set -a      # turn on automatic exporting
 		    source "$file"
 		    set +a      # turn off automatic exporting
@@ -176,7 +176,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	path='.'
 	for path_e in $(echo "$inpath" | sed 's/\//\n/g'); do
     		path="$path/$path_e"
-		for file in "$path"/*compose.*; do
+		for [[ file in "$path"/*compose.* ]]; do
 		    if [[ $file == *.yml  || $file == *.yaml ]]; then
 		        echo "DEBUGG::: $docker_compose_yaml"
 		        echo "DEBUGG::: $envvars"
