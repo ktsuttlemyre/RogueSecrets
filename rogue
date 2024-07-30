@@ -196,9 +196,9 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		for file in $path/*compose.*; do
 		    [ -e "$file" ] || continue
 		    if [[ $file == *.yml  || $file == *.yaml ]]; then
-		        debugger $docker_compose_yaml"
-		        debugger $envvars"
-		        debugger $file"
+		        debugger "$docker_compose_yaml"
+		        debugger "$envvars"
+		        debugger "adding in file $file"
 		        if [ -z "${docker_compose_yaml}" ]; then
 			    docker_compose_yaml="$(${d_compose[@]} -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
 		        else
@@ -208,15 +208,11 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		done
 		path="$path/"
 	done
-	echo $envvars
-	echo "============"
-	echo "============"
-	echo "$docker_compose_yaml"
+	debugger "$docker_compose_yaml"
 	
-	${d_compose[@]} "${docker_compose_yamls[@]}" --env-file <(env) config 
 	#d_compose_args=${docker_compose_yamls[@]} --env-file <(env)
 	# ${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config | ${d_compose[@]} -f - up --pull always --build
-	#run
+	# pull docker
 	${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config | ${d_compose[@]} -f - pull
 	#get workdir from image
 	#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
