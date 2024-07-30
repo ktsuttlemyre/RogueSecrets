@@ -68,6 +68,9 @@ debugger () {
         eval "$setstate"
         return 1
         ;;
+      [:>]*)
+        eval "$${response:1}"
+        ;;
       *)
         eval "$response"
         ;;
