@@ -162,8 +162,8 @@ envvars=$(env || printenv)
 if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#generate docker_compose_yaml (iterate from parent to child)
 	docker_compose_yaml=''
-	for folder in $(echo "$traverse" | sed 's/\//\n/g' | cat  <(echo '/') - ); do
-		path="$path$folder${path:0:1}"
+	for path_e in $(echo "$inpath" | sed 's/\//\n/g'); do
+    		path="$path/$path_e"
 		#echo "$path ===== $folder===== $traverse";
 		for file in $path/*compose.*; do
 		    if [[ $file == *.env ]]; then
