@@ -10,7 +10,8 @@ services:
           #- USER=${USERNAME} #not sure if this should be done?
           - TZ=Etc/UTC
         restart: unless-stopped
-        network: rogue-gateway_rogue-network
+        networks:
+          - rogue-gateway_rogue-network
         build:
             context: ${CONTEXT:-$PWD}
         stdin_open: true
