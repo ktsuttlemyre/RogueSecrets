@@ -21,8 +21,8 @@ services:
         volumes:
             - /:/host/root/
             - ${PWD}:/host/cwd/
-            - ${PARENT?Parent directory not set}:/host/parent/
-            - ${RAMDISK?Ramdisk not set}:/host/ramdisk/
+            - ${PARENT?Variable PARENT directory not set}:/host/parent/
+            - ${RAMDISK?Variable RAMDISK not set}:/host/ramdisk/
             - ${HOME:-~}:/host/home/
 
  #       env_file:
