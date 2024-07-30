@@ -52,7 +52,7 @@ debugger () {
   fi
   set +euox pipefail
   if [ ! -z "${@}" ]; then
-    echo "RogueDebugger[${parent_name}]:::${@}"
+    echo "RogueDebugger[$caller]:::${@}"
   fi
   while true; do
     read -r -p "RogueDebugger[$caller]>>> " response
