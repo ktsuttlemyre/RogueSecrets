@@ -43,7 +43,12 @@ debugger () {
   #state restore
   #TODO add shopt 
   # https://unix.stackexchange.com/questions/310957/how-to-restore-the-value-of-shell-options-like-set-x
-  setstate="$(set +o)" 
+  if [ ! -z "$RogueArgs_xtrace" ]; then
+    set +x
+    setstate="$(set +o)"$'\nset -o xtrace'
+  else
+    setstate="$(set +o)" 
+  fi
   set +euox pipefail
   if [ ! -z "${@}" ]; then
     echo "RogueDebugger[${parent_name}]:::${@}"
@@ -107,7 +112,7 @@ done
 set -- "${positional_args[@]}" # restore positional parameters
 [ ! -z "${version}" ] && echo "$version_tag" && exit 0
 if [ ! -z "${debug}" ];then
-  [ "$debug" = true ] && header "Debug set to true" && set -xe
+  [ "$debug" = true ] && header "Debug set to true" && RogueArgs_xtrace=true && set -xe
   #other debug values parse here
   [ "$debug" = 'strict' ] && header "Debug set to strict" && set -euo pipefail
 fi
