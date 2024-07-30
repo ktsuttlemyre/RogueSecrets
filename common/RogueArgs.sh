@@ -45,7 +45,7 @@ debugger () {
   # https://unix.stackexchange.com/questions/310957/how-to-restore-the-value-of-shell-options-like-set-x
   setstate="$(set +o)" 
   set +euox pipefail
-  if [ -z "${@}" ]; then
+  if [ ! -z "${@}" ]; then
     echo "RogueDebugger[${parent_name}]:::${@}"
   fi
   while true; do
