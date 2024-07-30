@@ -139,6 +139,10 @@ inpath=${inpath#'cli'}
 #remove RogueCLI
 inpath=${inpath#'RogueCLI'}
 
+absolute_path="$PWD/$inpath"
+relative_path="./$inpath"
+array_path=$(echo "$inpath" | sed 's/\//\n/g')
+
 if [[ -d "$inpath" ]] || [[ ! -x "$inpath" ]]; then
     header "Error must provide an executable file"
     header "got arguments ${@}"
@@ -161,8 +165,8 @@ envvars=$(env || printenv)
 #if is_context isn't set then find the context to run this command
 if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#Add env vars to session (iterate from parent to child)
-	path='.'
-	for path_e in $(echo "$inpath" | sed 's/\//\n/g'); do
+	path=''
+	for path_e in ${array_path[@]}; do
     		path="$path/$path_e"
 		for file in "$path"/*compose.env; do
 		    set -a      # turn on automatic exporting
@@ -173,8 +177,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 
 	#generate docker_compose_yaml (iterate from parent to child)
 	docker_compose_yaml=''
-	path='.'
-	for path_e in $(echo "$inpath" | sed 's/\//\n/g'); do
+	path=''
+	for path_e in ${array_path[@]}; do
     		path="$path/$path_e"
 		for file in "$path"/*compose.*; do
 		    if [[ $file == *.yml  || $file == *.yaml ]]; then
