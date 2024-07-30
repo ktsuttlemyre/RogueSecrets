@@ -4,7 +4,7 @@ if [ "$#" -gt 2 ]; then
 	echo "No more than 2 arguments allowed"
  	exit 1
 fi
-ramdisk="${2:-/mnt/ramdisk}"
+ramdisk="${2:-ramdisk}"
 if df | grep "$ramdisk" > /dev/null; then
 	echo "$ramdisk already mounted"
  	exit 1
@@ -30,6 +30,6 @@ case "$OSTYPE" in
   ;; 
   msys*)    echo "WINDOWS";exit 1 ;;
   cygwin*)  echo "ALSO WINDOWS";exit 1 ;;
-  *)        sudo mkdir -p "$ramdisk" && sudo mount -t tmpfs -o size=$1,mode=1777 $ramdisk /mnt && sudo systemctl daemon-reload && echo "RAM-disk of $1 created" ;;
+  *)        sudo mount -t tmpfs -o size=$1,mode=1777 $ramdisk /mnt && sudo systemctl daemon-reload && echo "RAM-disk of $1 created" ;;
 esac
 
