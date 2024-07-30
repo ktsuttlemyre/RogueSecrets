@@ -87,7 +87,7 @@ while [[ $# -gt 0 ]]; do
         shift # past value
       fi
       ;;
-    -[:alnum:])
+    -[:alnum:]) #todo fix flags maybe
       found=false
       for entry in "${flags[@]}" ; do
           flag="${entry%%:*}"; arg="${entry##*:}"
@@ -107,7 +107,7 @@ done
 set -- "${positional_args[@]}" # restore positional parameters
 [ ! -z "${version}" ] && echo "$version_tag" && exit 0
 if [ ! -z "${debug}" ];then
-  [ "$debug" = true ] && header "Debug set to true" && set +xe
+  [ "$debug" = true ] && header "Debug set to true" && set -xe
   #other debug values parse here
   [ "$debug" = 'strict' ] && header "Debug set to strict" && set -euo pipefail
 fi
