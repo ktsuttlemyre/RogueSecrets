@@ -149,21 +149,30 @@ if [[ -d "$inpath" ]] || [[ ! -x "$inpath" ]]; then
     exit 1
 fi
 
-export PID=$$
-export USERNAME=${USER:-$(whoami)}
-export PUID=${UID:-$(id -u $USERNAME)}
-export PGID=$(id -g $USERNAME)
-
-export PARENT=$(dirname "$PWD")
-export ENTRYPOINT="${@}"
-#export CMD="${@:2}"
-
-full_path=$(realpath "$inpath")
-
-envvars=$(env || printenv)
-
 #if is_context isn't set then find the context to run this command
 if [ -z "${IS_ROGUE_CONTEXT}" ]; then
+	export PID=$$
+	export USERNAME=${USER:-$(whoami)}
+	export PUID=${UID:-$(id -u $USERNAME)}
+	export PGID=$(id -g $USERNAME)
+	
+	export PARENT=$(dirname "$PWD")
+	export ENTRYPOINT="${@}"
+	#export CMD="${@:2}"
+	
+	full_path=$(realpath "$inpath")
+	
+	envvars=$(env || printenv)
+
+	#create ramdisk
+	RAMDISK="RogueCLI_ramdisk_$$"
+	#TODO run local scripts through rougue cause its neat
+	#IS_ROGUE_CONTEXT=true ./rogue ./create/ramdisk.sh 250M "$RAMDISK" -- local
+	#./rogue ./create/ramdisk.sh 250M "$RAMDISK" -- local
+	./create/ramdisk.sh 250M "$RAMDISK"
+	#Create dynamic docker-compose.yaml
+	service="${image}"
+
 	#Add env vars to session (iterate from parent to child)
 	path=''
 	for path_e in ${array_path[@]}; do
@@ -190,9 +199,9 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		        echo "DEBUGG::: $envvars"
 		        echo "DEBUGG::: $file"
 		        if [ -z "${docker_compose_yaml}" ]; then
-			    docker_compose_yaml="$(${d_compose[@]} -f <( envsubst < "$file" ) config)"
+			    docker_compose_yaml="$(${d_compose[@]} -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
 		        else
-			    docker_compose_yaml="$(${d_compose[@]} -f <(envsubst < "$docker_compose_yaml") -f <( envsubst < "$file" ) config)"
+			    docker_compose_yaml="$(${d_compose[@]} -f <(envsubst < "$docker_compose_yaml") -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
 			fi
 		    fi
 		done
@@ -203,14 +212,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	echo "============"
 	echo "$docker_compose_yaml"
 	exit
-	#create ramdisk
-	RAMDISK="RogueCLI_ramdisk_$$"
-	#TODO run local scripts through rougue cause its neat
-	#IS_ROGUE_CONTEXT=true ./rogue ./create/ramdisk.sh 250M "$RAMDISK" -- local
-	#./rogue ./create/ramdisk.sh 250M "$RAMDISK" -- local
-	./create/ramdisk.sh 250M "$RAMDISK"
-	#Create dynamic docker-compose.yaml
-	service="${image}"
+	
 	${d_compose[@]} "${docker_compose_yamls[@]}" --env-file <(env) config 
 	#d_compose_args=${docker_compose_yamls[@]} --env-file <(env)
 	# ${d_compose[@]} ${docker_compose_yamls[@]} --env-file <(env) config | ${d_compose[@]} -f - up --pull always --build
