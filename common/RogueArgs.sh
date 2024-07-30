@@ -75,15 +75,15 @@ positional_args=()
 while [[ $# -gt 0 ]]; do
   case $1 in
     --*=)
-      IFS='=' read -r key value <<< "$1"; ${!key#??}="${value}"; shift ;;
+      IFS='=' read -r key value <<< "${1:2}"; export ${key}="${value}"; shift ;;
     --*)
       #if value doesn't start with -
       if [[ ! ${2} =~ ^- ]]; then
-        ${!1}="${2}"
+        export ${1:2}="${2}"
         shift # past argument
         shift # past value
       else
-        ${!1}=true
+        export ${1:2}=true
         shift # past argument
       fi
       ;;
