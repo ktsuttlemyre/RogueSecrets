@@ -1,4 +1,3 @@
-version: "3"
 name: ${project}
 services:
     ${image}: #this is the service name
