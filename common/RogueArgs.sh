@@ -71,9 +71,6 @@ debugger () {
       :*)
         eval "\$${response:1}"
         ;;
-      >*)
-        eval "\$${response:1}"
-        ;;
       *)
         eval "$response"
         ;;
