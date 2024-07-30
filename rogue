@@ -170,7 +170,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		        set -a      # turn on automatic exporting
 		        source "$file"
 		        set +a      # turn off automatic exporting
-		    else [[ $file == *.yml  || $file == *.yaml ]]; then
+		    elif [[ $file == *.yml  || $file == *.yaml ]]; then
 		        echo "DEBUGG::: $docker_compose_yaml"
 		        echo "DEBUGG::: $envvars"
 		        echo "DEBUGG::: $file"
