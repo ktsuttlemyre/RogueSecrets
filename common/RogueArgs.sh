@@ -38,8 +38,28 @@ fi
 header () {
  echo -e "Rogue[${parent_name}]  $1"
 }
+
 debugger () {
-  read -p "RogueDebugger[${parent_name}] continue? " -n1 -s
+  if [ -z "${@}"]; then
+    echo "RogueDebugger[${parent_name}]:::${@}"
+  fi
+  while true; do
+    read -r -n 1 -p "Input: " response
+    case "$response" in
+      [Dd][Oo][Nn][Ee]|[Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee]) 
+        return 0
+        ;;
+      [Ee][Xx][Ii][Tt]) 
+        exit 1
+        ;;
+      [Bb][Rr][Aa][Kk][Ee]) 
+        return 1
+        ;;
+      *)
+        eval "$response"
+        ;;
+    esac 
+  done
 }
 
 positional_args=()
