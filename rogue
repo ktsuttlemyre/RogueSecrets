@@ -177,8 +177,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	path=''
 	for path_e in ${array_path[@]}; do
     		path="$path$path_e"
-		for file in $(shopt -s nullglob; echo $path/*compose.env); do
-		    if [ -z "$file" ]; then continue; fi
+		for file in $path/*compose.env; do
+		    [ -e "$file" ] || continue
 		    echo "$file"
 		    set -a      # turn on automatic exporting
 		    source "$file"
@@ -192,8 +192,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	path=''
 	for path_e in ${array_path[@]}; do
     		path="$path$path_e"
-		for file in $(shopt -s nullglob; echo $path/*compose.*); do
-		    if [ -z "$file" ]; then continue; fi
+		for file in $path/*compose.*; do
+		    [ -e "$file" ] || continue
 		    if [[ $file == *.yml  || $file == *.yaml ]]; then
 		        echo "DEBUGG::: $docker_compose_yaml"
 		        echo "DEBUGG::: $envvars"
@@ -252,8 +252,8 @@ for path_e in ${array_path[@]}; do
     #check if path is a directory or file
     if [[ -d $path ]]; then
         #iterate all files in path that are hidden files and source them
-        for file in $(shopt -s nullglob; echo $path/*); do
-	    if [ -z "$file" ]; then continue; fi
+        for file in $path/*; do
+	    [ -e "$file" ] || continue
             if [[ ! -f $file ]]; then
                 continue
             fi
