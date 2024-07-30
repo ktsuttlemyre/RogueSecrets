@@ -169,6 +169,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	for path_e in ${array_path[@]}; do
     		path="$path$path_e"
 		for file in $path/*compose.env; do
+		    debugger
 		    set -a      # turn on automatic exporting
 		    source "$file"
 		    set +a      # turn off automatic exporting
