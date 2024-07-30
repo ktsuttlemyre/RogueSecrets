@@ -141,7 +141,7 @@ inpath=${inpath#'RogueCLI'}
 
 absolute_path="$PWD/$inpath"
 relative_path="./$inpath"
-array_path=($(echo "$inpath" | sed 's/\//\n/g'))
+array_path=($(echo "$relative_path" | sed 's/\//\n/g'))
 
 if [[ -d "$inpath" ]] || [[ ! -x "$inpath" ]]; then
     header "Error must provide an executable file"
