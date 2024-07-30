@@ -167,19 +167,20 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#Add env vars to session (iterate from parent to child)
 	path=''
 	for path_e in ${array_path[@]}; do
-    		path="$path$path_e/"
+    		path="$path$path_e"
 		for file in "$path"/*compose.env; do
 		    set -a      # turn on automatic exporting
 		    source "$file"
 		    set +a      # turn off automatic exporting
 		done
+		path="$path/"
 	done
 
 	#generate docker_compose_yaml (iterate from parent to child)
 	docker_compose_yaml=''
 	path=''
 	for path_e in ${array_path[@]}; do
-    		path="$path$path_e/"
+    		path="$path$path_e"
 		for file in "$path"/*compose.*; do
 		    if [[ $file == *.yml  || $file == *.yaml ]]; then
 		        echo "DEBUGG::: $docker_compose_yaml"
@@ -192,6 +193,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 			fi
 		    fi
 		done
+		path="$path/"
 	done
 	echo $envvars
 	echo "============"
@@ -238,14 +240,14 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 fi
 
 
-echo "$script_dir/$inpath"
-for path_e in $(echo "$inpath" | sed 's/\//\n/g'); do
-    path="$path/$path_e"
+path=''
+for path_e in ${array_path[@]}; do
+    path="$path$path_e"
 
     #check if path is a directory or file
     if [[ -d $path ]]; then
         #iterate all files in path that are hidden files and source them
-        for file in $path/.*; do
+        for file in $path.*; do
             if [[ ! -f $file ]]; then
                 continue
             fi
@@ -256,6 +258,7 @@ for path_e in $(echo "$inpath" | sed 's/\//\n/g'); do
                 env $file
             fi
         done
+	path="$path/"
     elif [[ -f $path ]]; then #if path variable is a file then exec it
 	exec env $path "${@:2}" </dev/tty
 	# if test ! -t 0; then
