@@ -168,6 +168,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#IS_ROGUE_CONTEXT=true ./rogue ./create/ramdisk.sh 250M "$RAMDISK" -- local
 	#./rogue ./create/ramdisk.sh 250M "$RAMDISK" -- local
 	./create/ramdisk.sh 250M "$RAMDISK"
+	RAMDISK="/mnt/$RAMDISK"
 	#Create dynamic docker-compose.yaml
 	export service="${image}"
 
