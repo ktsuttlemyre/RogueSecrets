@@ -78,7 +78,7 @@ while [[ $# -gt 0 ]]; do
       IFS='=' read -r key value <<< "${1:2}"; export ${key}="${value}"; shift ;;
     --*)
       #if value doesn't start with -
-      if [ -z "$2" ] | [[ ${2} == ^- ]]; then
+      if [ -z "$2" ] || [[ ${2} == ^- ]]; then
         export ${1:2}=true
         shift # past argument
       else
