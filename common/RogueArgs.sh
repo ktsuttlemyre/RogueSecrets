@@ -51,7 +51,7 @@ debugger () {
   while true; do
     read -r -p "RogueDebugger>>> " response
     case "$response" in
-      [Dd][Oo][Nn][Ee]|[Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee])
+      [Dd][Oo][Nn][Ee]|[Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee]|'')
         eval "$setstate"
         return 0
         ;;
