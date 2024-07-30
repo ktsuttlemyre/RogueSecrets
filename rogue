@@ -2,7 +2,7 @@
 source $( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/common/RogueArgs.sh "${@}"
 
 #set -euo pipefail
-set -ex
+#set -ex
 IFS=$'\n\t'
 #script metadata values
 script_name=$(basename "$0")
