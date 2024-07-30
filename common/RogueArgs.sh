@@ -40,7 +40,11 @@ header () {
 }
 
 debugger () {
-  set -euo pipefail
+  #state restore
+  #TODO add shopt 
+  # https://unix.stackexchange.com/questions/310957/how-to-restore-the-value-of-shell-options-like-set-x
+  setstate="$(set +o)" 
+  set +euo pipefail
   if [ -z "${@}"]; then
     echo "RogueDebugger[${parent_name}]:::${@}"
   fi
@@ -48,15 +52,15 @@ debugger () {
     read -r -p "Input: " response
     case "$response" in
       [Dd][Oo][Nn][Ee]|[Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee])
-        set +euo pipefail
+        eval "$setstate"
         return 0
         ;;
       [Ee][Xx][Ii][Tt])
-        set +euo pipefail
+        eval "$setstate"
         exit 1
         ;;
       [Bb][Rr][Aa][Kk][Ee])
-        set +euo pipefail
+        eval "$setstate"
         return 1
         ;;
       *)
@@ -64,7 +68,7 @@ debugger () {
         ;;
     esac 
   done
-  set +euo pipefail
+  eval "$setstate"
 }
 
 positional_args=()
