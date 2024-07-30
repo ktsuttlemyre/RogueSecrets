@@ -14,7 +14,7 @@ flags=( "h:help"
         
 #set -euo pipefail
 IFS=$'\n\t'
-parent_name="$script_name"
+parent_name="${script_name:-$(caller)}"
 parent_dir="$script_dir"
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 script_name=$(basename "$0")
