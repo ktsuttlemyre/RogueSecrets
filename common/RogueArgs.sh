@@ -40,19 +40,23 @@ header () {
 }
 
 debugger () {
+  set -euo pipefail
   if [ -z "${@}"]; then
     echo "RogueDebugger[${parent_name}]:::${@}"
   fi
   while true; do
     read -r -p "Input: " response
     case "$response" in
-      [Dd][Oo][Nn][Ee]|[Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee]) 
+      [Dd][Oo][Nn][Ee]|[Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee])
+        set +euo pipefail
         return 0
         ;;
-      [Ee][Xx][Ii][Tt]) 
+      [Ee][Xx][Ii][Tt])
+        set +euo pipefail
         exit 1
         ;;
-      [Bb][Rr][Aa][Kk][Ee]) 
+      [Bb][Rr][Aa][Kk][Ee])
+        set +euo pipefail
         return 1
         ;;
       *)
@@ -60,6 +64,7 @@ debugger () {
         ;;
     esac 
   done
+  set +euo pipefail
 }
 
 positional_args=()
