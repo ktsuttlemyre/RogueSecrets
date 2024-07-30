@@ -44,7 +44,7 @@ debugger () {
     echo "RogueDebugger[${parent_name}]:::${@}"
   fi
   while true; do
-    read -r -n 1 -p "Input: " response
+    read -r -p "Input: " response
     case "$response" in
       [Dd][Oo][Nn][Ee]|[Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee]) 
         return 0
