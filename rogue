@@ -162,8 +162,6 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	
 	full_path=$(realpath "$inpath")
 	
-	envvars=$(env || printenv)
-
 	#create ramdisk
 	RAMDISK="RogueCLI_ramdisk_$$"
 	#TODO run local scripts through rougue cause its neat
@@ -186,6 +184,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		done
 		path="$path/"
 	done
+
+	envvars=$(env || printenv)
 
 	#generate docker_compose_yaml (iterate from parent to child)
 	docker_compose_yaml=''
