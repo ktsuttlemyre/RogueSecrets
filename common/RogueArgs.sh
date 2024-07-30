@@ -40,6 +40,7 @@ header () {
 }
 
 debugger () {
+  caller=$(caller)
   #state restore
   #TODO add shopt 
   # https://unix.stackexchange.com/questions/310957/how-to-restore-the-value-of-shell-options-like-set-x
@@ -54,7 +55,7 @@ debugger () {
     echo "RogueDebugger[${parent_name}]:::${@}"
   fi
   while true; do
-    read -r -p "RogueDebugger>>> " response
+    read -r -p "RogueDebugger[$caller]>>> " response
     case "$response" in
       [Dd][Oo][Nn][Ee]|[Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee]|'')
         eval "$setstate"
