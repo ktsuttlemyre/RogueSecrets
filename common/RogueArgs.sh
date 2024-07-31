@@ -94,7 +94,7 @@ while [[ $# -gt 0 ]]; do
     --*=*)
       IFS='=' read -r key value <<< "${1:2}"
       export ${key}="${value}"
-      [ -z "${key+xxx}" ] && declare -a "args_${key}"
+      [ -z "${key+xxx}" ] && echo "creating array" && declare -a "args_${key}"
       args_${key}+="${value}"
       shift
       ;;
