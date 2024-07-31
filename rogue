@@ -65,7 +65,11 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
             install_docker
 	fi
 fi
-
+g=""
+echo test
+debugger
+debugger $g
+debugger $script_name
 #if first variable == --help then print readme.md
 if [ "$1" == "--help" ]; then
 	# if glow exists then use that
