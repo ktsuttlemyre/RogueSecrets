@@ -41,7 +41,7 @@ header () {
 }
 
 debugger () {
-  [ -z "${debug}" ] && return
+  [ "${debug}" = false ] && return
   caller=$(caller)
   #state restore
   #TODO add shopt 
