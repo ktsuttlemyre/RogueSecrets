@@ -134,12 +134,20 @@ done
 set -- "${positional_args[@]}" # restore positional parameters
 [ ! -z "${version}" ] && echo "$version_tag" && exit 0
 if [ ! -z "${debug}" ];then
-  header "Debug set to $debug"
-  [ "$debug" = 'all' ] && debug=true
-  [ "$debug" = true ] || [ "$debug" = 'verbose' ] && RogueArgs_xtrace=true && set -x
-  [ "$debug" = true ] || [ "$debug" = 'error' ] && set -e
-  [ "$debug" = true ] || [ "$debug" = 'trace' ] && set -o history
-  [ "$debug" = true ] || [ "$debug" = 'break' ] || [ "$debug" = 'breakpoints' ] && echo "breakpoints on"
+  header "Debug set to ${args_debug[@]}"
+  #if args_debug array contains true or all then set debug=true 
+  if [[ " ${args_debug[*]} " =~ [[:space:]]all[[:space:]] ]]; then
+    debug=true
+  fi
+  if [[ " ${args_debug[*]} " =~ [[:space:]]true[[:space:]] ]]; then
+    debug=true
+  fi
+  for entry in "${args_debug[@]}"; do
+          [ "$debug" = true ] || [ "$entry" = 'verbose' ] && RogueArgs_xtrace=true && set -x
+          [ "$debug" = true ] || [ "$entry" = 'error' ] && set -e
+          [ "$debug" = true ] || [ "$entry" = 'trace' ] && set -o history
+          [ "$debug" = true ] || [ "$entry" = 'break' ] || [ "$entry" = 'breakpoints' ] && echo "breakpoints on"
+  done
 fi
 if [ ! -z "$strict" ]; then
         [ "$strict" = true ] && header "Mode set to strict" && set -euo pipefail
