@@ -103,7 +103,7 @@ while [[ $# -gt 0 ]]; do
       if [ -z "$2" ] || [[ ${2} == ^- ]]; then
         key="${1:2}"
         export $key=true
-        [ -z "${!key+xxx}" ] && declare -a "args_${!key}"
+        [ -z "${!key+xxx}" ] && echo "createing array" && declare -a "args_${!key}"
         args_${!key}+=true
         shift # past argument
       else
