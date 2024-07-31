@@ -4,8 +4,8 @@
 #
 
 version_tag="1.0"
-version=''
-help=''
+#version=''
+#help=''
 #debug=false
 flags=( "h:help"
         "d:debug"
@@ -92,11 +92,19 @@ positional_args=()
 while [[ $# -gt 0 ]]; do
   case $1 in
     --*=*)
-      IFS='=' read -r key value <<< "${1:2}"; export ${key}="${value}"; shift ;;
+      IFS='=' read -r key value <<< "${1:2}"
+      export ${key}="${value}"
+      [ -z "${!key+xxx}" ] && declare -a "args_${!key}"
+      args_${!key}+="${value}"
+      shift
+      ;;
     --*)
       #if value doesn't start with -
       if [ -z "$2" ] || [[ ${2} == ^- ]]; then
-        export ${1:2}=true
+        key="${1:2}"
+        export $key=true
+        [ -z "${!key+xxx}" ] && declare -a "args_${!key}"
+        args_${!key}+=true
         shift # past argument
       else
         export ${1:2}="${2}"
@@ -146,7 +154,7 @@ if [ ! -z "${help}"]; then
   else
     tail -n +1 $script_dir/$script_name | sed '/^#/!q'
   fi
-exit 0;
+  exit 0;
 fi
 :;
 
