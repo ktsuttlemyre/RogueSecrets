@@ -94,8 +94,8 @@ while [[ $# -gt 0 ]]; do
     --*=*)
       IFS='=' read -r key value <<< "${1:2}"
       export ${key}="${value}"
-      [ -z "${key+xxx}" ] && echo "creating array" && declare -a "args_${key}"
-      args_${key}+="${value}"
+      [ -z "${!key+xxx}" ] && echo "creating array" && declare -a args_${key}
+      eval "args_$key+=($value)"
       shift
       ;;
     --*)
@@ -103,11 +103,11 @@ while [[ $# -gt 0 ]]; do
       if [ -z "$2" ] || [[ ${2} == ^- ]]; then
         key="${1:2}"
         export $key=true
-        [ -z "${key+xxx}" ] && echo "createing array" && declare -a "args_${key}"
-        args_${key}+=true
         shift # past argument
       else
         export ${1:2}="${2}"
+        [ -z "${!key+xxx}" ] && echo "createing array" && declare -a args_${key}
+        eval "args_$key+=(true)"
         shift # past argument
         shift # past value
       fi
