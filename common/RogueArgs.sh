@@ -11,11 +11,12 @@ flags=( "h:help"
         "d:debug"
         "v:version"
         )
-        
+#"s":"silent" "strict"
+#"q":"quiet"
 #set -euo pipefail
 IFS=$'\n\t'
-parent_name="${script_name:-$(caller)}"
-parent_dir="$script_dir"
+parent_name="${script_name:-$(basename $(caller))}"
+parent_dir="${script_dir:-$(realpath dirname caller)}"
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 script_name=$(basename "$0")
 (return 0 2>/dev/null) && sourced=true || sourced=false
@@ -40,6 +41,7 @@ header () {
 }
 
 debugger () {
+  [ -z "${debug}" ] && return
   caller=$(caller)
   #state restore
   #TODO add shopt 
@@ -121,7 +123,9 @@ set -- "${positional_args[@]}" # restore positional parameters
 if [ ! -z "${debug}" ];then
   [ "$debug" = true ] && header "Debug set to true" && RogueArgs_xtrace=true && set -xe
   #other debug values parse here
-  [ "$debug" = 'strict' ] && header "Debug set to strict" && set -euo pipefail
+fi
+if [ ! -z "$strict" ]; then
+        [ "$strict" = true ] && header "Mode set to strict" && set -euo pipefail
 fi
 if [ ! -z "${help}"]; then
   #todo make readme case insensitive
