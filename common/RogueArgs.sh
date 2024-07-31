@@ -53,7 +53,7 @@ debugger () {
     setstate="$(set +o)" 
   fi
   set +euox pipefail
-  if [ ! -z "${@}" ]; then
+  if [ "$#" -gt 0 ]; then #if [ ! -z "${@}" ]; then
     echo "RogueDebugger[$caller]:::${@}"
   fi
   while true; do
