@@ -54,10 +54,11 @@ debugger () {
   fi
   set +euox pipefail
   if [ "$#" -gt 0 ]; then #if [ ! -z "${@}" ]; then
-    echo "RogueDebugger[$caller]:::${@}"
+    echo "RogueDebugger[$caller]>>> ${@}"
   fi
-  while true; do
-    read -r -p "RogueDebugger[$caller]>>> " response
+
+  while IFS="" read -r -e -d $'\n' -p 'RogueDebugger[$caller]<<< ' response; do 
+    history -s "$response"
     case "$response" in
       [Dd][Oo][Nn][Ee]|[Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee]|'')
         eval "$setstate"
