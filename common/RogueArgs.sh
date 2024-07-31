@@ -6,7 +6,7 @@
 version_tag="1.0"
 version=''
 help=''
-debug=false
+#debug=false
 flags=( "h:help"
         "d:debug"
         "v:version"
