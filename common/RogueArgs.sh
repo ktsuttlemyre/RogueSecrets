@@ -91,7 +91,7 @@ debugger () {
 positional_args=()
 while [[ $# -gt 0 ]]; do
   case $1 in
-    --*=)
+    --*=*)
       IFS='=' read -r key value <<< "${1:2}"; export ${key}="${value}"; shift ;;
     --*)
       #if value doesn't start with -
