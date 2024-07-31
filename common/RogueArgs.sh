@@ -57,10 +57,12 @@ debugger () {
     echo "RogueDebugger[$caller]>>> ${@}"
   fi
 
-  while IFS="" read -r -e -d $'\n' -p 'RogueDebugger[$caller]<<< ' response; do 
+  #TODO if you want a more advanced tab completion use this low level approach
+  # https://stackoverflow.com/a/77567693
+  while IFS="" read -r -e -d $'\n' -p "RogueDebugger[$caller]<<< " response; do 
     history -s "$response"
     case "$response" in
-      [Dd][Oo][Nn][Ee]|[Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee]|'')
+      [Dd][Oo][Nn][Ee]|[Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee]|[Nn][Ee][Xx][Tt]'')
         eval "$setstate"
         return 0
         ;;
