@@ -124,8 +124,12 @@ done
 set -- "${positional_args[@]}" # restore positional parameters
 [ ! -z "${version}" ] && echo "$version_tag" && exit 0
 if [ ! -z "${debug}" ];then
-  [ "$debug" = true ] && header "Debug set to true" && RogueArgs_xtrace=true && set -xe
-  #other debug values parse here
+  header "Debug set to $debug"
+  [ "$debug" = 'all' ] && debug=true
+  [ "$debug" = true ] || [ "$debug" = 'verbose' ] && RogueArgs_xtrace=true && set -x
+  [ "$debug" = true ] || [ "$debug" = 'error' ] && set -e
+  [ "$debug" = true ] || [ "$debug" = 'trace' ] && set -o history
+  [ "$debug" = true ] || [ "$debug" = 'break' ] || [ "$debug" = 'breakpoints' ] && echo "breakpoints on"
 fi
 if [ ! -z "$strict" ]; then
         [ "$strict" = true ] && header "Mode set to strict" && set -euo pipefail
