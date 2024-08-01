@@ -80,7 +80,7 @@ debugger () {
       :*) # this will print the value
         name=${response:1}
         echo "${!name}"
-        echo "${name}
+        echo "${name}"
         if [[ "$(declare -p ${!name})" =~ "declare -a" ]]; then
             echo "is array"
             eval "echo \"\$\{${!name}\[\@\]\}\""
