@@ -41,7 +41,7 @@ header () {
 }
 
 debugger () {
-  [ -z "${debug}" ] || [ "${debug}" = false ] && return
+  #[ -z "${debug}" ] || [ "${debug}" = false ] && return
   caller=$(caller)
   #state restore
   #TODO add shopt 
@@ -73,6 +73,14 @@ debugger () {
       [Bb][Rr][Aa][Kk][Ee])
         eval "$setstate"
         return 1
+        ;;
+      :json:*)
+        echo "beta feature"
+        name="${response:6}"
+        docker run --rm -i ghcr.io/jqlang/jq:latest < <(echo '{"version":5778}') '.version'
+        printf '%s\n' "${name[@]}" | jq -R . | jq -s .
+        echo "or"
+        printf '%s\n' "${!name[@]}" | jq -R . | jq -s .
         ;;
       ::*) # this will print the value bare
         eval "echo \$${response:2}"
@@ -153,7 +161,11 @@ if [ ! -z "${debug}" ];then
           [ "$debug" = true ] || [ "$entry" = 'error' ] && set -e
           [ "$debug" = true ] || [ "$entry" = 'trace' ] && set -o history
           [ "$debug" = true ] || [ "$entry" = 'break' ] || [ "$entry" = 'breakpoints' ] && echo "breakpoints on"
+          [ "$debug" = true ] || [ "$entry" = 'stdout' ] && echo "logging debug to stdout"
+          [ "$debug" = true ] || [ "$entry" = 'stderr' ] && echo "logging debug to stderr"
   done
+else
+  debugger=":" # disable debugger
 fi
 if [ ! -z "$strict" ]; then
         [ "$strict" = true ] && header "Mode set to strict" && set -euo pipefail
