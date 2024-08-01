@@ -83,7 +83,7 @@ debugger () {
         printf '%s\n' "${!name[@]}" | jq -R . | jq -s .
         ;;
       ::*) # this will print the value bare
-        name="${response:1}"
+        name="${response:2}"
         if [[ "$(declare -p ${name})" =~ "declare -a" ]]; then
             echo -n "RogueDebugger[Type:Array]>>> "
             eval "echo \${${name}[@]}"
