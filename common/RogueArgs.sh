@@ -4,7 +4,7 @@
 
 #simple debugger for this script only
 console () { echo "$@" }
-console () { :; } # comment this line to debug
+#console () { :; } # comment this line to debug
 
 console "number of arguments received $#"
 _sessionenv=$((set -o posix ; set)| cut -f1 -d= | tr '\0' '\n')
