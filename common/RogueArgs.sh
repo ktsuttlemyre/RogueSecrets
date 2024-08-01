@@ -16,7 +16,7 @@ script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 script_name=$(basename "$0")
 if ! ((return 0 2>/dev/null) && true); then
         echo "This script is expected to be sourced. Please use . or source commands to call $script_name from $parent_name"
-        exit 1
+        echo "exit 1"
 fi
 
 #prerequsite checks
