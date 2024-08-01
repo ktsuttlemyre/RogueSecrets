@@ -37,10 +37,15 @@ else # stat -f %HT == Character Device
   is_stdin=false
 fi
 
-#functions
+#####################
+#  Helper Functions
+#####################
 header () {
  echo -e "Rogue[${parent_name}]  $1"
 }
+
+# print private session variables 
+sessionenv () { (set -o posix ; set) }
 
 debugger () {
   set +x
