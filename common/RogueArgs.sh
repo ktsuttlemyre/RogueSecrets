@@ -1,9 +1,12 @@
 #!/bin/bash
 #
 #
+
 console () {
+ ;;
  echo "$@"
 }
+
 console "number of arguments received $#"
 _sessionenv=$((set -o posix ; set)| cut -f1 -d= | tr '\0' '\n')
 sessionenv () {
@@ -107,15 +110,12 @@ debugger () {
         return 1
         ;;
       :json:*)
-        echo "beta feature"
         name="${response:6}"
         #docker run --rm -i ghcr.io/jqlang/jq:latest < <(echo '{"version":5778}') '.version'
-        echo "$(eval \"echo \"\${${name}[@]}\"\")"
-        printf '%s\n' "$(eval "echo \${${name}[@]}")" | jq -R . | jq -s .
-        echo "or"
         printf '%s\n' "${args_debug[@]}" | jq -R . | jq -s .
-        X=("hello world" "goodnight moon")
-        printf '%s\n' "${X[@]}" | jq -R . | jq -s .
+        #Example
+        #X=("hello world" "goodnight moon")
+        #printf '%s\n' "${X[@]}" | jq -R . | jq -s .
         ;;
       ::*) # this will print the value bare
         name="${response:2}"
@@ -201,8 +201,8 @@ if [ ! -z "${debug}" ];then
   if [[ " ${args_debug[*]} " =~ [[:space:]]true[[:space:]] ]]; then
     debug=true
   fi
-  for entry in ${args_debug[@]}; do
-          echo "debug entry = $entry"
+  for entry in "${args_debug[@]}"; do
+          console "debug entry = $entry"
           [ -f "$entry" ] && RogueArgs_debug_output="$entry"
           [ "$debug" = true ] || [ "$entry" = 'verbose' ] && RogueArgs_xtrace=true && set -x
           [ "$debug" = true ] || [ "$entry" = 'error' ] && set -e
