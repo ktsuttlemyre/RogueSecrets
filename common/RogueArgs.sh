@@ -5,9 +5,10 @@
 #set -euo pipefail
 
 IFS=$'\n\t'
-parent_name="${script_name:-$(basename $(caller))}"
-parent_dir="${script_dir:-$(realpath $(dirname $(caller)))}"
-echo "$parent_dir"
+parent_name="${script_name:-$(basename $(caller |  cut -d " " -f 2))}"
+parent_dir="${script_dir:-$(realpath $(dirname $(caller | cut -d " " -f 2 )))}"
+echo "parent dir $parent_dir"
+echo "parent name $parent_name"
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 script_name=$(basename "$0")
 (return 0 2>/dev/null) && sourced=true || sourced=false
