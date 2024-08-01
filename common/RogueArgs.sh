@@ -63,7 +63,7 @@ debugger () {
     if [ "$lines" -gt 5 ]; then 
             echo -e "RogueDebugger[$caller]>>> [ Start DocVar : $lines ] \n -----------------------------------" >> ${RogueArgs_debug_output:-/dev/stderr}
             echo "${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
-            echo -e " -----------------------------------"nRogueDebugger[$caller] [ End DocVar : $lines ]" >> ${RogueArgs_debug_output:-/dev/stderr}
+            echo -e " -----------------------------------\nRogueDebugger[$caller] [ End DocVar : $lines ]" >> ${RogueArgs_debug_output:-/dev/stderr}
     else
             echo "RogueDebugger[$caller]>>> ${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
     fi
