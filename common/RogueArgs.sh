@@ -201,7 +201,7 @@ if [ ! -z "${debug}" ];then
   if [[ " ${args_debug[*]} " =~ [[:space:]]true[[:space:]] ]]; then
     debug=true
   fi
-  for entry in "${args_debug[@]}"; do
+  for entry in ${args_debug[@]}; do
           echo "debug entry = $entry"
           [ -f "$entry" ] && RogueArgs_debug_output="$entry"
           [ "$debug" = true ] || [ "$entry" = 'verbose' ] && RogueArgs_xtrace=true && set -x
