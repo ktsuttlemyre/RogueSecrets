@@ -1,12 +1,5 @@
 #!/bin/bash
 ############################  Script Head   ############################
-_sessionenv=$((set -o posix ; set)| cut -f1 -d= | tr '\0' '\n')
-sessionenv () {
-  [ "$1" == 'all' ] && (set -o posix ; set) && return 0
-  echo "$(set -o posix ; set)" | egrep -v "$(printf '^%s*$' "$_sessionenv")"
-}
-#fix file seperator
-IFS=$'\n\t'
 # Detect if this script sourced
 sourced=false; (return 0 2>/dev/null) && sourced=true
 
