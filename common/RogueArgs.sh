@@ -81,7 +81,7 @@ debugger () {
         echo "$(eval \"echo \"\${${name}[@]}\"\")"
         printf '%s\n' "$(eval "echo \${${name}[@]}")" | jq -R . | jq -s .
         echo "or"
-        printf '%s\n' "${!name[@]}" | jq -R . | jq -s .
+        printf '%s\n' "${args_debug[@]}" | jq -R . | jq -s .
         ;;
       ::*) # this will print the value bare
         name="${response:2}"
