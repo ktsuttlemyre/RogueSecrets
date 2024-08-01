@@ -14,7 +14,7 @@ if ! $sourced; then
         echo "This script is expected to be sourced. Please use . or source commands to call $script_name from $parent_name" 
 fi
 #prerequsite checks
-[ -z "${version}" ] && echo "Please add a version variable to your $parent_name" && exit 0
+[ -z "${version_tag}" ] && echo "Please add a version_tag variable to your $parent_name" && exit 0
 [ -z "${help}" ] && [ ! -f "$parent_dir/README.md" ] && echo "Please add a help variable to your script or a $parent_dir/README.md" && exit 0
 
 #varaibles
