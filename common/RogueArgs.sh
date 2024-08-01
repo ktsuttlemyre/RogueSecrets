@@ -77,20 +77,28 @@ debugger () {
       :json:*)
         echo "beta feature"
         name="${response:6}"
-        docker run --rm -i ghcr.io/jqlang/jq:latest < <(echo '{"version":5778}') '.version'
+        #docker run --rm -i ghcr.io/jqlang/jq:latest < <(echo '{"version":5778}') '.version'
         printf '%s\n' "${name[@]}" | jq -R . | jq -s .
         echo "or"
         printf '%s\n' "${!name[@]}" | jq -R . | jq -s .
         ;;
       ::*) # this will print the value bare
-        eval "echo \$${response:2}"
+        name="${response:1}"
+        if [[ "$(declare -p ${name})" =~ "declare -a" ]]; then
+            echo -n "RogueDebugger[Type:Array]>>> "
+            eval "echo \${${name}[@]}"
+        else
+            echo -n "RogueDebugger[Type:String]>>> "
+            eval "echo \$${name}"
+        fi
         ;;
       :*) # this will print the value
         name="${response:1}"
         if [[ "$(declare -p ${name})" =~ "declare -a" ]]; then
-            echo "is array"
+            echo -n "RogueDebugger[Type:Array]>>> "
             eval "echo \"\${${name}[@]}\""
         else
+            echo -n "RogueDebugger[Type:String]>>> "
             eval "echo \"\$${name}\""
         fi
         ;;
