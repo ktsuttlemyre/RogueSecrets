@@ -78,6 +78,7 @@ debugger () {
         echo "beta feature"
         name="${response:6}"
         #docker run --rm -i ghcr.io/jqlang/jq:latest < <(echo '{"version":5778}') '.version'
+        echo "$(eval "echo \"\${${name}[@]}\""
         printf '%s\n' "$(eval "echo \"\${${name}[@]}\"" )" | jq -R . | jq -s .
         echo "or"
         printf '%s\n' "${!name[@]}" | jq -R . | jq -s .
