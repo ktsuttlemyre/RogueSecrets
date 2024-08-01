@@ -2,7 +2,7 @@
 #
 #
 console () {
- echo "@"
+ echo "$@"
 }
 console "number of arguments received $#"
 _sessionenv=$((set -o posix ; set)| cut -f1 -d= | tr '\0' '\n')
