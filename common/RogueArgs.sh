@@ -61,9 +61,9 @@ debugger () {
   if [ "$#" -gt 0 ]; then #if [ ! -z "${@}" ]; then
     lines="$(echo "${@}" | wc -l)"
     if [ "$lines" -gt 5 ]; then 
-            echo -e "RogueDebugger[$caller]>>> [ Start Doc : $lines ] \n -------------------------" >> ${RogueArgs_debug_output:-/dev/stderr}
+            echo -e "RogueDebugger[$caller]>>> [ Start Doc : $lines ] \n -----------------------------------" >> ${RogueArgs_debug_output:-/dev/stderr}
             echo "${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
-            echo -e " -------------------------\nRogueDebugger[$caller] [ End Doc : $lines ]" >> ${RogueArgs_debug_output:-/dev/stderr}
+            echo -e " -----------------------------------"nRogueDebugger[$caller] [ End Doc : $lines ]" >> ${RogueArgs_debug_output:-/dev/stderr}
     else
             echo "RogueDebugger[$caller]>>> ${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
     fi
