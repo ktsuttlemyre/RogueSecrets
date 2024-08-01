@@ -78,7 +78,12 @@ debugger () {
         eval "echo \$${response:2}"
         ;;
       :*) # this will print the value
-        eval "echo \"\$${response:1}\""
+        if [[ "$(declare -p ${!response:1})" =~ "declare -a" ]]; then
+            echo "is array"
+            eval "echo \"\$\{${response:1}\[\@\]\}\""
+        else
+            eval "echo \"\$${response:1}\""
+        fi
         ;;
       *)
         eval "$response"
