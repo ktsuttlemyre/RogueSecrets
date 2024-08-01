@@ -155,7 +155,7 @@ while [[ $# -gt 0 ]]; do
       name=args_$key
       [ -z "${!name+xxx}" ] && declare -a args_${key}
       console "pushing key/value [$key] and [$value]"
-      eval "args_$key+=("$value")"
+      eval "args_$key+=('$value')"
       shift
       ;;
     --*)
