@@ -57,7 +57,7 @@ debugger () {
   
   #send output
   if [ "$#" -gt 0 ]; then #if [ ! -z "${@}" ]; then
-    echo "RogueDebugger[$caller]>>> ${@}" >> ${RogueArgs_debug_output:-/dev/stdout}
+    echo "RogueDebugger[$caller]>>> ${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
   fi
   # if it isn't interactive then reset bash set state flags and exit
   if [ ! -z "${RogueArgs_debug_output}" ]; then
