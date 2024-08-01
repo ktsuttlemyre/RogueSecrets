@@ -7,6 +7,9 @@ name: Release
 # separate terms of service, privacy policy, and support
 # documentation.
 
+#TDOD add dynamic matrix for mulitple docker builds
+# https://tomasvotruba.com/blog/2020/11/16/how-to-make-dynamic-matrix-in-github-actions/
+
 on:
   push:
     branches: [ "master" ]
