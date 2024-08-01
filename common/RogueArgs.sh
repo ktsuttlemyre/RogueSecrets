@@ -59,10 +59,11 @@ debugger () {
   
   #send output
   if [ "$#" -gt 0 ]; then #if [ ! -z "${@}" ]; then
-    if [ "$(echo "${@}" | wc -l)" -gt 5 ]; then 
-            echo "------- RogueDebugger[$caller] ----- [Start Doc] -------" >> ${RogueArgs_debug_output:-/dev/stderr}
+    lines="$(echo "${@}" | wc -l)"
+    if [ "$lines" -gt 5 ]; then 
+            echo -e "RogueDebugger[$caller]>>> [ Start Doc : $lines ] \n -------------------------" >> ${RogueArgs_debug_output:-/dev/stderr}
             echo "${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
-            echo "------- RogueDebugger[$caller] ----- [ End Doc ] -------" >> ${RogueArgs_debug_output:-/dev/stderr}
+            echo -e " -------------------------\nRogueDebugger[$caller] [ End Doc : $lines ]" >> ${RogueArgs_debug_output:-/dev/stderr}
     else
             echo "RogueDebugger[$caller]>>> ${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
     fi
