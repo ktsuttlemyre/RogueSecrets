@@ -1,19 +1,9 @@
 #!/bin/bash
 #
 #
-#
 
-version_tag="1.0"
-#version=''
-#help=''
-#debug=false
-flags=( "h:help"
-        "d:debug"
-        "v:version"
-        )
-#"s":"silent" "strict"
-#"q":"quiet"
 #set -euo pipefail
+
 IFS=$'\n\t'
 parent_name="${script_name:-$(basename $(caller))}"
 parent_dir="${script_dir:-$(realpath dirname caller)}"
@@ -21,8 +11,20 @@ script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 script_name=$(basename "$0")
 (return 0 2>/dev/null) && sourced=true || sourced=false
 if ! $sourced; then
-        echo "This script is expected to be sourced. Please use . or source commands to call $script_name"
+        echo "This script is expected to be sourced. Please use . or source commands to call $script_name from $parent_name" 
 fi
+#prerequsite checks
+[ ! -z "${version}" ] && echo "Please add a version variable to your script" && exit 0
+[ ! -z "${help}" ] && [ ! -f "$parent_dir/README.md" ] && echo "Please add a help variable to your script or a $parent_dir/README.md" && exit 0
+
+#varaibles
+flags=( "h:help"
+        "d:debug"
+        "v:version"
+        )
+#"s":"silent" "strict"
+#"q":"quiet"
+        
 # https://stackoverflow.com/questions/65349069/testing-whether-stdin-is-a-file-vs-a-pipe-vs-a-tty
 is_interactive () { [[ $- == *i* ]]; }
 is_stdin_redirected () { [[ $- == *s* ]]; }
