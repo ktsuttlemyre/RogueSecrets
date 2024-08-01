@@ -41,22 +41,31 @@ header () {
 }
 
 debugger () {
-  #[ -z "${debug}" ] || [ "${debug}" = false ] && return
-  caller=$(caller)
+  set +x
   #state restore
   #TODO add shopt 
   # https://unix.stackexchange.com/questions/310957/how-to-restore-the-value-of-shell-options-like-set-x
   if [ ! -z "$RogueArgs_xtrace" ]; then
-    set +x
     setstate="$(set +o)"$'\nset -o xtrace'
   else
     setstate="$(set +o)" 
   fi
-  set +euox pipefail
+  set +euo pipefail
+  
+  #set variables to use
+  caller=$(caller)
+  
+  #send output
   if [ "$#" -gt 0 ]; then #if [ ! -z "${@}" ]; then
-    echo "RogueDebugger[$caller]>>> ${@}"
+    echo "RogueDebugger[$caller]>>> ${@}" >> ${RogueArgs_debug_output:-/dev/stdout}
   fi
-
+  # if it isn't interactive then reset bash set state flags and exit
+  if [ ! -z "${RogueArgs_debug_output}" ]; then
+    eval "$setstate"
+    return 
+  fi
+  
+  #interative debug
   #TODO if you want a more advanced tab completion use this low level approach
   # https://stackoverflow.com/a/77567693
   while IFS="" read -r -e -d $'\n' -p "RogueDebugger[$caller]<<< " response; do 
@@ -168,12 +177,13 @@ if [ ! -z "${debug}" ];then
     debug=true
   fi
   for entry in "${args_debug[@]}"; do
+          [ -f "$entry" ] && RogueArgs_debug_output="$entry"
           [ "$debug" = true ] || [ "$entry" = 'verbose' ] && RogueArgs_xtrace=true && set -x
           [ "$debug" = true ] || [ "$entry" = 'error' ] && set -e
           [ "$debug" = true ] || [ "$entry" = 'trace' ] && set -o history
           [ "$debug" = true ] || [ "$entry" = 'break' ] || [ "$entry" = 'breakpoints' ] && echo "breakpoints on"
-          [ "$debug" = true ] || [ "$entry" = 'stdout' ] && echo "logging debug to stdout"
-          [ "$debug" = true ] || [ "$entry" = 'stderr' ] && echo "logging debug to stderr"
+          [ "$entry" = 'stdout' ] && RogueArgs_debug_output=/dev/stdout && echo "logging debug to stdout"
+          [ "$entry" = 'stderr' ] && RogueArgs_debug_output=/dev/stderr && echo "logging debug to stderr"
   done
 else
   debugger () { :; } # disable debugger
