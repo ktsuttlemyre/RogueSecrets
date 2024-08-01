@@ -162,9 +162,6 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	export PGID=$(id -g $USERNAME)
 	
 	export PARENT=$(dirname "$PWD")
-	export ENTRYPOINT="${@}"
-	#export CMD="${@:2}"
-	
 	full_path=$(realpath "$inpath")
 	
 	#create ramdisk
@@ -174,8 +171,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#./rogue ./create/ramdisk.sh 250M "$RAMDISK" -- local
 	./create/ramdisk.sh 250M "$RAMDISK"
 	export RAMDISK="/mnt/$RAMDISK"
-	#Create dynamic docker-compose.yaml
-	export service="${image}"
+
 
 	#Add env vars to session (iterate from parent to child)
 	path=''
@@ -190,10 +186,11 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		done
 		path="$path/"
 	done
-
+	
+	#save the vars we just loaded to a variable for compiling
 	envvars=$(env || printenv)
 
-	#generate docker_compose_yaml (iterate from parent to child)
+	#Generate dynamic docker_compose_yaml (iterate from parent to child)
 	docker_compose_yaml=''
 	path=''
 	for path_e in ${array_path[@]}; do
@@ -215,23 +212,30 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	done
 	debugger "$docker_compose_yaml"
 	
-	#d_compose_args=${docker_compose_yaml} --env-file <(env)
-	# ${d_compose[@]} ${docker_compose_yaml} --env-file <(env) config | ${d_compose[@]} -f - up --pull always --build
-	# pull docker
-	${d_compose[@]} -f <(echo "${docker_compose_yaml}") pull
-	#get workdir from image
-	#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
+	
+	export service="${image}"
+	export ENTRYPOINT="${@}"
+	#export CMD="${@:2}"
 
 	debugger 
 	if [ -z "${registry}" ]; then
-		${d_compose[@]} -f <(echo "${docker_compose_yaml}") run --remove-orphans --env IS_ROGUE_CONTEXT=true --build "${service}"
+		# build docker
+		${d_compose[@]} -f <(echo "${docker_compose_yaml}") build
 	else
-		${d_compose[@]} -f <(echo "${docker_compose_yaml}") run --remove-orphans --env IS_ROGUE_CONTEXT=true "${service}"
+		# pull docker
+		${d_compose[@]} -f <(echo "${docker_compose_yaml}") pull
 	fi
-	if ! [ -z "$is_service" ]; then
-		${d_compose[@]} -f <(echo "${docker_compose_yaml}") down
-	fi
-	rogue_envvars="$RAMDISK.env"
+
+	#get workdir from image
+	#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
+
+	#run
+	${d_compose[@]} -f <(echo "${docker_compose_yaml}") run --remove-orphans --env IS_ROGUE_CONTEXT=true "${service}"
+
+	# if it is a service then shut it down?
+	[ ! -z "$is_service" ] && ${d_compose[@]} -f <(echo "${docker_compose_yaml}") down
+	
+	rogue_envvars="$RAMDISK/.env"
 	if [ -f rogue_envvars ]; then
 		header "Exporting secrets to current session"
 		case "$(uname)" in
