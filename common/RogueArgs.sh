@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #
-if (return 0 2>/dev/null);then echo "not sourced"; fi
+
 _sessionenv=$((set -o posix ; set)| cut -f1 -d= | tr '\0' '\n')
 sessionenv () {
   [ "$1" == 'all' ] && (set -o posix ; set) && return 0
@@ -14,10 +14,9 @@ parent_name="${script_name:-$(basename $(caller |  cut -d " " -f 2))}"
 parent_dir="${script_dir:-$(realpath $(dirname $(caller | cut -d " " -f 2 )))}"
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 script_name=$(basename "$0")
-(sourced=false; (return 0 2>/dev/null) && sourced=true
-if ! $sourced; then
+if ! (return 0 2>/dev/null);then
         echo "This script is expected to be sourced. Please use . or source commands to call $script_name from $parent_name" 
-fi)
+fi
 
 #prerequsite checks
 [ -z "${version_tag}" ] && echo "Please add a version_tag variable to your $parent_name" && exit 0
