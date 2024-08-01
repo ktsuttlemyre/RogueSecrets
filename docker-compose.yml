@@ -24,6 +24,9 @@ services:
             - ${PARENT?Variable PARENT directory not set}:/host/parent/
             - ${RAMDISK?Variable RAMDISK not set}:/host/ramdisk/
             - ${HOME:-~}:/host/home/
+            #TODO? - ${DIR_SECRETS}:/host/secrets
+            #TODO? - /host/config
+            #TODO? - /host/data
 
  #       env_file:
  #           - /under/my
