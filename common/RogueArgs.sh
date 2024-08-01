@@ -3,7 +3,9 @@
 #
 
 #simple debugger for this script only
-console () { echo "$@" }
+console () {
+  echo "$@"
+}
 
 
 console "number of arguments received $#"
@@ -189,10 +191,6 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
-console "======== All arguments parsed ========"
-console "number of arguments now $#"
-console "values for arguments $@"
-console "will now be set to ${positional_args[@]}"
 set -- "${positional_args[@]}" # restore positional parameters
 
 [ ! -z "${version}" ] && echo "$version_tag" && exit 0
