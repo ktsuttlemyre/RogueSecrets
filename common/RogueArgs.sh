@@ -197,6 +197,7 @@ if [ ! -z "${debug}" ];then
     debug=true
   fi
   for entry in "${args_debug[@]}"; do
+          echo "debug entry = $entry"
           [ -f "$entry" ] && RogueArgs_debug_output="$entry"
           [ "$debug" = true ] || [ "$entry" = 'verbose' ] && RogueArgs_xtrace=true && set -x
           [ "$debug" = true ] || [ "$entry" = 'error' ] && set -e
