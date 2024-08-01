@@ -6,7 +6,8 @@
 
 IFS=$'\n\t'
 parent_name="${script_name:-$(basename $(caller))}"
-parent_dir="${script_dir:-$(caller | dirname | realpath)}"
+parent_dir="${script_dir:-$(realpath $(dirname $(caller)))}"
+echo "$parent_dir"
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 script_name=$(basename "$0")
 (return 0 2>/dev/null) && sourced=true || sourced=false
