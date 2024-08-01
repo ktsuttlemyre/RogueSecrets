@@ -1,24 +1,25 @@
 #!/bin/bash
-version_tag='0.5.0'
-source $( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/common/RogueArgs.sh "${@}"
-
-#set -euo pipefail
-#set -ex
+############################  Script Head   ############################
+_sessionenv=$((set -o posix ; set)| cut -f1 -d= | tr '\0' '\n')
+sessionenv () {
+  [ "$1" == 'all' ] && (set -o posix ; set) && return 0
+  echo "$(set -o posix ; set)" | egrep -v "$(printf '^%s*$' "$_sessionenv")"
+}
+#fix file seperator
 IFS=$'\n\t'
+# Detect if this script sourced
+sourced=false; (return 0 2>/dev/null) && sourced=true
+
 #script metadata values
 script_name=$(basename "$0")
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-#Detect if sourced
-(return 0 2>/dev/null) && sourced=true || sourced=false
 
-if ! $sourced; then
-  #do not use set -a because it will cause all these secret values to be sent to terminal
-  #set -a      # turn on automatic exporting
-  [ -f ${script_dir}/env ] && source ${script_dir}/env
-  [ -f "$host_wd/env" ] && source "$host_wd/env"
-  #set +a      # turn off automatic exporting
-fi
+#config
+version_tag='0.5.0'
+RogueArgs=/common/RogueArgs.sh
 
+sessionenv source $script_dir$RogueArgs "${@}"
+############################  Script Body   ############################
 make_all_executable () {
     dir=${1:-$PWD}
     pattern=${2:-*.sh}
