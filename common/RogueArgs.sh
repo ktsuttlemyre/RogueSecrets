@@ -78,11 +78,12 @@ debugger () {
         eval "echo \$${response:2}"
         ;;
       :*) # this will print the value
-        if [[ "$(declare -p ${!response:1})" =~ "declare -a" ]]; then
+        name=${response:1}
+        if [[ "$(declare -p ${!name})" =~ "declare -a" ]]; then
             echo "is array"
-            eval "echo \"\$\{${response:1}\[\@\]\}\""
+            eval "echo \"\$\{${!name}\[\@\]\}\""
         else
-            eval "echo \"\$${response:1}\""
+            eval "echo \"\$${!name}\""
         fi
         ;;
       *)
