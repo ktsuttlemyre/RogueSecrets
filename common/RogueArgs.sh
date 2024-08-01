@@ -11,7 +11,7 @@ sessionenv () {
   echo "$(set -o posix ; set)" | egrep -v "$(printf '^%s*$' "$_sessionenv")"
 }
 #fix file seperator
-IFS=$'\n\t'
+#IFS=$'\n\t'
 
 parent_name="${script_name:-$(basename $(caller |  cut -d " " -f 2))}"
 parent_dir="${script_dir:-$(realpath $(dirname $(caller | cut -d " " -f 2 )))}"
