@@ -3,7 +3,7 @@
 #
 
 console () {
- echo "$@"
+ #echo "$@"
 }
 
 console "number of arguments received $#"
