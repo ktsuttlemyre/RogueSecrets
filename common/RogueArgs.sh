@@ -83,9 +83,9 @@ debugger () {
         echo "${name}"
         if [[ "$(declare -p ${!name})" =~ "declare -a" ]]; then
             echo "is array"
-            eval "echo \"\$\{${!name}\[\@\]\}\""
+            eval "echo \"\$\{${name}\[\@\]\}\""
         else
-            eval "echo \"\$${!name}\""
+            eval "echo \"\$${name}\""
         fi
         ;;
       *)
