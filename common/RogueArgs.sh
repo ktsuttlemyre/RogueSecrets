@@ -176,7 +176,7 @@ if [ ! -z "${debug}" ];then
           [ "$debug" = true ] || [ "$entry" = 'stderr' ] && echo "logging debug to stderr"
   done
 else
-  debugger=":" # disable debugger
+  debugger () { :; } # disable debugger
 fi
 if [ ! -z "$strict" ]; then
         [ "$strict" = true ] && header "Mode set to strict" && set -euo pipefail
