@@ -189,7 +189,15 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+console "======== All arguments parsed ========"
+console "number of arguments now $#"
+console "values for arguments $@"
+console "will now be set to ${positional_args[@]}"
 set -- "${positional_args[@]}" # restore positional parameters
+console "======== Arguments reset ========"
+console "number of arguments now $#"
+console "values for arguments $@"
+console "moving on to standard flags"
 [ ! -z "${version}" ] && echo "$version_tag" && exit 0
 if [ ! -z "${debug}" ];then
   header "Debug set to ${args_debug[@]}"
