@@ -218,18 +218,18 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#d_compose_args=${docker_compose_yaml} --env-file <(env)
 	# ${d_compose[@]} ${docker_compose_yaml} --env-file <(env) config | ${d_compose[@]} -f - up --pull always --build
 	# pull docker
-	${d_compose[@]} ${docker_compose_yaml} --env-file <(env) config | ${d_compose[@]} -f - pull
+	${d_compose[@]} -f <(echo "${docker_compose_yaml}") pull
 	#get workdir from image
 	#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
 
 	debugger 
 	if [ -z "${registry}" ]; then
-		${d_compose[@]} ${docker_compose_yaml} --env-file <(env) config | ${d_compose[@]} -f - run --remove-orphans --env IS_ROGUE_CONTEXT=true --build "${service}"
+		${d_compose[@]} -f <(echo "${docker_compose_yaml}") run --remove-orphans --env IS_ROGUE_CONTEXT=true --build "${service}"
 	else
-		${d_compose[@]} ${docker_compose_yaml} --env-file <(env) config | ${d_compose[@]} -f - run --remove-orphans --env IS_ROGUE_CONTEXT=true "${service}"
+		${d_compose[@]} -f <(echo "${docker_compose_yaml}") run --remove-orphans --env IS_ROGUE_CONTEXT=true "${service}"
 	fi
 	if ! [ -z "$is_service" ]; then
-		${d_compose[@]} ${docker_compose_yaml} --env-file <(env) config | ${d_compose[@]} -f - down
+		${d_compose[@]} -f <(echo "${docker_compose_yaml}") down
 	fi
 	rogue_envvars="$RAMDISK.env"
 	if [ -f rogue_envvars ]; then
