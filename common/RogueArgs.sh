@@ -1,7 +1,10 @@
 #!/bin/bash
 #
 #
-echo "number of arguments received $#"
+console () {
+ echo "@"
+}
+console "number of arguments received $#"
 _sessionenv=$((set -o posix ; set)| cut -f1 -d= | tr '\0' '\n')
 sessionenv () {
   [ "$1" == 'all' ] && (set -o posix ; set) && return 0
@@ -144,6 +147,7 @@ debugger () {
 
 positional_args=()
 while [[ $# -gt 0 ]]; do
+  console "parsing flag $1"
   case $1 in
     --*=*)
       IFS='=' read -r key value <<< "${1:2}"
