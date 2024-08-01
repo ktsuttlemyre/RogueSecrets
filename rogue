@@ -16,6 +16,7 @@ echo "testing parent ${args_debug[@]}"
 echo "testing parent ${positional_args[@]}"
 echo "testing parent num args $# and first three $1 $2 $3 and all of them ${@}"
 set -- "${positional_args[@]}"
+echo "testing parent num args $# and first three $1 $2 $3 and all of them ${@}"
 ############################  Script Body   ############################
 make_all_executable () {
     dir=${1:-$PWD}
