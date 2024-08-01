@@ -11,12 +11,11 @@ script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 version_tag='0.5.0'
 RogueArgs=/common/RogueArgs.sh
 
+#parse args
 source $script_dir$RogueArgs "${@}"
-echo "testing parent ${args_debug[@]}"
-echo "testing parent ${positional_args[@]}"
-echo "testing parent num args $# and first three $1 $2 $3 and all of them ${@}"
+#any arguments that are postional only will come back here and be set as an array
+# accessable via $# $@ and $1 $2 $3 etc
 set -- "${positional_args[@]}"
-echo "testing parent num args $# and first three $1 $2 $3 and all of them ${@}"
 ############################  Script Body   ############################
 make_all_executable () {
     dir=${1:-$PWD}
