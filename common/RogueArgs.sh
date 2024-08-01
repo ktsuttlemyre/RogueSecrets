@@ -14,7 +14,7 @@ parent_name="${script_name:-$(basename $(caller |  cut -d " " -f 2))}"
 parent_dir="${script_dir:-$(realpath $(dirname $(caller | cut -d " " -f 2 )))}"
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 script_name=$(basename "$0")
-if ! ((return 0 2>/dev/null) && true); then
+if (return 0 2>/dev/null) && true || false; then
         echo "This script is expected to be sourced. Please use . or source commands to call $script_name from $parent_name"
         echo "exit 1"
 fi
