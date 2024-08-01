@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #
-
+echo "number of arguments received $#"
 _sessionenv=$((set -o posix ; set)| cut -f1 -d= | tr '\0' '\n')
 sessionenv () {
   [ "$1" == 'all' ] && (set -o posix ; set) && return 0
