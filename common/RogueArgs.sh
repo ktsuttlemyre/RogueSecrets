@@ -59,7 +59,13 @@ debugger () {
   
   #send output
   if [ "$#" -gt 0 ]; then #if [ ! -z "${@}" ]; then
-    echo "RogueDebugger[$caller]>>> ${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
+    if [ "$(echo $var | wc -l)" -gt "5" ]; then 
+            echo "[Start Doc] - - - - - RogueDebugger[$caller] - - - - - [Start Doc]" >> ${RogueArgs_debug_output:-/dev/stderr}
+            echo "${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
+            echo "[ End Doc ] - - - - - RogueDebugger[$caller] - - - - - [ End Doc ]" >> ${RogueArgs_debug_output:-/dev/stderr}
+    else
+            echo "RogueDebugger[$caller]>>> ${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
+    fi
   fi
   # if it isn't interactive then reset bash set state flags and exit
   if [ ! -z "${RogueArgs_debug_output}" ]; then
