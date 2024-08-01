@@ -7,8 +7,6 @@
 IFS=$'\n\t'
 parent_name="${script_name:-$(basename $(caller |  cut -d " " -f 2))}"
 parent_dir="${script_dir:-$(realpath $(dirname $(caller | cut -d " " -f 2 )))}"
-echo "parent dir $parent_dir"
-echo "parent name $parent_name"
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 script_name=$(basename "$0")
 (return 0 2>/dev/null) && sourced=true || sourced=false
@@ -133,7 +131,7 @@ while [[ $# -gt 0 ]]; do
       IFS='=' read -r key value <<< "${1:2}"
       export ${key}="${value}"
       name=args_$key
-      [ -z "${!name+xxx}" ] && echo "creating array" && declare -a args_${key}
+      [ -z "${!name+xxx}" ] && declare -a args_${key}
       eval "args_$key+=($value)"
       shift
       ;;
@@ -146,7 +144,7 @@ while [[ $# -gt 0 ]]; do
       else
         export ${1:2}="${2}"
         name=args_$key
-        [ -z "${!name+xxx}" ] && echo "creating array" && declare -a args_${key}
+        [ -z "${!name+xxx}" ] && declare -a args_${key}
         eval "args_$key+=(true)"
         shift # past argument
         shift # past value
