@@ -164,6 +164,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	export PARENT=$(dirname "$PWD")
 	full_path=$(realpath "$inpath")
 	
+	export ENTRYPOINT="${@}"
+	
 	#create ramdisk
 	export RAMDISK="RogueCLI_ramdisk_$$"
 	#TODO run local scripts through rougue cause its neat
@@ -214,7 +216,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	
 	
 	export service="${image}"
-	export ENTRYPOINT="${@}"
+
 	#export CMD="${@:2}"
 
 	debugger 
