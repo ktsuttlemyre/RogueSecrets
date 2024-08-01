@@ -12,6 +12,9 @@ version_tag='0.5.0'
 RogueArgs=/common/RogueArgs.sh
 
 source $script_dir$RogueArgs "${@}"
+echo "testing parent $args_debug"
+echo "testing parent ${positional_args[@]}"
+set -- "${positional_args[@]}"
 ############################  Script Body   ############################
 make_all_executable () {
     dir=${1:-$PWD}
