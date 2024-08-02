@@ -168,7 +168,7 @@ assign_keyvalue () {
       name=args_$key
       console "Handling argument arrays"
       console "declaring args_${key} && args${section}_${key}"
-      [ -z "${!name+xxx}" ] && export declare -a args_${key} && export declare -a args${section}_${key}
+      [ -z "${!name+xxx}" ] && declare -a args_${key} && declare -a args${section}_${key} && export args_${key} && export args${section}_${key}
       console "pushing key/value [$key] and [$value] to args_${key} and args${section}_${key}"
       eval "args_${key}+=('$value'); args${section}_${key}+=('$value')"
     fi
@@ -235,9 +235,9 @@ if [ ! -z "${debug}" ]; then
   for entry in "${args_debug[@]}"; do
           console "debug entry = $entry"
           [ -f "$entry" ] && RogueArgs_debug_output="$entry"
-          [ "$entry" = "all" ] || [ "$entry" = 'verbose' ] && [ "$entry" = 'xtrace' ] && RogueArgs_xtrace=true && set_flags="${set_flags}set -x\n"
+          [ "$entry" = "all" ] || [ "$entry" = 'verbose' ] || [ "$entry" = 'xtrace' ] && RogueArgs_xtrace=true && set_flags="${set_flags}set -x\n"
           [ "$entry" = "all" ] || [ "$entry" = 'error' ] && set_flags="${set_flags}set -e\n"
-          [ "$entry" = "all" ] || [ "$entry" = 'trace' ] && [ "$entry" = 'history' ] && set_flags="${set_flags}set -o history\n"
+          [ "$entry" = "all" ] || [ "$entry" = 'trace' ] || [ "$entry" = 'history' ] && set_flags="${set_flags}set -o history\n"
           [ "$entry" = "all" ] || [ "$entry" = 'break' ] || [ "$entry" = 'breakpoints' ] && echo "breakpoints on"
           [ "$entry" = 'stdout' ] && RogueArgs_debug_output=/dev/stdout && echo "logging debug to stdout"
           [ "$entry" = 'stderr' ] && RogueArgs_debug_output=/dev/stderr && echo "logging debug to stderr"
