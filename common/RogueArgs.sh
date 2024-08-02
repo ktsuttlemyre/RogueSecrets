@@ -188,7 +188,7 @@ while [[ $# -gt 0 ]]; do
     --?*)
       #if value doesn't start with - then assume true value
       if [ -z "$2" ] || [[ ${2} == ^- ]]; then
-        assign_keyvalue "$section" "$key" "$value"
+        assign_keyvalue "$section" "$key" true
 
         shift # past flag
       else
