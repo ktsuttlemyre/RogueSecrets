@@ -148,40 +148,61 @@ debugger () {
   eval "$setstate"
 }
 
+assign_keyvalue () {
+    section="$1"; key="$2"; value="$3"
+    #handle single variable assignements
+    # (defaults to non existant variable or true means it flag exists and may have multiple values)
+    if [ -z "$key" ];then #if it doesnt exist then make it
+      declare ${key}="${value}"
+    else  #if it exitsts then make it true and add values to args_${key} and args${section}_${key}
+      declare ${key}=true
+    fi
+    if [ "$value" != true ]; then
+      if [ -z "arg${section}_${key}" ]; then
+        declare arg${section}_${key}="${value}"
+      else
+        declare arg${section}_${key}=true
+      fi
+      #handle multiple values and add to sections
+      name=args_$key
+      [ -z "${!name+xxx}" ] && declare -a args_${key} && declare -a args${section}_${key}
+      console "pushing key/value [$key] and [$value] to args_${key} and args${section}_${key}"
+      eval "args_${key}+=('$value'); args${section}_${key}+=('$value')"
+    fi
+}
+
 positional_args=()
 while [[ $# -gt 0 ]]; do
-  console "parsing flag $1"
+  section="${#positional_args[@]}"
+  console "parsing flag $1 in section args${section}"
   case $1 in
-    --*=*)
+    --?*=*)
       IFS='=' read -r key value <<< "${1:2}"
-      export ${key}="${value}"
-      name=args_$key
-      [ -z "${!name+xxx}" ] && declare -a args_${key}
-      console "pushing key/value [$key] and [$value]"
-      eval "args_$key+=('$value')"
-      shift
+      assign_keyvalue "$section" "$key" "$value"
+
+      shift # past key=value
       ;;
-    --*)
-      #if value doesn't start with -
+    --?*)
+      #if value doesn't start with - then assume true value
       if [ -z "$2" ] || [[ ${2} == ^- ]]; then
-        key="${1:2}"
-        export $key=true
-        shift # past argument
+        assign_keyvalue "$section" "$key" "$value"
+
+        shift # past flag
       else
-        export ${1:2}="${2}"
-        name=args_$key
-        [ -z "${!name+xxx}" ] && declare -a args_${key}
-        eval "args_$key+=(true)"
-        shift # past argument
+        key="${1:2}"
+        value="${2}"
+        assign_keyvalue "$section" "$key" "$value"
+
+        shift # past key
         shift # past value
       fi
       ;;
-    -[:alnum:]) #todo fix flags maybe
+    -?) #todo fix flags maybe
       found=false
       for entry in "${flags[@]}" ; do
           flag="${entry%%:*}"; arg="${entry##*:}"
           if [ "$1" = "$flag" ]; then
-            set -- "--$arg" "${@:1}"; found=true
+            assign_keyvalue "$section" "$arg" true; found=true
             break
           fi
       done
