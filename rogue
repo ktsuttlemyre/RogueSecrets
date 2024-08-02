@@ -64,21 +64,6 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
             install_docker
 	fi
 fi
-g=""
-echo test
-debugger
-debugger $g
-debugger $script_name
-#if first variable == --help then print readme.md
-if [ "$1" == "--help" ]; then
-	# if glow exists then use that
-	if command -v glow &> /dev/null; then
-		glow "$script_dir/README.md"
-	else
-		cat "$script_dir/README.md"
-	fi
-	exit 0
-fi
 
 inpath=$1
 # if [[ $inpath == ~* ]]; then
@@ -162,7 +147,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	export PARENT=$(dirname "$PWD")
 	full_path=$(realpath "$inpath")
 	
-	export ENTRYPOINT="${@}"
+	export ENTRYPOINT="${RogueArgs[@]}"
 	
 	#create ramdisk
 	export RAMDISK="RogueCLI_ramdisk_$$"
@@ -215,7 +200,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	
 	export service="${image}"
 
-	#export CMD="${@:2}"
+	#export CMD="${RogueArgs[@]:2}"
 
 	debugger 
 	if [ -z "${registry}" ]; then
