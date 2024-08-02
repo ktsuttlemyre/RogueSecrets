@@ -187,18 +187,14 @@ while [[ $# -gt 0 ]]; do
       ;;
     --?*)
       #if value doesn't start with - then assume true value
-      if [ -z "$2" ] || [[ ${2} == ^- ]]; then
-        assign_keyvalue "$section" "$key" true
-
-        shift # past flag
-      else
-        key="${1:2}"
+      key=${1:2}
+      value=true
+      shift # past key
+      if [ ! -z "$2" ] || [[ ! ${2} == ^- ]]; then
         value="${2}"
-        assign_keyvalue "$section" "$key" "$value"
-
-        shift # past key
         shift # past value
       fi
+      assign_keyvalue "$section" "$key" "$value"
       ;;
     -?) #todo fix flags maybe
       found=false
