@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #
-
+RogueArgs="${@}"
 #simple debugger for this script only
 console () {
  :;
