@@ -151,24 +151,24 @@ assign_keyvalue () {
     # (defaults to non existant variable or true means it flag exists and may have multiple values)
     if [ -z "$key" ];then #if it doesnt exist then make it
       console "declaring ${key}=${value}"
-      export ${key}="${value}"
+      delare -g ${key}="${value}"
     else  #if it exitsts then make it true and add values to args_${key} and args${section}_${key}
       console "declaring ${key}=true"
-      export ${key}=true
+      declare -g ${key}=true
     fi
     if [ "$value" != true ]; then
       if [ -z "arg${section}_${key}" ]; then
         console "declaring arg${section}_${key}=${value}"
-        export arg${section}_${key}="${value}"
+        declare -g arg${section}_${key}="${value}"
       else
         console "declaring arg${section}_${key}=true"
-        export arg${section}_${key}=true
+        declare -g arg${section}_${key}=true
       fi
       #handle multiple values and add to sections
       name=args_$key
       console "Handling argument arrays"
       console "declaring args_${key} && args${section}_${key}"
-      [ -z "${!name+xxx}" ] && declare -a args_${key} && declare -a args${section}_${key} && export args_${key} && export args${section}_${key}
+      [ -z "${!name+xxx}" ] && declare -ag args_${key} && declare -ag args${section}_${key}
       console "pushing key/value [$key] and [$value] to args_${key} and args${section}_${key}"
       eval "args_${key}+=('$value'); args${section}_${key}+=('$value')"
     fi
