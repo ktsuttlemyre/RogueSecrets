@@ -167,7 +167,7 @@ assign_keyvalue () {
       #handle multiple values and add to sections
       name=args_$key
       console "Handling argument arrays"
-      console "declaring args_${key} && arg${section}_${key}"
+      console "declaring args_${key} && args${section}_${key}"
       [ -z "${!name+xxx}" ] && declare -a args_${key} && declare -a args${section}_${key}
       console "pushing key/value [$key] and [$value] to args_${key} and args${section}_${key}"
       eval "args_${key}+=('$value'); args${section}_${key}+=('$value')"
@@ -232,6 +232,7 @@ if [ ! -z "${RogueArgs_debug}" ]; then
   }
 fi
 [ ! -z "${version}" ] && echo "$version_tag" && exit 0
+console "debug flag set to ${debug}"
 if [ ! -z "${debug}" ]; then
   header "Debug set to ${args_debug[@]}"
   for entry in "${args_debug[@]}"; do
