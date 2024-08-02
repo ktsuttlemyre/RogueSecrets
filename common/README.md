@@ -16,6 +16,8 @@ RogueDebugger[65 ./rogue]<<< :json:args_debug
 ]
 ```
 
+Use `--RogueArgs_debug` to debug RogueArgs via the console function
+
 
 ### Devnote:
 if you uncomment echo inside the console function you will get parsing information output
