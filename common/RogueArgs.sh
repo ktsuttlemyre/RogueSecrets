@@ -4,13 +4,10 @@
 
 #simple debugger for this script only
 console () {
-  echo "$@"
-}
-console () {
  :;
 }
 
-console "number of arguments received $#"
+console "Number of arguments received $#"
 _sessionenv=$((set -o posix ; set)| cut -f1 -d= | tr '\0' '\n')
 sessionenv () {
   [ "$1" == 'all' ] && (set -o posix ; set) && return 0
@@ -223,16 +220,14 @@ console "======== Arguments reset ========"
 console "number of arguments now $#"
 console "values for arguments $@"
 console "moving on to standard flags"
+if [ ! -z "${RogueArgs_debug}" ]; then
+  console () {
+    echo "$@"
+  }
+fi
 [ ! -z "${version}" ] && echo "$version_tag" && exit 0
-if [ ! -z "${debug}" ];then
+if [ ! -z "${debug}" ]; then
   header "Debug set to ${args_debug[@]}"
-  #if args_debug array contains true or all then set debug=true 
-  if [[ " ${args_debug[*]} " =~ [[:space:]]all[[:space:]] ]]; then
-    debug=true
-  fi
-  if [[ " ${args_debug[*]} " =~ [[:space:]]true[[:space:]] ]]; then
-    debug=true
-  fi
   for entry in "${args_debug[@]}"; do
           console "debug entry = $entry"
           [ -f "$entry" ] && RogueArgs_debug_output="$entry"
