@@ -263,6 +263,6 @@ if [ ! -z "${help}"]; then
   exit 0;
 fi
 set_flags=$(echo "$set_flags" | sort | uniq )
-#$set_flags
+$set_flags
 :;
 
