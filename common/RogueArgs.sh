@@ -229,15 +229,16 @@ if [ ! -z "${RogueArgs_debug}" ]; then
 fi
 [ ! -z "${version}" ] && echo "$version_tag" && exit 0
 console "debug flag set to ${debug}"
+set_flags=''
 if [ ! -z "${debug}" ]; then
   header "Debug set to ${args_debug[@]}"
   for entry in "${args_debug[@]}"; do
           console "debug entry = $entry"
           [ -f "$entry" ] && RogueArgs_debug_output="$entry"
-          [ "$debug" = true ] || [ "$entry" = 'verbose' ] && RogueArgs_xtrace=true && set -x
-          [ "$debug" = true ] || [ "$entry" = 'error' ] && set -e
-          [ "$debug" = true ] || [ "$entry" = 'trace' ] && set -o history
-          [ "$debug" = true ] || [ "$entry" = 'break' ] || [ "$entry" = 'breakpoints' ] && echo "breakpoints on"
+          [ "$entry" = "all" ] || [ "$entry" = 'verbose' ] && [ "$entry" = 'xtrace' ] && RogueArgs_xtrace=true && set_flags="${set_flags}set -x\n"
+          [ "$entry" = "all" ] || [ "$entry" = 'error' ] && set_flags="${set_flags}set -e\n"
+          [ "$entry" = "all" ] || [ "$entry" = 'trace' ] && [ "$entry" = 'history' ] && set_flags="${set_flags}set -o history\n"
+          [ "$entry" = "all" ] || [ "$entry" = 'break' ] || [ "$entry" = 'breakpoints' ] && echo "breakpoints on"
           [ "$entry" = 'stdout' ] && RogueArgs_debug_output=/dev/stdout && echo "logging debug to stdout"
           [ "$entry" = 'stderr' ] && RogueArgs_debug_output=/dev/stderr && echo "logging debug to stderr"
   done
@@ -261,15 +262,7 @@ if [ ! -z "${help}"]; then
   fi
   exit 0;
 fi
+set_flags=$(echo "$set_flags" | sort | uniq )
+$set_flags
 :;
 
-# echo "FILE EXTENSION  = ${EXTENSION}"
-# echo "SEARCH PATH     = ${SEARCHPATH}"
-# echo "DEFAULT         = ${DEFAULT}"
-# echo "Number files in SEARCH PATH with EXTENSION:" $(ls -1 "${SEARCHPATH}"/*."${EXTENSION}" | wc -l)
-
-# if [[ -n $1 ]]; then
-#     echo "Last line of file specified as non-opt/last argument:"
-#     tail -1 "$1"
-# fi
-# EOF
