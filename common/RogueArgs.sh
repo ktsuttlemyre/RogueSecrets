@@ -6,6 +6,11 @@
 console () {
  :;
 }
+if [[ " ${*} " =~ [[:space:]]RogueArgs_debug[[:space:]] ]]; then
+  console () {
+    echo "$@"
+  }
+fi
 
 console "Number of arguments received $#"
 _sessionenv=$((set -o posix ; set)| cut -f1 -d= | tr '\0' '\n')
@@ -222,11 +227,6 @@ console "======== Arguments reset ========"
 console "number of arguments now $#"
 console "values for arguments $@"
 console "moving on to standard flags"
-if [ ! -z "${RogueArgs_debug}" ]; then
-  console () {
-    echo "$@"
-  }
-fi
 [ ! -z "${version}" ] && echo "$version_tag" && exit 0
 console "debug flag set to ${debug}"
 set_flags=''
