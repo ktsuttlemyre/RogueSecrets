@@ -4,7 +4,7 @@
 
 #simple debugger for this script only
 console () {
- echo "$@" #:;
+ #:;
 }
 
 console "Number of arguments received $#"
