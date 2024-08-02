@@ -6,7 +6,7 @@
 console () {
  :;
 }
-if [[ " ${*} " =~ [[:space:]]RogueArgs_debug[[:space:]] ]]; then
+if [[ " ${*} " =~ [[:space:]]--RogueArgs_debug[[:space:]] ]]; then
   console () {
     echo "$@"
   }
