@@ -2,7 +2,6 @@
 #
 #
 RogueArgs=("$@")
-RogueArgs2=(${@})
 #simple debugger for this script only
 console () {
  :;
@@ -117,12 +116,17 @@ debugger () {
         ;;
       :json:*)
         name="${response:6}"
-        #docker run --rm -i ghcr.io/jqlang/jq:latest < <(echo '{"version":5778}') '.version'
-        eval "printf '%s\n' \"\${${name}[@]}\" | jq -R . | jq -s ."
-        eval "printf '%s\n' \${${name}[@]} | jq -R . | jq -s ."
-        #Example
-        #X=("hello world" "goodnight moon")
-        #printf '%s\n' "${X[@]}" | jq -R . | jq -s .
+        name="${name:@}"
+        if[[ "$name" != [[:alpha:]]* ]]; then
+          eval "printf '%s\n' \"\${${name}}\" | jq -R . | jq -s ."
+        else
+          #docker run --rm -i ghcr.io/jqlang/jq:latest < <(echo '{"version":5778}') '.version'
+          eval "printf '%s\n' \"\${${name}[@]}\" | jq -R . | jq -s ."
+          #eval "printf '%s\n' \${${name}[@]} | jq -R . | jq -s ."
+          #Example
+          #X=("hello world" "goodnight moon")
+          #printf '%s\n' "${X[@]}" | jq -R . | jq -s .
+        fi
         ;;
       ::*) # this will print the value bare
         name="${response:2}"
