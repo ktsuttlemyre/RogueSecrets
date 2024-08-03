@@ -12,9 +12,7 @@ version_tag='0.5.0'
 RogueArgs=/common/RogueArgs.sh
 
 #parse args
-echo "arguments sent is ${#}"
-echo "arguments sent is ${@}"
-source $script_dir$RogueArgs "${@}"
+source $script_dir$RogueArgs "${@}" # I believe this is passing arguments by refrence
 #any arguments that are postional only will come back here and be set as an array
 # accessable via $# $@ and $1 $2 $3 etc
 set -- "${positional_args[@]}"
