@@ -253,6 +253,7 @@ fi
 path=''
 for path_e in ${array_path[@]}; do
     path="$path$path_e"
+    echo "live update"
     debugger "$path"
 
     #check if path is a directory or file
