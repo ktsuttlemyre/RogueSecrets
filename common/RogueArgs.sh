@@ -122,6 +122,9 @@ debugger () {
         eval "$setstate"
         return 1
         ;;
+      :restart:)
+       exec "${RogueArgs[@]}
+       ;;
       :json:*)
         name="${response:6}"
         name="${name:-@}"
