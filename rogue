@@ -227,7 +227,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 
 	debug_mount=''
 	if [ ! -z "$debug" ]; then
-		debug_mount="-v ./:${WORKDIR}"	
+		debug_mount="-v $(pwd):${WORKDIR}"	
 	fi
 	#run
 	${d_compose[@]} -f <(echo "${docker_compose_yaml}") run --remove-orphans --env IS_ROGUE_CONTEXT=true $debug_mount "${service}" "${RogueArgs[@]}"
