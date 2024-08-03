@@ -222,8 +222,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	fi
 
 	#get workdir from image
-	WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
-	debugger "$image"
+	WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${registry}${project}/${image}:${tag}")
 	debugger "$WORKDIR"
 
 	debug_mount=''
