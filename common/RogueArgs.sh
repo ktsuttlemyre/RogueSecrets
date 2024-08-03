@@ -117,7 +117,7 @@ debugger () {
       :json:*)
         name="${response:6}"
         #docker run --rm -i ghcr.io/jqlang/jq:latest < <(echo '{"version":5778}') '.version'
-        printf '%s\n' "${args_debug[@]}" | jq -R . | jq -s .
+        eval "printf '%s\n' \"\${${name}[@]}\"" | jq -R . | jq -s ."
         #Example
         #X=("hello world" "goodnight moon")
         #printf '%s\n' "${X[@]}" | jq -R . | jq -s .
