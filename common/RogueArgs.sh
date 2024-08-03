@@ -87,12 +87,15 @@ debugger () {
   #send output
   if [ "$#" -gt 0 ]; then #if [ ! -z "${@}" ]; then
     lines="$(echo "${@}" | wc -l)"
+    outfile=${RogueArgs_debug_output:-/dev/stderr}
+    prefix="RogueDebugger[$caller]\$\$\$ $caller_line\nRogueDebugger[$caller]>>> "
+    hr="-----------------------------------"
     if [ "$lines" -gt 5 ]; then 
-            echo -e "RogueDebugger[$caller]>>> [ Start DocVar : $lines ] \n -----------------------------------" >> ${RogueArgs_debug_output:-/dev/stderr}
+            echo -e "$prefix[ Start DocVar : $lines ] \n $hr" >> $outfile
             echo "${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
-            echo -e " -----------------------------------\nRogueDebugger[$caller] [ End DocVar : $lines ]" >> ${RogueArgs_debug_output:-/dev/stderr}
+            echo -e " $hr\nRogueDebugger[$caller] [ End DocVar : $lines ]" >> $outfile
     else
-            echo -e "RogueDebugger[$caller]\$ $caller_line\nRogueDebugger[$caller]>>> ${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
+            echo -e "$preix${@}" >> $outfile
     fi
   fi
   # if it isn't interactive then reset bash set state flags and exit
