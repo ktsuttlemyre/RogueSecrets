@@ -147,9 +147,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	export PARENT=$(dirname "$PWD")
 	full_path=$(realpath "$inpath")
 	
-	ENTRYPOINT="RogueArgs"
-	debugger "${RogueArgs[@]}"
-	debugger "$RogueArgs"
+	ENTRYPOINT="$RogueArgs"
 	debugger "${ENTRYPOINT[@]}"
 
 	
