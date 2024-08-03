@@ -189,6 +189,8 @@ assign_keyvalue () {
       console "declaring args_${key} && args${section}_${key}"
       [ -z "${!name+xxx}" ] && declare -ag args_${key} && declare -ag args${section}_${key}
       console "pushing key/value [$key] and [$value] to args_${key} and args${section}_${key}"
+      #TODO fix this? I have protected it a bit by adding filtered case statements only allowing
+      # ([[:alpha:]_][[:alpha:][:digit:]_]*)
       eval "args_${key}+=('$value'); args${section}_${key}+=('$value')"
     fi
 }
@@ -198,13 +200,13 @@ while [[ $# -gt 0 ]]; do
   section="${#positional_args[@]}"
   console "parsing flag $1 in section args${section}"
   case $1 in
-    --?*=*)
+    --[[:alpha:]_][[:alpha:][:digit:]_]*=*)
       IFS='=' read -r key value <<< "${1:2}"
       assign_keyvalue "$section" "$key" "$value"
 
       shift # past key=value
       ;;
-    --?*)
+    --[[:alpha:]_][[:alpha:][:digit:]_]*)
       #if value doesn't start with - then assume true value
       key=${1:2}
       value=true
@@ -215,7 +217,7 @@ while [[ $# -gt 0 ]]; do
       fi
       assign_keyvalue "$section" "$key" "$value"
       ;;
-    -?) #todo fix flags maybe
+    -[[:alpha:]_]) #todo fix flags maybe
       found=false
       for entry in "${flags[@]}" ; do
           flag="${entry%%:*}"; arg="${entry##*:}"
