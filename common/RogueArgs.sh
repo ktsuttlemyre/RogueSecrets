@@ -13,10 +13,10 @@ if [[ " ${*} " =~ [[:space:]]--RogueArgs_debug[[:space:]] ]]; then
 fi
 
 console "Number of arguments received $#"
-_sessionenv=$((set -o posix ; set)| cut -f1 -d= | tr '\0' '\n')
+_sessionenv=$((set -o posix ; set)| cut -f1 -d= | tr '\0' '\n' | sort | egrep ^[[:alnum:]]) # IF=$'\n' or anythong else with a \n tends to fuck up filtering so the sort | egrep helps get it cleaner
 sessionenv () {
   [ "$1" == 'all' ] && (set -o posix ; set) && return 0
-  echo "$(set -o posix ; set)" | egrep -v "$(printf '^%s*$' "$_sessionenv")"
+  echo "$(set -o posix ; set | sort | uniq)" | grep "=" | egrep -ve "$(printf '^%s=*$|' $_sessionenv)g"
 }
 #fix file seperator
 #IFS=$'\n\t'
