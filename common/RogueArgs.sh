@@ -175,7 +175,7 @@ assign_keyvalue () {
       console "declaring ${key}=true"
       declare -g ${key}=true
     fi
-    if [ "$value" != true ]; then
+    if [ ! "$value" = true ]; then
       if [ -z "arg${section}_${key}" ]; then
         console "declaring arg${section}_${key}=${value}"
         declare -g arg${section}_${key}="${value}"
