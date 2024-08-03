@@ -95,7 +95,7 @@ debugger () {
             echo "${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
             echo -e " $hr\nRogueDebugger[$caller] [ End DocVar : $lines ]" >> $outfile
     else
-            echo -e "$preix${@}" >> $outfile
+            echo -e "$prefix${@}" >> $outfile
     fi
   fi
   # if it isn't interactive then reset bash set state flags and exit
