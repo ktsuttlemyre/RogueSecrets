@@ -15,7 +15,7 @@ RogueArgs=/common/RogueArgs.sh
 source $script_dir$RogueArgs "${@}" # I believe this is passing arguments by refrence
 #any arguments that are postional only will come back here and be set as an array
 # accessable via $# $@ and $1 $2 $3 etc
-set -- "${positional_args[@]}"
+#set -- "${positional_args[@]}"
 ############################  Script Body   ############################
 make_all_executable () {
     dir=${1:-$PWD}
