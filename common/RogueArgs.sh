@@ -116,7 +116,7 @@ debugger () {
         ;;
       :json:*)
         name="${response:6}"
-        name="${name:@}"
+        name="${name:-@}"
         if [[ "$name" != [[:alpha:]]* ]]; then
           eval "printf '%s\n' \"\${${name}}\" | jq -R . | jq -s ."
         else
