@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #
-RogueArgs=${@}
+RogueArgs="${@}"
 #simple debugger for this script only
 console () {
  :;
@@ -117,6 +117,7 @@ debugger () {
       :json:*)
         name="${response:6}"
         #docker run --rm -i ghcr.io/jqlang/jq:latest < <(echo '{"version":5778}') '.version'
+        eval "printf '%s\n' \"\${${name}[@]}\" | jq -R . | jq -s ."
         eval "printf '%s\n' \${${name}[@]} | jq -R . | jq -s ."
         #Example
         #X=("hello world" "goodnight moon")
