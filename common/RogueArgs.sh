@@ -2,6 +2,7 @@
 #
 #
 RogueArgs="${@}"
+RogueArgs2=${@}
 #simple debugger for this script only
 console () {
  :;
