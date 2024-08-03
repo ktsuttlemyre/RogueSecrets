@@ -183,10 +183,10 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	path=''
 
 	#handle debug command
-	if [ ! -z "$debug" ]; then
-	    export registry=''
-	    docker_compose_yaml="$(${d_compose[@]} -f <( envsubst < "./docker-debug.yaml" ) --env-file <(echo "$envvars") config)"
-	fi
+	#if [ ! -z "$debug" ]; then
+	#    export registry=''
+	#    docker_compose_yaml="$(${d_compose[@]} -f <( envsubst < "./docker-debug.yaml" ) --env-file <(echo "$envvars") config)"
+	#fi
 
 	for path_e in ${array_path[@]}; do
     		path="$path$path_e"
@@ -222,10 +222,14 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	fi
 
 	#get workdir from image
-	#WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
+	WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${image}")
 
+	debug_mount=''
+	if [ ! -z "$debug" ]; then
+		debug_mount="-v ./:$WORKDIR"	
+	fi
 	#run
-	${d_compose[@]} -f <(echo "${docker_compose_yaml}") run --remove-orphans --env IS_ROGUE_CONTEXT=true "${service}" "${RogueArgs[@]}"
+	${d_compose[@]} -f <(echo "${docker_compose_yaml}") run --remove-orphans --env IS_ROGUE_CONTEXT=true $debug_mount "${service}" "${RogueArgs[@]}"
 
 	# if it is a service then shut it down?
 	[ ! -z "$is_service" ] && ${d_compose[@]} -f <(echo "${docker_compose_yaml}") down
