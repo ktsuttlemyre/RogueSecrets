@@ -148,6 +148,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	full_path=$(realpath "$inpath")
 	
 	ENTRYPOINT="RogueArgs"
+	debugger "${RogueArgs[@]}"
+	debugger "$RogueArgs"
 	debugger "${ENTRYPOINT[@]}"
 
 	
