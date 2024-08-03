@@ -147,9 +147,9 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	export PARENT=$(dirname "$PWD")
 	full_path=$(realpath "$inpath")
 	
-	ENTRYPOINT="${RogueArgs[@]}"
+	ENTRYPOINT="$RogueArgs"
 	debugger "$ENTRYPOINT"
-	debugger "$ENTRYPOINT[@]"
+
 	
 	#create ramdisk
 	export RAMDISK="RogueCLI_ramdisk_$$"
