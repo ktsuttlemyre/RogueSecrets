@@ -117,7 +117,7 @@ debugger () {
       :json:*)
         name="${response:6}"
         name="${name:@}"
-        if[[ "$name" != [[:alpha:]]* ]]; then
+        if [[ "$name" != [[:alpha:]]* ]]; then
           eval "printf '%s\n' \"\${${name}}\" | jq -R . | jq -s ."
         else
           #docker run --rm -i ghcr.io/jqlang/jq:latest < <(echo '{"version":5778}') '.version'
