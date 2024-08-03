@@ -148,6 +148,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	full_path=$(realpath "$inpath")
 	
 	export ENTRYPOINT="${RogueArgs[@]}"
+	debugger "$ENTRYPOINT"
+	debugger "$ENTRYPOINT[@]"
 	
 	#create ramdisk
 	export RAMDISK="RogueCLI_ramdisk_$$"
