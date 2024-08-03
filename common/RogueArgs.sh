@@ -125,6 +125,9 @@ debugger () {
       :restart:)
        exec "${RogueArgs[@]}
        ;;
+       :refresh:)
+       git pull; exec "${RogueArgs[@]}
+       ;;
       :json:*)
         name="${response:6}"
         name="${name:-@}"
