@@ -148,7 +148,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	full_path=$(realpath "$inpath")
 	
 	ENTRYPOINT="RogueArgs"
-	debugger "${ENTRYPOINT{@}}"
+	debugger "${ENTRYPOINT[@]}"
 
 	
 	#create ramdisk
