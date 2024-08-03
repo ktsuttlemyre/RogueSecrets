@@ -181,6 +181,13 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#Generate dynamic docker_compose_yaml (iterate from parent to child)
 	docker_compose_yaml=''
 	path=''
+
+	#handle debug command
+	if [ ! -z "$debug" ]; then
+	    export registry=''
+	    docker_compose_yaml="$(${d_compose[@]} -f <( envsubst < "./docker-debug.yaml" ) --env-file <(echo "$envvars") config)"
+	fi
+
 	for path_e in ${array_path[@]}; do
     		path="$path$path_e"
 		for file in $path/*compose.*; do
@@ -241,6 +248,7 @@ fi
 path=''
 for path_e in ${array_path[@]}; do
     path="$path$path_e"
+    debugger "$path"
 
     #check if path is a directory or file
     if [[ -d $path ]]; then
