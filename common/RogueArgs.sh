@@ -21,8 +21,8 @@ sessionenv () {
 #fix file seperator
 #IFS=$'\n\t'
 
-parent_name="${script_name:-$(basename $(caller |  cut -d " " -f 2))}"
-parent_dir="${script_dir:-$(realpath $(dirname $(caller | cut -d " " -f 2 )))}"
+parent_name="$(basename $(caller |  cut -d " " -f 2))"
+parent_dir="$(realpath $(dirname $(caller | cut -d " " -f 2 )))"
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 script_name=$(basename "$0")
 if ! ( (return 0 2>/dev/null) && true || false); then
@@ -78,6 +78,11 @@ debugger () {
   
   #set variables to use
   caller=$(caller)
+  caller_number=$(echo "$caller" |  cut -d " " -f 1)
+  caller_name="$(basename $(echo "$caller" |  cut -d " " -f 2))"
+  caller_dir="$(realpath $(dirname $(echo "$caller" | cut -d " " -f 2 )))"
+
+  caller_line=$(sed -n "${caller_number}p" < $caller_dir$caller_name | tr -d "[:space:]")
   
   #send output
   if [ "$#" -gt 0 ]; then #if [ ! -z "${@}" ]; then
@@ -87,7 +92,7 @@ debugger () {
             echo "${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
             echo -e " -----------------------------------\nRogueDebugger[$caller] [ End DocVar : $lines ]" >> ${RogueArgs_debug_output:-/dev/stderr}
     else
-            echo "RogueDebugger[$caller]>>> ${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
+            echo -e "RogueDebugger[$caller]\$ $caller_line\nRogueDebugger[$caller]>>> ${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
     fi
   fi
   # if it isn't interactive then reset bash set state flags and exit
