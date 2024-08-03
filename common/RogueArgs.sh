@@ -82,7 +82,7 @@ debugger () {
   caller_name="$(basename $(echo "$caller" |  cut -d " " -f 2))"
   caller_dir="$(realpath $(dirname $(echo "$caller" | cut -d " " -f 2 )))"
 
-  caller_line=$(sed -n "${caller_number}p" < $caller_dir/$caller_name | tr -d "[:space:]")
+  caller_line=$(sed -n "${caller_number}p" < $caller_dir/$caller_name | sed 's/^[[:space:]]*//g'
   
   #send output
   if [ "$#" -gt 0 ]; then #if [ ! -z "${@}" ]; then
