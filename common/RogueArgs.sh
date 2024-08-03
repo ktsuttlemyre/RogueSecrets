@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 #
-RogueArgs="${@}"
-RogueArgs2=${@}
+RogueArgs=("$@")
+RogueArgs2=(${@})
 #simple debugger for this script only
 console () {
  :;
