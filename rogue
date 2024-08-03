@@ -173,8 +173,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	done
 	
 	#save the vars we just loaded to a variable for compiling
-	echo $(sessionenv)
-	envvars=$(sessionenv || env || printenv)
+	#TODO use sessionenv here but right now it is very hacky
+	envvars=$(env || printenv)
 
 	#Generate dynamic docker_compose_yaml (iterate from parent to child)
 	docker_compose_yaml=''
