@@ -225,6 +225,15 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${registry}${project}/${image}:${tag}")
 	debugger "$WORKDIR"
 
+	#https://stackoverflow.com/questions/50549356/how-can-i-see-which-user-launched-a-docker-container
+	CONTAINER_USER=$(docker image inspect -f '{{.Config.User}}' "${registry}${project}/${image}:${tag}")
+	if [ ! -z "${CONTINER_USER ]; then
+		header "This image does not use root user!"
+		header "This image does not use root user!"
+		header "This image does not use root user!"
+	fi
+	debugger "$CONTAINER_USER"
+
 	debug_mount=''
 	if [ ! -z "$debug" ]; then
 		debug_mount="-v $(pwd):${WORKDIR}"	
