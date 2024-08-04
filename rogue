@@ -259,16 +259,17 @@ for path_e in ${array_path[@]}; do
     #check if path is a directory or file
     if [[ -d $path ]]; then
         #iterate all files in path that are hidden files and source them
-        for file in $path/*; do
-	    [ -e "$file" ] || continue
-            if [[ ! -f $file ]]; then
+        for file in $path/* | sort ; do
+	    if [ -e "$file" ] || [ ! -f $file ]; then
                 continue
             fi
             #if file ends with .sh or .env
-            if [[ $file == *.sh || $file == *.env ]]; then
-                source $file
-            else
-                env $file
+            if [[ $file == .env ]]; then
+		    set -a      # turn on automatic exporting
+		    source "$file"
+		    set +a      # turn off automatic exporting
+            elif [[ $file == .sh ]]; then
+		    env $file
             fi
         done
 	path="$path/"
