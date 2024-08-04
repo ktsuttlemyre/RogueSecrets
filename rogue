@@ -259,7 +259,7 @@ for path_e in ${array_path[@]}; do
     #check if path is a directory or file
     if [[ -d $path ]]; then
         #iterate all files in path that are hidden files and source them
-        for file in $path/* | sort ; do
+        for file in "$($path/* | sort)" ; do
 	    if [ -e "$file" ] || [ ! -f $file ]; then
                 continue
             fi
