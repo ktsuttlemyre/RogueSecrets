@@ -227,7 +227,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 
 	#https://stackoverflow.com/questions/50549356/how-can-i-see-which-user-launched-a-docker-container
 	CONTAINER_USER=$(docker image inspect -f '{{.Config.User}}' "${registry}${project}/${image}:${tag}")
-	if [ ! -z "${CONTINER_USER ]; then
+	if [ ! -z "${CONTINER_USER}" ]; then
 		header "This image does not use root user!"
 		header "This image does not use root user!"
 		header "This image does not use root user!"
