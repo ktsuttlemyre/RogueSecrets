@@ -177,7 +177,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#replace special tag with branch name as needed
 	branch="$(git rev-parse --abbrev-ref HEAD)"
 	if [ -z "$tag" ]; then
-		tag="${default_image_tag:-$branch}"
+		export tag="${default_image_tag:-$branch}"
 	fi
 
 	#save the vars we just loaded to a variable for compiling
