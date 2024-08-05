@@ -173,7 +173,16 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		done
 		path="$path/"
 	done
-	
+
+	#replace special tag with branch name as needed
+	branch="$(git rev-parse --abbrev-ref HEAD)"
+	if [ tag == "$branch" ]; then
+		tag="$branch"
+		if [ ! -z repo_images_branch ]; then
+			tag="$repo_images_branch"
+		fi
+	fi
+
 	#save the vars we just loaded to a variable for compiling
 	#TODO use sessionenv here but right now it is very hacky
 	envvars=$(env || printenv)
