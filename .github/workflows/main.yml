@@ -22,18 +22,32 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
   # github.repository as <account>/<repo>
 
 jobs:
-  #prepare:
-    #runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
-    #steps:
-      # upload the file here for later use
-      #- name: precomile stuff
-      #uses: actions/upload-artifact
+  compile:
+    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+    name: Find Docker images
+
+    # Use GitHub Script to find all Dockerfiles
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set Matrix
+        id: set-matrix
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const glob = require('@actions/glob');
+            const globber = await glob.create('**/Dockerfile', { followSymbolicLinks: false });
+            const files = await globber.glob();
+            return { 'include': files.map(file => ({ 'DOCKERFILE': file })) };
+          result-encoding: string
   build:
-    #needs: prepare
+    needs: compile
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     permissions:
       contents: read
@@ -43,12 +57,12 @@ jobs:
       id-token: write
       attestations: write
     strategy:
-      matrix:
-        include:
-          - IMAGE: ktsuttlemyre/roguecli
-            DOCKERFILE: ./Dockerfile
-          - IMAGE: ktsuttlemyre/roguesecrets
-            DOCKERFILE: ./secrets/Dockerfile
+      matrix: ${{fromJson(needs.compile.outputs.matrix)}}
+        # include:
+        #   - IMAGE: ktsuttlemyre/roguecli
+        #     DOCKERFILE: ./Dockerfile
+        #   - IMAGE: ktsuttlemyre/roguesecrets
+        #     DOCKERFILE: ./secrets/Dockerfile
     steps:
       # download the file here so you can use it
       #- name: download artifact
@@ -67,6 +81,18 @@ jobs:
         uses: sigstore/cosign-installer@6e04d228eb30da1757ee4e1dd75a0ec73a653e06 #v3.1.1
         with:
           cosign-release: 'v2.1.1'
+      #####
+      # - name: Build and push Docker image
+      #   id: build-and-push
+      #   uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
+      #   with:
+      #     file: ${{ matrix.DOCKERFILE }}
+      #     context: .
+      #     push: ${{ github.event_name != 'pull_request' }}
+      #     tags: ${{ steps.meta.outputs.tags }}
+      #     labels: ${{ steps.meta.outputs.labels }}
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max####
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
