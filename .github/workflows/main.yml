@@ -1,4 +1,4 @@
-name: Release ${{ github.head_ref }} 
+name: Release
 # more info here 
 # https://docs.github.com/en/actions/publishing-packages/publishing-docker-images
 
