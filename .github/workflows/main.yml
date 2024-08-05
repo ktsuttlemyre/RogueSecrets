@@ -1,4 +1,4 @@
-name: Release
+name: Release ${{ github.head_ref || github.ref_name }} 
 # more info here 
 # https://docs.github.com/en/actions/publishing-packages/publishing-docker-images
 
@@ -22,6 +22,7 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
   # github.repository as <account>/<repo>
 
 jobs:
