@@ -126,7 +126,12 @@ debugger () {
        exec "${RogueArgs[@]}
        ;;
        :refresh:)
-       git pull; exec "${RogueArgs[@]}
+       branch="$(git rev-parse --abbrev-ref HEAD)"
+       if [ "$branch" == 'develop' ]; then
+         git pull -f && git merge origin/main && exec "${RogueArgs[@]}"
+       else
+         git pull -f && exec "${RogueArgs[@]}"
+       fi
        ;;
       :json:*)
         name="${response:6}"
