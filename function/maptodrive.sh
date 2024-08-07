@@ -70,6 +70,13 @@ create_symlinks() {
   done
 }
 
+scrub_destination=false
+#if [ "$clean_destination" == true ]; then
+#    for dest_folder in "$SOURCE_DIR"/*; do
+#        src_name=$(basename "$src_folder")
+#    fi
+#fi
+
 # Main loop
 # Iterate over the files in the source directory using a glob pattern
 for src_folder in "$SOURCE_DIR"/*; do
@@ -77,7 +84,7 @@ for src_folder in "$SOURCE_DIR"/*; do
   # Check if it's a file (not a directory)
   [ ! -d "$src_folder" ] && echo "Not a directory $src_folder skipping" && continue
   echo "src is $src_name"
-  echo "fodler is ${!src_name}"
+  echo "folder is ${!src_name}"
   dest_folder="${!src_name}"
   [ -z "$dest_folder" ] && echo "Source directory $src_folder does not map to a destination" && continue
 
