@@ -8,19 +8,21 @@
 
 # Source the env file
 [ ! -f "$1" ] && echo "Env file $1 not found." && exit 1
+set -o allexport
 source "$1"
+set +o allexport
 
 # Source directory (you can change this to your desired directory)
-[ ! -f "$SOURCE_DIR" ] && echo "be sure to give a $SOURCE_DIR" && exit 1
+[ -z "$SOURCE_DIR" ] && echo "Variable SOURCE_DIR has no value" && exit 1
 
 # Check if the source directory exists
 [ ! -d "$SOURCE_DIR" ] && echo "Source directory does not exist: $SOURCE_DIR" && exit 1
 
 # Function to check if a file is a symbolic link
-is_symlink() { [ -L "$1" ] }
+is_symlink() { [ -L "$1" ]; }
 
 # Function to check if a file is a hard link
-is_hardlink() { [ -e "$1" ] && [ "$(stat -c %h "$1")" -gt 1 ] }
+is_hardlink() { [ -e "$1" ] && [ "$(stat -c %h "$1")" -gt 1 ]; }
 
 # Function to create symlinks
 create_symlinks() {
@@ -35,10 +37,10 @@ create_symlinks() {
     dest_file="$dest_dir/$file_name"
 
     #if file exists then
-    if [ -e "$dest_file"]; then 
+    if [ -e "$dest_file" ]; then 
         if is_symlink "$dest_file"; then
             target_path=$(readlink "$dest_file")
-        
+
             if [ -e "$target_path" ]; then
                 echo "Found [Skipping]: Symlink $dest_file is valid and points to $target_path."
                 continue
@@ -52,22 +54,28 @@ create_symlinks() {
             continue
         fi
     fi
-@@@@@@ ERROR HERE BECAUSE I DONT KNOW WHAT THE BELOW LINE DOES    
-    ln -sf "$src_fullpath" "$dest_file"
+    if [ ! -z "$dry-run" ]; then
+        echo "this is a dry run"
+        continue
+     fi
+     echo "creating softlink $src_fullpath $dest_file"
+     #ln -sf "$src_fullpath" "$dest_file"
   done
 }
 
 # Main loop
 # Iterate over the files in the source directory using a glob pattern
 for src_folder in "$SOURCE_DIR"/*; do
+  src_name=$(basename "$src_folder")
   # Check if it's a file (not a directory)
   [ ! -d "$src_folder" ] && echo "Not a directory $src_folder skipping" && continue
-
-  dest_folder=${!src_folder}
+  echo "src is $src_name"
+  echo "fodler is ${!src_name}"
+  dest_folder="${!src_folder}"
   [ -z "$dest_folder" ] && echo "Source directory $src_folder does not map to a destination" && continue
-  
+
   echo "Creating symlinks from $src_folder to $dest_folder"
   create_symlinks "$src_folder" "$dest_folder"
 done
 
-echo "Symlinks creation completed."
+echo "done"
