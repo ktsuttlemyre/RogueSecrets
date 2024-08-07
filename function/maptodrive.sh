@@ -2,7 +2,8 @@
 #
 # Takes a src directory and maps all the files in there to another drive using symlinks
 # I use this for steamdeck to map my usb drive to a drive on the hdd
-
+create_destinations=false
+dry_run=false
 # Check if env file is provided
 [ -z "$1" ] && echo "Usage: $0 path_to_env_file" && exit 1
 
@@ -29,15 +30,21 @@ create_symlinks() {
   local source_dir=$1
   local dest_dir=$2
 
-  [ ! -d "$source_dir" ] && echo "Source directory $source_dir does not exist." && return 1
-  [ ! -d "$dest_dir" ] && echo "Destination directory $dest_dir does not exist." && return 1
-
+  [ ! -d "$source_dir" ] && echo "Source directory $source_dir does not exist. Nothing to do" && return 1
+  if [ ! -d "$dest_dir" ]; then
+	if [ ! -z "$create_destinations" ]; then
+		mkdir -p "$dest_dir"
+	else
+		 echo "Destination directory $dest_dir does not exist. Not creating it"
+		 return 1
+	fi
+  fi
   for src_file in "$source_dir"/*; do
     file_name=$(basename "$src_file")
     dest_file="$dest_dir/$file_name"
 
     #if file exists then
-    if [ -e "$dest_file" ]; then 
+    if [ -e "$dest_file" ]; then
         if is_symlink "$dest_file"; then
             target_path=$(readlink "$dest_file")
 
@@ -54,12 +61,12 @@ create_symlinks() {
             continue
         fi
     fi
-    if [ ! -z "$dry-run" ]; then
+    if [ "$dry_run" == true ]; then
         echo "this is a dry run"
         continue
      fi
-     echo "creating softlink $src_fullpath $dest_file"
-     #ln -sf "$src_fullpath" "$dest_file"
+     echo "creating softlink $src_file $dest_file"
+     ln -sf "$src_file" "$dest_file"
   done
 }
 
@@ -71,10 +78,10 @@ for src_folder in "$SOURCE_DIR"/*; do
   [ ! -d "$src_folder" ] && echo "Not a directory $src_folder skipping" && continue
   echo "src is $src_name"
   echo "fodler is ${!src_name}"
-  dest_folder="${!src_folder}"
+  dest_folder="${!src_name}"
   [ -z "$dest_folder" ] && echo "Source directory $src_folder does not map to a destination" && continue
 
-  echo "Creating symlinks from $src_folder to $dest_folder"
+  echo "Linking directory from $src_folder to $dest_folder"
   create_symlinks "$src_folder" "$dest_folder"
 done
 
