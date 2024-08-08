@@ -102,8 +102,9 @@ scrub_destination=false
 #   create_symlinks "$src_folder" "$dest_folder"
 # done
 
-
-jq -r '.map | to_entries[][]' | while read -r src_rpath ; do
+# https://stackoverflow.com/questions/34226370/jq-print-key-and-value-for-each-entry-in-an-object
+jq -r '.myhosts | keys[] as $k | "\($k), \(.[$k] | .ip)"'
+jq -r '.map | to_entries[]' | while read -r src_rpath ; do
     read -r dest_rpath
     echo "src_rpath=$src_rpath and value=$dest_rpath"
     
