@@ -103,7 +103,7 @@ scrub_destination=false
 # done
 
 # https://stackoverflow.com/questions/34226370/jq-print-key-and-value-for-each-entry-in-an-object
-jq -r '.map | to_entries[][]' | while read -r src_rpath ; do
+cat "$config" | jq -r '.map | to_entries[][]' | while read -r src_rpath ; do
     read -r dest_rpath
     echo "src_rpath=$src_rpath and value=$dest_rpath"
     
@@ -118,6 +118,6 @@ jq -r '.map | to_entries[][]' | while read -r src_rpath ; do
 
     echo "Linking directory from $src_folder to $dest_folder"
     create_symlinks "$src_folder" "$dest_folder"
-done < <(cat "$config")
+done
 
 echo "done"
