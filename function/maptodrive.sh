@@ -118,6 +118,6 @@ jq -r '.map | to_entries[][]' | while read -r src_rpath ; do
 
     echo "Linking directory from $src_folder to $dest_folder"
     create_symlinks "$src_folder" "$dest_folder"
-done < "$config"
+done < <(cat "$config")
 
 echo "done"
