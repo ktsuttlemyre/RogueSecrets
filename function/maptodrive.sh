@@ -2,7 +2,7 @@
 #
 # Takes a src directory and maps all the files in there to another drive using symlinks
 # I use this for steamdeck to map my usb drive to a drive on the hdd
-set -xe
+#set -xe
 create_destinations=false
 dry_run=false
 # Check if env file is provided
