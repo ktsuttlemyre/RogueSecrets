@@ -1,0 +1,32 @@
+Atari - 2600
+Atari - 5200
+Atari - Lynx
+Bandai - WonderSwan
+Bandai - WonderSwan Color
+FB Alpha - Arcade Games
+GameCube
+GCE - Vectrex
+Handheld Electronic Game
+MAME - 2003
+Microsoft - MSX2
+NEC - PC Engine
+NEC - PC Engine CD
+NEC - PC Engine SuperGrafx
+NEC - TurboGrafx 16
+NEC - TurboGrafx CD
+Nintendo - 64
+Nintendo - Famicom
+Nintendo - Family Computer Disk System
+Nintendo - Game Boy
+Nintendo - Game Boy Advance
+Nintendo - Game Boy Color
+Nintendo - Nintendo Entertainment System
+Nintendo - Sufami Turbo
+Nintendo - Super Famicom
+Nintendo - Super Nintendo Entertainment System
+Nintendo - Virtual Boy
+Sega - Game Gear
+Sega - Master System - Mark III
+Sega - Mega Drive - Genesis
+SNK - Neo Geo Pocket
+SNK - Neo Geo Pocket Color
