@@ -102,7 +102,7 @@ scrub_destination=false
 # done
 
 
-jq -r 'to_entries[][]' | while read -r src_rpath ; do
+jq -r '.map | to_entries[][]' | while read -r src_rpath ; do
     read -r dest_rpath
     echo "src_rpath=$src_rpath and value=$dest_rpath"
     
