@@ -71,12 +71,14 @@ create_symlinks() {
             continue
         fi
     fi
-    if [ "$dry_run" == true ]; then
+
+     echo "creating softlink $src_file $dest_file"
+     
+     if [ "$dry_run" == true ]; then
         echo "this is a dry run"
         continue
      fi
-     echo "creating softlink $src_file $dest_file"
-     #ln -sf "$src_file" "$dest_file"
+     ln -sf "$src_file" "$dest_file"
   done
 }
 
