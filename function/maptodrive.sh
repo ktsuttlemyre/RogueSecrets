@@ -111,10 +111,10 @@ cat "$config" | jq -r '.map | to_entries[][]' | while read -r src_rpath ; do
     dest_folder="$dest_abs_path/$dest_rpath"
 
     # Check if it's a file (not a directory)
-    [ -z "$src_folder" ] && echo "Source directory $src_folder does not map to a destination" && continue
-    [ ! -d "$src_folder" ] && echo "Not a directory $src_folder skipping" && continue
-    [ -z "$dest_folder" ] && echo "Source directory $dest_folder does not map to a destination" && continue
-    [ ! -d "$dest_folder" ] && echo "Not a directory $dest_folder skipping" && continue
+    [ -z "$src_folder" ] && echo "Source directory value empty not map to a source" && continue
+    [ ! -d "$src_folder" ] && echo "Source directory not a directory $src_folder skipping" && continue
+    [ -z "$dest_folder" ] && echo "Destination directory value empty not map to a destination" && continue
+    [ ! -d "$dest_folder" ] && echo "Destination directory not a directory $dest_folder skipping" && continue
 
     echo "Linking directory from $src_folder to $dest_folder"
     create_symlinks "$src_folder" "$dest_folder"
