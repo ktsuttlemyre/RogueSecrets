@@ -44,6 +44,8 @@ if ! ( (return 0 2>/dev/null) && true || false); then
 fi
 
 #prerequsite checks
+version_tag=${version_tag:-}
+help=${help:-}
 [ -z "${version_tag}" ] && echo "Please add a version_tag variable to your $parent_name" && exit 0
 [ -z "${help}" ] && [ ! -f "$parent_dir/README.md" ] && echo "Please add a help variable to your script or a $parent_dir/README.md" && exit 0
 
