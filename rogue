@@ -42,8 +42,10 @@ docker_build () {
   fi
 }
 
+#TODO remove set +u and add all undelcared vars to the loop
+set +u
 # declare all vars
-for var in IS_ROGUE_CONTEXT; do
+for var in IS_ROGUE_CONTEXT tag; do
   declare "$var"="${!var:-}"
 done 
 
