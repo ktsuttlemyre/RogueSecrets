@@ -4,7 +4,10 @@ set -uo pipefail
 ( 
 script=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/
 if [ ! -f "${script}log.sh" ]; then
-  curl -S -s -o /dev/null -O https://raw.githubusercontent.com/Zordrak/bashlog/master/log.sh
+  if ! curl -S -s -o /dev/null -O https://raw.githubusercontent.com/Zordrak/bashlog/master/log.sh; then
+    echo "Downlaod error"
+    exit 1
+  fi
 fi
 chmod +x "${script}log.sh"
 source "${script}log.sh"
