@@ -4,7 +4,6 @@ set -uo pipefail
 ( 
 script=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/
 if [ ! -f "${script}log.sh" ]; then
-  echo "${script}"
   if ! curl -S -s -O --output-dir $script https://raw.githubusercontent.com/Zordrak/bashlog/master/log.sh; then
     echo "Download error"
     exit 1
@@ -46,6 +45,7 @@ fi
 #prerequsite checks
 version_tag=${version_tag:-}
 help=${help:-}
+debug=${debug:-}
 [ -z "${version_tag}" ] && echo "Please add a version_tag variable to your $parent_name" && exit 0
 [ -z "${help}" ] && [ ! -f "$parent_dir/README.md" ] && echo "Please add a help variable to your script or a $parent_dir/README.md" && exit 0
 
