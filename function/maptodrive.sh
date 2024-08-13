@@ -2,11 +2,15 @@
 #
 # Takes a src directory and maps all the files in there to another drive using symlinks
 # I use this for steamdeck to map my usb drive to a drive on the hdd
-#set -xe
+set -uo pipefail
+
 create_destinations=false
 dry_run=false
+HOSTNAME="${HOSTNAME:-$HOST}"
+HOSTNAME="${HOSTNAME:=$(hostname||uname -n)}"
+
 # Check if env file is provided
-config=${1:-../_hosts/steamdeck/RogueCLI/functions/src.json}
+config=${1:-../_hosts/$HOSTNAME/RogueCLI/functions/src.json}
 [ -z "$config" ] && echo "Usage: $0 path_to_env_file" && exit 1
 
 # Source the env file
@@ -105,7 +109,7 @@ scrub_destination=false
 # done
 
 # https://stackoverflow.com/questions/34226370/jq-print-key-and-value-for-each-entry-in-an-object
-cat "$config" | jq -r '.map | to_entries[][]' | while read -r src_rpath ; do
+jq -r '.map "$config" | to_entries[][]' | while read -r src_rpath ; do
     read -r dest_rpath
     echo "src_rpath=$src_rpath and value=$dest_rpath"
     
