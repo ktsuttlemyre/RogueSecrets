@@ -10,7 +10,8 @@ HOSTNAME="${HOSTNAME:-$HOST}"
 HOSTNAME="${HOSTNAME:=$(hostname||uname -n)}"
 
 # Check if env file is provided
-config=${1:-../_hosts/$HOSTNAME/RogueCLI/functions/src.json}
+# TODO remove the default
+config=${1:-../_hosts/$HOSTNAME/RogueCLI/functions/maptodrive-default.json}
 [ -z "$config" ] && echo "Usage: $0 path_to_env_file" && exit 1
 [ ! -f "$config" ] && echo "No configuration for $HOSTNAME at $config" && exit 1
 
