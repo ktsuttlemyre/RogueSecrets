@@ -4,6 +4,7 @@ set -uo pipefail
 ( 
 script=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/
 if [ ! -f "${script}log.sh" ]; then
+  echo "${script}"
   if ! curl -S -s -o /dev/null -O --output-dir "${script}" https://raw.githubusercontent.com/Zordrak/bashlog/master/log.sh; then
     echo "Download error"
     exit 1
