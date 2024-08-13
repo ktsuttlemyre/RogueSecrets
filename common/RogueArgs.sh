@@ -1,6 +1,15 @@
 #!/bin/bash
 #
-#
+set -uo pipefail
+( 
+script=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+if [ ! -f "${script}log.sh" ]; then
+  curl -O https://raw.githubusercontent.com/Zordrak/bashlog/master/log.sh
+fi
+chmod +x "${script}log.sh"
+source "${script}log.sh"
+)
+
 RogueArgs=("$@")
 #simple debugger for this script only
 console () {
