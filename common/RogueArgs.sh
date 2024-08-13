@@ -43,6 +43,7 @@ if ! ( (return 0 2>/dev/null) && true || false); then
 fi
 
 #prerequsite checks
+version=${version:-}
 version_tag=${version_tag:-}
 help=${help:-}
 debug=${debug:-}
