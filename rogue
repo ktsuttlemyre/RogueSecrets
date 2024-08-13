@@ -79,6 +79,10 @@ inpath=$1
 
 #https://medium.com/oracledevs/creating-an-oracle-cloud-infrastructure-cli-toolkit-docker-image-35be0ca71aa
 
+for var in IS_ROGUE_CONTEXT; do
+  declare "$var"="${!var:-}"
+done 
+
 if [ "$1" == "--" ]; then
   case $2 in
     reset)
