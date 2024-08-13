@@ -41,6 +41,13 @@ docker_build () {
     echo "$log" > /dev/stderr
   fi
 }
+
+# declare all vars
+for var in IS_ROGUE_CONTEXT; do
+  declare "$var"="${!var:-}"
+done 
+
+
 export d_compose=(docker-compose)
 if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	if ! command -v docker &> /dev/null; then
@@ -78,10 +85,6 @@ inpath=$1
 # fi
 
 #https://medium.com/oracledevs/creating-an-oracle-cloud-infrastructure-cli-toolkit-docker-image-35be0ca71aa
-
-for var in IS_ROGUE_CONTEXT; do
-  declare "$var"="${!var:-}"
-done 
 
 if [ "$1" == "--" ]; then
   case $2 in
