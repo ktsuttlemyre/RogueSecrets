@@ -4,7 +4,7 @@ services:
         image: ${registry}${project}/${image}:${tag}
         container_name: ${image}-${PID}
         hostname: ${image} #optional
-        user: ${PUID:-1000}:=${GUID:-1000}
+        user: ${PUID:-1000}:${GUID:-1000}
         environment:
           - PUID=${PUID:-1000}
           - PGID=${GUID:-1000}
