@@ -1,10 +1,10 @@
 #!/bin/bash
 #
 set -uo pipefail
-( 
+(
 script=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/
 if [ ! -f "${script}log.sh" ]; then
-  if ! curl -S -s -O --output-dir $script https://raw.githubusercontent.com/Zordrak/bashlog/master/log.sh; then
+  if ! curl -S -s -O --output-dir "${script}" https://raw.githubusercontent.com/Zordrak/bashlog/master/log.sh; then
     echo "Download error"
     exit 1
   fi
@@ -57,7 +57,7 @@ flags=( "h:help"
         )
 #"s":"silent" "strict"
 #"q":"quiet"
-        
+
 # https://stackoverflow.com/questions/65349069/testing-whether-stdin-is-a-file-vs-a-pipe-vs-a-tty
 is_interactive () { [[ $- == *i* ]]; }
 is_stdin_redirected () { [[ $- == *s* ]]; }
@@ -109,7 +109,7 @@ debugger () {
     if [ "$lines" -gt 5 ]; then 
             echo -e "$prefix[ Start DocVar : $lines ] \n $hr" >> $outfile
             echo "${@}" >> ${RogueArgs_debug_output:-/dev/stderr}
-            echo -e " $hr\nRogueDebugger[$caller] [ End DocVar : $lines ]" >> $outfile
+            echo -e " $hr\nRogueDebugger[$caller] [ End DocVar : $lines ]" >> "${outfile}"
     else
             echo -e "$prefix${@}" >> $outfile
     fi
@@ -139,7 +139,7 @@ debugger () {
         return 1
         ;;
       :restart:)
-       exec "${RogueArgs[@]}
+       exec "${RogueArgs[@]}"
        ;;
        :refresh:)
        branch="$(git rev-parse --abbrev-ref HEAD)"
@@ -197,18 +197,18 @@ assign_keyvalue () {
     # (defaults to non existant variable or true means it flag exists and may have multiple values)
     if [ -z "$key" ];then #if it doesnt exist then make it
       console "declaring ${key}=${value}"
-      delare -g ${key}="${value}"
+      delare -g "${key}"="${value}"
     else  #if it exitsts then make it true and add values to args_${key} and args${section}_${key}
       console "declaring ${key}=true"
-      declare -g ${key}=true
+      declare -g "${key}"=true
     fi
     if [ ! "$value" = true ]; then
       if [ -z "arg${section}_${key}" ]; then
         console "declaring arg${section}_${key}=${value}"
-        declare -g arg${section}_${key}="${value}"
+        declare -g "arg${section}_${key}"="${value}"
       else
         console "declaring arg${section}_${key}=true"
-        declare -g arg${section}_${key}=true
+        declare -g "arg${section}_${key}"=true
       fi
       #handle multiple values and add to sections
       name=args_$key
@@ -253,7 +253,7 @@ while [[ $# -gt 0 ]]; do
             break
           fi
       done
-      [ "$found" != true ] echo "flag [$1] is not a valid flag"; exit 1
+      [ "$found" != true ] && echo "flag [$1] is not a valid flag"; exit 1
       ;;
     *)
       positional_args+=("$1") # save positional arg
@@ -291,21 +291,20 @@ fi
 if [ ! -z "$strict" ]; then
         [ "$strict" = true ] && header "Mode set to strict" && set -euo pipefail
 fi
-if [ ! -z "${help}"]; then
+if [ ! -z "${help}" ]; then
   #todo make readme case insensitive
-  if [ -f $script_dir/README.md ]; then
+  if [ -f "${script_dir}/README.md" ]; then
     # if glow exists then use that
     if command -v glow &> /dev/null; then
-      glow "$script_dir/README.md"
+      glow "${script_dir}/README.md"
     else
-      cat "$script_dir/README.md"
+      cat "${script_dir}/README.md"
     fi
   else
-    tail -n +1 $script_dir/$script_name | sed '/^#/!q'
+    tail -n +1 "${script_dir}/${script_name}" | sed '/^#/!q'
   fi
   exit 0;
 fi
 set_flags=$(echo "$set_flags" | sort | uniq )
 $set_flags
 :;
-
