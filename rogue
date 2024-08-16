@@ -193,8 +193,9 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#debugger "${ENTRYPOINT[@]}"
 	#export CMD="${RogueArgs[@]:2}"
 
-	CMD=$(docker image inspect -f '{{.Config.Cmd}}' "${registry}${project}/${image}:${tag}")
-	ENTRYPOINT=$(docker image inspect -f '{{.Config.Entrypoint}}' "${registry}${project}/${image}:${tag}")
+	inspected="$(docker image inspect "${registry}${project}/${image}:${tag}")"
+	CMD="$(echo "$inspected" | jq -r '.[-1].Config.Cmd')"
+	ENTRYPOINT="$(echo "$inspected" | jq -r '.[-1].Config.Entrypoint')"
 
 	#https://stackoverflow.com/questions/50549356/how-can-i-see-which-user-launched-a-docker-container
 	CONTAINER_USER=$(docker image inspect -f '{{.Config.User}}' "${registry}${project}/${image}:${tag}")
