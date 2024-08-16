@@ -17,12 +17,8 @@ services:
         stdin_open: true
         init: true
         tty: true
-        entrypoint: ${ENTRYPOINT}
-        # entrypoint: setpriv --reuid=${PUID:-1000} --regid=${PGID:-1000} --init-groups
-        # entrypoint: chroot --userspec=${PUID:-1000}:${PGID:-1000} /
-        # command: ${CMD:-ps aux}
-        #docker inspect -f '{{.Config.Cmd}}' <image id>
-        #docker inspect -f '{{.Config.Entrypoint}}' <image id>
+        entrypoint: ${ENTRYPOINT:-}
+        command: ${CMD:-}
         volumes:
             - /:/host/root:Z
             - ${PWD}:/host/cwd:Z
