@@ -158,6 +158,32 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	
 	#export ENTRYPOINT=("${RogueArgs[@]}")
 	#debugger "${ENTRYPOINT[@]}"
+	#export CMD="${RogueArgs[@]:2}"
+
+	CMD=$(docker image inspect -f '{{.Config.Cmd}}' "${registry}${project}/${image}:${tag}")
+	ENTRYPOINT=$(docker image inspect -f '{{.Config.Entrypoint}}' "${registry}${project}/${image}:${tag}")
+
+	#https://stackoverflow.com/questions/50549356/how-can-i-see-which-user-launched-a-docker-container
+	CONTAINER_USER=$(docker image inspect -f '{{.Config.User}}' "${registry}${project}/${image}:${tag}")
+	if [ ! -z "${CONTINER_USER}" ]; then
+		header "This image does not use root user!"
+		header "This image does not use root user!"
+		header "This image does not use root user!"
+	else
+		header "Container is root, stepping down to local user"
+		#if [ ! -z "${ENTRYPOINT}" ]; then
+			if [[ $(jq -r 'if type=="string" then true else false end' <(echo "$ENTRYPOINT")) == true ]]; then
+				#is string
+				# alternate entrypoint to step down privliage: setpriv --reuid=${PUID:-1000} --regid=${PGID:-1000} --init-groups
+				export ENTRYPOINT="chroot --userspec=${PUID:-1000}:${PGID:-1000} / ${ENTRYPOINT}"
+			else
+				#it is array
+				export ENTRYPOINT="$(echo -e "[\"chroot\", \"--userspec=${PUID:-1000}:${PGID:-1000}\", \"/\"]\n${ENTRYPOINT}" | jq -s 'add')"
+			fi
+		#fi
+	fi
+	debugger "$CONTAINER_USER"
+
 
 	
 	#create ramdisk
@@ -222,10 +248,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	done
 	debugger "$docker_compose_yaml"
 	
-	
 	export service="${image}"
-
-	#export CMD="${RogueArgs[@]:2}"
 
 	debugger 
 	if [ -z "${registry}" ]; then
@@ -239,15 +262,6 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#get workdir from image
 	WORKDIR=$(docker image inspect -f '{{.Config.WorkingDir}}' "${registry}${project}/${image}:${tag}")
 	debugger "$WORKDIR"
-
-	#https://stackoverflow.com/questions/50549356/how-can-i-see-which-user-launched-a-docker-container
-	CONTAINER_USER=$(docker image inspect -f '{{.Config.User}}' "${registry}${project}/${image}:${tag}")
-	if [ ! -z "${CONTINER_USER}" ]; then
-		header "This image does not use root user!"
-		header "This image does not use root user!"
-		header "This image does not use root user!"
-	fi
-	debugger "$CONTAINER_USER"
 
 	# if we are in debug mode then add a mount to the source code
 	debug_mount=''
