@@ -212,7 +212,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 				export ENTRYPOINT="chroot --userspec=${PUID:-1000}:${PGID:-1000} / ${ENTRYPOINT}"
 			else
 				debugger "Entrypoint is array"
-				export ENTRYPOINT="$(echo -e "[\"chroot\", \"--userspec=${PUID:-1000}:${PGID:-1000}\", \"/\"]\n${ENTRYPOINT}" | jq -s 'add')"
+				export ENTRYPOINT="$(echo -e "[\"chroot\", \"--userspec=${PUID:-1000}:${PGID:-1000}\", \"/\"]\n${ENTRYPOINT}" | jq -sc 'add')"
 			fi
 		#fi
 	fi
