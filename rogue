@@ -205,16 +205,17 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		header "This image does not use root user!"
 	else
 		header "Container is root, stepping down to local user"
-		#if [ ! -z "${ENTRYPOINT}" ]; then
-			if [[ $(jq -r 'if type=="string" then true else false end' <(echo "$ENTRYPOINT")) == true ]]; then
-				debugger "Entrypoint is string"
-				# alternate entrypoint to step down privliage: setpriv --reuid=${PUID:-1000} --regid=${PGID:-1000} --init-groups
-				export ENTRYPOINT="chroot --userspec=${PUID:-1000}:${PGID:-1000} / ${ENTRYPOINT}"
-			else
-				debugger "Entrypoint is array"
-				export ENTRYPOINT="$(echo -e "[\"/bin/bash\", \"-c\", \"chroot\", \"--userspec=${PUID:-1000}:${PGID:-1000}\", \"/\"]\n${ENTRYPOINT}" | jq -sc 'add')"
-			fi
-		#fi
+		export ENTRYPOINT="chroot --userspec=${PUID:-1000}:${PGID:-1000} / ps aux"
+		##if [ ! -z "${ENTRYPOINT}" ]; then
+		#	if [[ $(jq -r 'if type=="string" then true else false end' <(echo "$ENTRYPOINT")) == true ]]; then
+		#		debugger "Entrypoint is string"
+		#		# alternate entrypoint to step down privliage: setpriv --reuid=${PUID:-1000} --regid=${PGID:-1000} --init-groups
+		#		export ENTRYPOINT="chroot --userspec=${PUID:-1000}:${PGID:-1000} / ${ENTRYPOINT}"
+		#	else
+		#		debugger "Entrypoint is array"
+		#		export ENTRYPOINT="$(echo -e "[\"/bin/bash\", \"-c\", \"chroot\", \"--userspec=${PUID:-1000}:${PGID:-1000}\", \"/\"]\n${ENTRYPOINT}" | jq -sc 'add')"
+		#	fi
+		##fi
 	fi
 	debugger "$CONTAINER_USER"
 
