@@ -50,7 +50,7 @@ for var in IS_ROGUE_CONTEXT tag; do
 done 
 
 
-export d_compose=(docker-compose)
+d_compose=(docker-compose)
 if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	if ! command -v docker &> /dev/null; then
 	    header "Docker not found. Installing"
@@ -185,7 +185,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		export tag="${default_image_tag:-$branch}"
 	fi
 
-	#save the vars we just loaded to a variable for compiling
+	#save the vars we just loaded to a variable for compilingfenv
 	#TODO use sessionenv here but right now it is very hacky
 	envvars=$(env || printenv)
 
@@ -239,7 +239,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		        if [ -z "${docker_compose_yaml}" ]; then
 			    docker_compose_yaml="$(${d_compose[@]} -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
 		        else
-			    docker_compose_yaml="$(${d_compose[@]} -f <(envsubst < "$docker_compose_yaml") -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
+			    docker_compose_yaml="$(${d_compose[@]} -f <(echo "$docker_compose_yaml") -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
 			fi
 		    fi
 		done
