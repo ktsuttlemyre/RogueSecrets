@@ -236,6 +236,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		        debugger "$docker_compose_yaml"
 		        debugger "$envvars"
 		        debugger "adding in file $file"
+			debugger "$(envsubst < "$file")"
 		        if [ -z "${docker_compose_yaml}" ]; then
 			    docker_compose_yaml="$(${d_compose[@]} -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
 		        else
