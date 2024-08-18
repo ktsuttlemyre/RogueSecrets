@@ -17,8 +17,8 @@ services:
         stdin_open: true
         init: true
         tty: true
-        entrypoint: ${ENTRYPOINT:-}
-        command: ${CMD:-}
+        entrypoint: ${ENTRYPOINT}
+        command: ${CMD}
         volumes:
             - /:/host/root:Z
             - ${PWD}:/host/cwd:Z
