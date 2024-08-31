@@ -28,6 +28,13 @@ services:
             #TODO? - ${DIR_SECRETS}:/host/secrets:Z
             #TODO? - /host/config:Z
             #TODO? - /host/data:Z
+            #TODO XDG_CONFIG_HOME
+            #TODO XDG_CACHE_HOME
+            #TODO XDG_DATA_HOME
+            #TODO XDG_STATE_HOME
+            #TODO XDG_RUNTIME_DIR
+            #TODO XDG_DATA_DIRS
+            #TODO XDG_CONFIG_DIRS
 
  #       env_file:
  #           - /under/my
