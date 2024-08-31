@@ -55,6 +55,50 @@ From in the docker image these paths map to host
 
  - /host/session/.env will be exported into the current session as a .env file after the docker image closes
 
+Todo: make these analogous to the above path
+info here
+https://wiki.archlinux.org/title/XDG_Base_Directory
+=== User directories ===
+
+* {{ic|XDG_CONFIG_HOME}}
+** Where user-specific configurations should be written (analogous to {{ic|/etc}}).
+** Should default to {{ic|$HOME/.config}}.
+
+* {{ic|XDG_CACHE_HOME}}
+** Where user-specific non-essential (cached) data should be written (analogous to {{ic|/var/cache}}).
+** Should default to {{ic|$HOME/.cache}}.
+
+* {{ic|XDG_DATA_HOME}}
+** Where user-specific data files should be written (analogous to {{ic|/usr/share}}).
+** Should default to {{ic|$HOME/.local/share}}.
+
+* {{ic|XDG_STATE_HOME}}
+** Where user-specific state files should be written (analogous to {{ic|/var/lib}}).
+** Should default to {{ic|$HOME/.local/state}}.
+
+* {{ic|XDG_RUNTIME_DIR}}
+** Used for non-essential, user-specific data files such as sockets, named pipes, etc.
+** Not required to have a default value; warnings should be issued if not set or equivalents provided.
+** Must be owned by the user with an access mode of {{ic|0700}}.
+** Filesystem fully featured by standards of OS.
+** Must be on the local filesystem.
+** May be subject to periodic cleanup.
+** Modified every 6 hours or set sticky bit if persistence is desired.
+** Can only exist for the duration of the user's login.
+** Should not store large files as it may be mounted as a tmpfs.
+** pam_systemd sets this to {{ic|/run/user/$UID}}.
+
+=== System directories ===
+
+* {{ic|XDG_DATA_DIRS}}
+** List of directories separated by {{ic|:}} (analogous to {{ic|PATH}}).
+** Should default to {{ic|/usr/local/share:/usr/share}}.
+
+* {{ic|XDG_CONFIG_DIRS}}
+** List of directories separated by {{ic|:}} (analogous to {{ic|PATH}}).
+** Should default to {{ic|/etc/xdg}}.
+
+
 Useful conversions to use inside docker to map to host
 ```bash
 #replace path with host locations
