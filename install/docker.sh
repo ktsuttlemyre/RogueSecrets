@@ -48,31 +48,49 @@ fi
 
 header "Confirmed installing docker and compose on $linux_distro on processor type $processor_arch"
 
-header "Remove docker and install official build"
-for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
-#add repo
-# Add Docker's official GPG key:
-sudo apt-get update
-sudo apt-get install ca-certificates curl gnupg
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo mkdir -p /etc/apt/keyrings
-REPO="$linux_distro" #known values are rasbian and ubuntu others expected to work based on the $linux_distro var detemined from /etc/os-release #ID var
-curl -fsSL https://download.docker.com/linux/$REPO/gpg | sudo gpg --dearmor --yes --output /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
-# Add the repository to Apt sources:
-echo \
-  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$REPO \
-  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
+#https://gist.github.com/aarondewindt/99a7ea09d00813bccab5953f40010ace
 
-header 'installing docker'
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-sudo groupadd docker
-#Add the connected user "$USER" to the docker group. Change the user name to match your preferred user if you do not want to use your current user:
-sudo usermod -aG docker $USER
-getent group docker || newgrp docker || true #continue if group exits
-sudo systemctl restart docker
+if [ "$linux_distro" = "steamos" ]; then
+  sudo pacman-key --init
+  pacman-key --populate archlinux
+  sudo pacman -S gnome-terminal
+
+  wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.9.tgz
+  tar xzvf ./docker-20.10.9.tgz
+  sudo cp docker/* /usr/bin/
+
+  sudo wget https://gist.githubusercontent.com/aarondewindt/99a7ea09d00813bccab5953f40010ace/raw/6ea68b56457804096fdc64b147410ac4f832d336/docker.service -P /etc/systemd/system
+  sudo wget https://raw.githubusercontent.com/moby/moby/master/contrib/init/systemd/docker.socket -P /etc/systemd/system
+
+  sudo systemctl enable docker
+  sudo systemctl start docker
+else
+  header "Remove docker and install official build"
+  for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+  #add repo
+  # Add Docker's official GPG key:
+  sudo apt-get update
+  sudo apt-get install ca-certificates curl gnupg
+  sudo install -m 0755 -d /etc/apt/keyrings
+  sudo mkdir -p /etc/apt/keyrings
+  REPO="$linux_distro" #known values are rasbian and ubuntu others expected to work based on the $linux_distro var detemined from /etc/os-release #ID var
+  curl -fsSL https://download.docker.com/linux/$REPO/gpg | sudo gpg --dearmor --yes --output /etc/apt/keyrings/docker.gpg
+  sudo chmod a+r /etc/apt/keyrings/docker.gpg
+  # Add the repository to Apt sources:
+  echo \
+    "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$REPO \
+    "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt-get update
+
+  header 'installing docker'
+  sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  sudo groupadd docker
+  #Add the connected user "$USER" to the docker group. Change the user name to match your preferred user if you do not want to use your current user:
+  sudo usermod -aG docker $USER
+  getent group docker || newgrp docker || true #continue if group exits
+  sudo systemctl restart docker
+fi
 
 #if it doesn't connect try restarting the service
 if ! docker run hello-world &>/dev/null; then 
