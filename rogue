@@ -2,14 +2,15 @@
 ############################  Script Head   ############################
 # Detect if this script sourced
 sourced=false; (return 0 2>/dev/null) && sourced=true
+declare -r sourced="${sourced}"
 
 #script metadata values
-script_name=$(basename "$0")
-script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+declare -r script_name=$(basename "$0")
+declare -r script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 #config
-version_tag='0.5.0'
-RogueArgs=/common/RogueArgs.sh
+declare -r version_tag='0.5.0'
+declare -r RogueArgs=/common/RogueArgs.sh
 
 #parse args
 source $script_dir$RogueArgs "${@}" # I believe this is passing arguments by refrence
@@ -176,6 +177,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
  	#IDK if these are ever going to be relivant but here for completeness
 	#export XDG_DATA_DIRS=${XDG_DATA_DIRS:-/usr/local/share:/usr/share}
 	#export XDG_CONFIG_DIRS=${XDG_DATA_DIRS:-/etc/xdg}
+
+	RogueCLI_APP
 
 	#Add env vars to session (iterate from parent to child)
 	path=''
