@@ -166,6 +166,16 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	./create/ramdisk.sh 250M "$RAMDISK"
 	export RAMDISK="/mnt/$RAMDISK"
 
+	export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
+	export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
+	export XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
+	export XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
+	#not requred to be default. We dont use this for now
+	#export XDG_RUNTIME_HOME=${XDG_RUNTIME_HOME:-@@@@@@}
+
+ 	#IDK if these are ever going to be relivant but here for completeness
+	#export XDG_DATA_DIRS=${XDG_DATA_DIRS:-/usr/local/share:/usr/share}
+	#export XDG_CONFIG_DIRS=${XDG_DATA_DIRS:-/etc/xdg}
 
 	#Add env vars to session (iterate from parent to child)
 	path=''
@@ -277,7 +287,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	# if it is a service then shut it down?
 	[ ! -z "$is_service" ] && ${d_compose[@]} -f <(echo "${docker_compose_yaml}") down
 	
-	rogue_envvars="$RAMDISK/.env"
+	rogue_envvars="$RAMDISK/session/.env"
 	if [ -f rogue_envvars ]; then
 		header "Exporting secrets to current session"
 		case "$(uname)" in
