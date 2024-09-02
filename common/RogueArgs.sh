@@ -35,15 +35,15 @@ sessionenv () {
 
 parent_name="$(basename $(caller |  cut -d " " -f 2))"
 parent_dir="$(realpath $(dirname $(caller | cut -d " " -f 2 )))"
-script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-script_name=$(basename "$0")
+rogueargs_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+rogueargs_name=$(basename "$0")
 if ! ( (return 0 2>/dev/null) && true || false); then
-        echo "This script is expected to be sourced. Please use . or source commands to call $script_name from ${parent_name:-parent}"
+        echo "This script is expected to be sourced. Please use . or source commands to call $rogueargs_name from ${parent_name:-parent}"
         exit 1
 fi
 
 #prerequsite checks
-for var in version version_tag help debug strict; do
+for var in version help debug strict; do
   declare "$var"="${!var:-}"
 done 
 
@@ -293,15 +293,15 @@ if [ ! -z "$strict" ]; then
 fi
 if [ ! -z "${help}" ]; then
   #todo make readme case insensitive
-  if [ -f "${script_dir}/README.md" ]; then
+  if [ -f "${rogueargs_dir}/README.md" ]; then
     # if glow exists then use that
     if command -v glow &> /dev/null; then
-      glow "${script_dir}/README.md"
+      glow "${rogueargs_dir}/README.md"
     else
-      cat "${script_dir}/README.md"
+      cat "${rogueargs_dir}/README.md"
     fi
   else
-    tail -n +1 "${script_dir}/${script_name}" | sed '/^#/!q'
+    tail -n +1 "${rogueargs_dir}/${rogueargs_name}" | sed '/^#/!q'
   fi
   exit 0;
 fi
