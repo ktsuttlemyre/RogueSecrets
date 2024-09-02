@@ -133,7 +133,7 @@ while read -r name; do
 		# load as envirnment variable
 		log_info "exporting $name to shell environment"
 		export "$name=$data"
-  		echo "$name=$data" >> /host/ramdisk/.env
+  		echo "$name=$data" >> /host/session/.env
 	else
 		log_info "writing $name to $f_path"
 
