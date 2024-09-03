@@ -251,7 +251,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 				export COMMAND="-c \"chroot --userspec=${PUID:-1000}:${PGID:-1000} / $ENTRYPOINT $COMMAND\""
 			else
 				debugger "Entrypoint is array" 
-				cmd="$(echo -e "[\"chroot\", \"--userspec=${PUID:-1000}:${PGID:-1000}\", \"/\"]\n${ENTRYPOINT}" | jq -sc 'add')"
+				cmd="$(echo -e "[\"-c\", \"chroot\", \"--userspec=${PUID:-1000}:${PGID:-1000}\", \"/\"]\n${ENTRYPOINT}" | jq -sc 'add')"
 				export COMMAND=$(jq '. |= join(" ")' <(echo "$cmd"))
 			fi
 		fi
