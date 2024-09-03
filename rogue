@@ -55,38 +55,42 @@ for var in IS_ROGUE_CONTEXT tag; do
 done 
 
 
-build_compose=(docker-compose)
-run_compose=(docker-compose)
-container_runtime_installed=''
-if [ -z "${IS_ROGUE_CONTEXT}" ]; then
-	if [ container_runtime = 'docker' ] && ! command -v docker &> /dev/null; then
-	    header "Docker not found. Installing"
-	    container_runtime_installed=true
-	    install_docker
-	elif ! command -v podman &> /dev/null; then
-	    header "Podman not found. Installing"
-	    container_runtime_installed=true
-	    install_podman
-	fi
-	if [ container_runtime = 'docker' ] && [ -x "$(command -v docker-compose)" ]; then
-	    header "docker-compose (v1) is installed."
-	    header " will attempt to use docker-compose but may have incompabitliby issues."
-	    header "to force docker compose (v2) install. Run ${script_dir}/common/install-docker.sh"
-	elif [ container_runtime = 'docker' ] && $(docker compose --help &>/dev/null) && [ $? -eq 0 ]; then
-	    header "docker compose (v2) is installed."
-	    run_compose=(docker compose)
-	elif  $(podman-compose --help &>/dev/null) && [ $? -eq 0 ]; then
-	    header "podman compose installed"
-	    run_compose=(podman-compose)
-	else
-	    if [ -z "${container_runtime_installed}" ]; then
-		echo "Please restart your computer"
-		exit 1
-	    fi
-	    header "Container composer not found. Installing $container_runtime"
-	    install_$container_runtime
-	fi
-fi
+build_compose=(docker compose)
+run_compose=(podman-compose)
+
+#build_compose=(docker-compose)
+#run_compose=(docker-compose)
+#container_runtime_installed=''
+#if [ -z "${IS_ROGUE_CONTEXT}" ]; then
+#	if [ container_runtime = 'docker' ] && ! command -v docker &> /dev/null; then
+#	    header "Docker not found. Installing"
+#	    container_runtime_installed=true
+#	    install_docker
+#	elif ! command -v podman &> /dev/null; then
+#	    header "Podman not found. Installing"
+#	    container_runtime_installed=true
+#	    install_podman
+#	fi
+#	if [ container_runtime = 'docker' ] && [ -x "$(command -v docker-compose)" ]; then
+#	    header "docker-compose (v1) is installed."
+#	    header " will attempt to use docker-compose but may have incompabitliby issues."
+#	    header "to force docker compose (v2) install. Run ${script_dir}/common/install-docker.sh"
+#	elif $(docker compose --help &>/dev/null) && [ $? -eq 0 ]; then
+#	    header "docker compose (v2) is installed."
+#	    build_compose=(docker compose)
+#	    [ container_runtime = 'docker' ] && run_compose=(docker compose)
+#	elif  $(podman-compose --help &>/dev/null) && [ $? -eq 0 ]; then
+#	    header "podman compose installed"
+#	    run_compose=(podman-compose)
+#	else
+#	    if [ -z "${container_runtime_installed}" ]; then
+#		echo "Please restart your computer"
+#		exit 1
+#	    fi
+#	    header "Container composer not found. Installing $container_runtime"
+#	    install_$container_runtime
+#	fi
+#fi
 
 inpath=$1
 # if [[ $inpath == ~* ]]; then
