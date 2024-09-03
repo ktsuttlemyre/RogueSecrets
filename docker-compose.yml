@@ -18,7 +18,7 @@ services:
         init: true
         tty: true
         entrypoint: ${ENTRYPOINT}
-        command: ${CMD}
+        command: ${COMMAND}
         volumes:
             - /:/host/root:Z
             - ${PWD}:/host/workdir:Z
