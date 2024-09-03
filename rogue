@@ -252,7 +252,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		        debugger "$docker_compose_yaml"
 		        debugger "$envvars"
 		        debugger "adding in file $file"
-			addition="$(envsubst '$image' < "$file")"
+			addition="$(envsubst < "$file")" #add in shell format for only sending specific variable replacements '$image'
 			debugger "$addition"
 		        if [ -z "${docker_compose_yaml}" ]; then
 			    docker_compose_yaml="$(${d_compose[@]} -f <( echo "$addition" ) --env-file <(echo "$envvars") config)"
