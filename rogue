@@ -177,7 +177,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#export XDG_DATA_DIRS=${XDG_DATA_DIRS:-/usr/local/share:/usr/share}
 	#export XDG_CONFIG_DIRS=${XDG_DATA_DIRS:-/etc/xdg}
 
-	RogueCLI_APP="#${script_dir}"
+	export RogueCLI_APP="#${script_dir}"
 
 	#Add env vars to session (iterate from parent to child)
 	path=''
@@ -252,11 +252,12 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		        debugger "$docker_compose_yaml"
 		        debugger "$envvars"
 		        debugger "adding in file $file"
-			debugger "$(envsubst < "$file")"
+			addition="$(envsubst '$image' < "$file")"
+			debugger "$addition"
 		        if [ -z "${docker_compose_yaml}" ]; then
-			    docker_compose_yaml="$(${d_compose[@]} -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
+			    docker_compose_yaml="$(${d_compose[@]} -f <( echo "$addition" ) --env-file <(echo "$envvars") config)"
 		        else
-			    docker_compose_yaml="$(${d_compose[@]} -f <(echo "$docker_compose_yaml") -f <( envsubst < "$file" ) --env-file <(echo "$envvars") config)"
+			    docker_compose_yaml="$(${d_compose[@]} -f <(echo "$docker_compose_yaml") -f <( echo "$addition" ) --env-file <(echo "$envvars") config)"
 			fi
 		    fi
 		done
