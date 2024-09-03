@@ -55,7 +55,8 @@ for var in IS_ROGUE_CONTEXT tag; do
 done 
 
 
-d_compose=("${container_runtime}-compose")
+build_compose=(docker-compose)
+run_compose=(docker-compose)
 container_runtime_installed=''
 if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	if [ container_runtime = 'docker' ] && ! command -v docker &> /dev/null; then
@@ -73,10 +74,10 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	    header "to force docker compose (v2) install. Run ${script_dir}/common/install-docker.sh"
 	elif [ container_runtime = 'docker' ] && $(docker compose --help &>/dev/null) && [ $? -eq 0 ]; then
 	    header "docker compose (v2) is installed."
-	    d_compose=(docker compose)
+	    run_compose=(docker compose)
 	elif  $(podman-compose --help &>/dev/null) && [ $? -eq 0 ]; then
 	    header "podman compose installed"
-	    d_compose=(podman-compose)
+	    run_compose=(podman-compose)
 	else
 	    if [ -z "${container_runtime_installed}" ]; then
 		echo "Please restart your computer"
@@ -225,7 +226,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#replace special tag with branch name as needed
 	branch="$(git rev-parse --abbrev-ref HEAD)"
 	if [ -z "$tag" ]; then
-		export tag="${default_image_tag:-$branch}"
+		export tag="${remote_image_tag:-$branch}"
 	fi
 
 	#save the vars we just loaded to a variable for compilingfenv
@@ -285,7 +286,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#handle debug command
 	#if [ ! -z "$debug" ]; then
 	#    export registry=''
-	#    docker_compose_yaml="$(${d_compose[@]} -f <( envsubst < "./docker-debug.yaml" ) --env-file <(echo "$envvars") config)"
+	#    docker_compose_yaml="$(${build_compose[@]} -f <( envsubst < "./docker-debug.yaml" ) --env-file <(echo "$envvars") config)"
 	#fi
 
 	for path_e in ${array_path[@]}; do
@@ -299,9 +300,9 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 			addition="$(envsubst '$image' < "$file")"
 			debugger "$addition"
 		        if [ -z "${docker_compose_yaml}" ]; then
-			    docker_compose_yaml="$(${d_compose[@]} -f <( echo "$addition" ) --env-file <(echo "$envvars") config)"
+			    docker_compose_yaml="$(${build_compose[@]} -f <( echo "$addition" ) --env-file <(echo "$envvars") config)"
 		        else
-			    docker_compose_yaml="$(${d_compose[@]} -f <(echo "$docker_compose_yaml") -f <( echo "$addition" ) --env-file <(echo "$envvars") config)"
+			    docker_compose_yaml="$(${build_compose[@]} -f <(echo "$docker_compose_yaml") -f <( echo "$addition" ) --env-file <(echo "$envvars") config)"
 			fi
 		    fi
 		done
@@ -314,10 +315,10 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	debugger 
 	if [ -z "${registry}" ]; then
 		# build docker
-		${d_compose[@]} -f <(echo "${docker_compose_yaml}") build
+		${build_compose[@]} -f <(echo "${docker_compose_yaml}") build
 	else
 		# pull docker
-		${d_compose[@]} -f <(echo "${docker_compose_yaml}") pull
+		${build_compose[@]} -f <(echo "${docker_compose_yaml}") pull
 	fi
 
 	#get workdir from image
@@ -329,10 +330,10 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		docker_args+="-v $(pwd):${WORKDIR}:Z "	
 	fi
 	#run
-	${d_compose[@]} -f <(echo "${docker_compose_yaml}") run --remove-orphans --env IS_ROGUE_CONTEXT=true $docker_args "${service}" "${RogueArgs[@]}"
+	${run_compose[@]} -f <(echo "${docker_compose_yaml}") run --remove-orphans --env IS_ROGUE_CONTEXT=true $docker_args "${service}" "${RogueArgs[@]}"
 
 	# if it is a service then shut it down?
-	[ ! -z "$is_service" ] && ${d_compose[@]} -f <(echo "${docker_compose_yaml}") down
+	[ ! -z "$is_service" ] && ${build_compose[@]} -f <(echo "${docker_compose_yaml}") down
 	
 	rogue_envvars="$RAMDISK/session/.env"
 	if [ -f rogue_envvars ]; then
