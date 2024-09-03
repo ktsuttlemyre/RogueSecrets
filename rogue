@@ -229,7 +229,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		header "This image does not use root user!"
 	else
 		header "Container is root, stepping down to current local user"
-      		docker_args+='' #'-v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro '
+      		docker_args+='-v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro '
 		# https://github.com/tianon/gosu suggests chroot and setpriv
 		if [ "$COMMAND" = 'null' ]; then
 			export COMMAND=''
