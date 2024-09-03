@@ -17,6 +17,8 @@ services:
         stdin_open: true
         init: true
         tty: true
+        #this is for podman
+        userns_mode: keep-id
         entrypoint: ${ENTRYPOINT}
         command: ${COMMAND}
         volumes:
