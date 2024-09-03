@@ -248,10 +248,10 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 			if [[ $(jq -r 'if type=="string" then true else false end' <(echo "$ENTRYPOINT")) == true ]]; then
 				debugger "Entrypoint is string"
 				# alternate entrypoint to step down privliage: setpriv --reuid=${PUID:-1000} --regid=${PGID:-1000} --init-groups
-				export COMMAND="-c \"chroot --userspec=${PUID:-1000}:${PGID:-1000} / $ENTRYPOINT $COMMAND\""
+				export COMMAND="-c \"mkdir /home/$USER && chroot --userspec=${PUID:-1000}:${PGID:-1000} / $ENTRYPOINT $COMMAND\""
 			else
 				debugger "Entrypoint is array" 
-				cmd="$(echo -e "[\"-c\", \"chroot\", \"--userspec=${PUID:-1000}:${PGID:-1000}\", \"/\"]\n${ENTRYPOINT}" | jq -sc 'add')"
+				cmd="$(echo -e "[\"mkdir\", \"/home/$USER\", \"&&\", \"-c\", \"chroot\", \"--userspec=${PUID:-1000}:${PGID:-1000}\", \"/\"]\n${ENTRYPOINT}" | jq -sc 'add')"
 				export COMMAND=$(jq '. |= join(" ")' <(echo "$cmd"))
 			fi
 		fi
