@@ -333,8 +333,13 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	if [ ! -z "$debug" ]; then
 		docker_args+="-v $(pwd):${WORKDIR}:Z "	
 	fi
+
+	if [ container_runtime = 'docker' ]; then
+		docker_args+="--remove-orphans "
+	fi
+
 	#run
-	${run_compose[@]} -f <(echo "${docker_compose_yaml}") run --remove-orphans --env IS_ROGUE_CONTEXT=true $docker_args "${service}" "${RogueArgs[@]}"
+	${run_compose[@]} -f <(echo "${docker_compose_yaml}") run --env IS_ROGUE_CONTEXT=true $docker_args "${service}" "${RogueArgs[@]}"
 
 	# if it is a service then shut it down?
 	[ ! -z "$is_service" ] && ${build_compose[@]} -f <(echo "${docker_compose_yaml}") down
