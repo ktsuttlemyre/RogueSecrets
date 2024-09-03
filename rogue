@@ -62,7 +62,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	    header "Docker not found. Installing"
 	    container_runtime_installed=true
 	    install_docker
-	elif ! command -v podman &> /dev/null;
+	elif ! command -v podman &> /dev/null; then
 	    header "Podman not found. Installing"
 	fi
 	if [ container_runtime = 'docker' ] && [ -x "$(command -v docker-compose)" ]; then
