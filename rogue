@@ -229,8 +229,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 			else
 				debugger "Entrypoint is array" 
 				echo "Stopping because this is untested!"
-				exit 1
-				export COMMAND="$(echo -e "[\"/bin/bash\", \"-c\", \"chroot\", \"--userspec=${PUID:-1000}:${PGID:-1000}\", \"/\"]\n${ENTRYPOINT}" | jq -sc 'add')"
+				cmd="$(echo -e "[\"/bin/bash\", \"-c\", \"chroot\", \"--userspec=${PUID:-1000}:${PGID:-1000}\", \"/\"]\n${ENTRYPOINT}" | jq -sc 'add')"
+				export COMMAND=$(jq '. |= join(" ")' <(echo "$cmd"))
 			fi
 		#fi
 		export ENTRYPOINT='/bin/bash'
