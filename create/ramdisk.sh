@@ -4,6 +4,7 @@ if [ "$#" -gt 2 ]; then
 	echo "No more than 2 arguments allowed"
  	exit 1
 fi
+size="${1:-size}"
 ramdisk="${2:-ramdisk}"
 if df | grep "$ramdisk" > /dev/null; then
 	echo "$ramdisk already mounted"
@@ -27,9 +28,18 @@ case "$OSTYPE" in
   	#https://superuser.com/questions/1480144/creating-a-ram-disk-on-macos
 	#brew install entr
 	diskutil apfs create "$(hdiutil attach -nomount ram://8192)" RogueOSRam && touch "$ramdisk/.metadata_never_index"
-  ;; 
+  ;;
   msys*)    echo "WINDOWS";exit 1 ;;
   cygwin*)  echo "ALSO WINDOWS";exit 1 ;;
-  *)        sudo mount -t tmpfs -o size=$1,mode=1777 $ramdisk /mnt && sudo systemctl daemon-reload && echo "RAM-disk of $1 created" ;;
+  *)
+  	sudo mount -t tmpfs -o size=$size,mode=1777 $ramdisk /mnt
+   	sudo systemctl daemon-reload
+   	if [ ! -d /mnt/$ramdisk ]; then
+    		echo "RAMdisk not created at location /mnt/$ramdisk"
+      		exit 1
+    	else
+     		echo "RAMdisk of $1 created at /mnt/$ramdisk"
+     	fi
+  ;;
 esac
 
