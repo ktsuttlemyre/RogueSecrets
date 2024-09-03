@@ -32,6 +32,7 @@ case "$OSTYPE" in
   msys*)    echo "WINDOWS";exit 1 ;;
   cygwin*)  echo "ALSO WINDOWS";exit 1 ;;
   *)
+  	sudo mkdir -p /mnt/RogueCLI_ramdisk_25201
   	sudo mount -t tmpfs -o size=$size,mode=1777 tmpfs /mnt/$ramdisk
    	sudo systemctl daemon-reload
    	if [ ! -d /mnt/$ramdisk ]; then
