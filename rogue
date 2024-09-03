@@ -205,10 +205,10 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 
 	#export ENTRYPOINT=("${RogueArgs[@]}")
 	#debugger "${ENTRYPOINT[@]}"
-	#export CMD="${RogueArgs[@]:2}"
+	#export COMMAND="${RogueArgs[@]:2}"
 
 	inspected="$(docker image inspect "${registry}${project}/${image}:${tag}")"
-	CMD="$(echo "$inspected" | jq -r '.[-1].Config.Cmd')"
+	COMMAND="$(echo "$inspected" | jq -r '.[-1].Config.Cmd')"
 	ENTRYPOINT="$(echo "$inspected" | jq -r '.[-1].Config.Entrypoint')"
 
 	#https://stackoverflow.com/questions/50549356/how-can-i-see-which-user-launched-a-docker-container
@@ -221,7 +221,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		header "Container is root, stepping down to current local user"
       		docker_args+='-v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro '
 		# https://github.com/tianon/gosu suggests chroot and setpriv
-		export ENTRYPOINT="chroot --userspec=${PUID:-1000}:${PGID:-1000} /rogue ps aux"
+		export COMMAND="-c \"chroot --userspec=${PUID:-1000}:${PGID:-1000} / $ENTRYPOINT $COMMAND\""
+		export ENTRYPOINT='/bin/bash'
 		##if [ ! -z "${ENTRYPOINT}" ]; then
 		#	if [[ $(jq -r 'if type=="string" then true else false end' <(echo "$ENTRYPOINT")) == true ]]; then
 		#		debugger "Entrypoint is string"
