@@ -231,14 +231,14 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		header "Container is root, stepping down to current local user"
       		docker_args+='' #'-v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro '
 		# https://github.com/tianon/gosu suggests chroot and setpriv
-		if [ ! -z "${COMMAND}" ]; then
+		if [ ! -z "${COMMAND}" ] && [ "$COMMAND" != 'null' ]; then
 			if [[ $(jq -r 'if type=="string" then true else false end' <(echo "$COMMAND")) == false ]]; then
 				debugger "COMMAND is string" 
 				export COMMAND=$(jq '. |= join(" ")' <(echo "$COMMAND"))
 			fi
 		fi
 
-		if [ ! -z "${ENTRYPOINT}" ]; then
+		if [ ! -z "${ENTRYPOINT}" ] && [ "$ENTRYPOINT" != 'null' ]; then
 			if [[ $(jq -r 'if type=="string" then true else false end' <(echo "$ENTRYPOINT")) == true ]]; then
 				debugger "Entrypoint is string"
 				# alternate entrypoint to step down privliage: setpriv --reuid=${PUID:-1000} --regid=${PGID:-1000} --init-groups
