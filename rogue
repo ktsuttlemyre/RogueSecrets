@@ -177,7 +177,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	#export XDG_DATA_DIRS=${XDG_DATA_DIRS:-/usr/local/share:/usr/share}
 	#export XDG_CONFIG_DIRS=${XDG_DATA_DIRS:-/etc/xdg}
 
-	RogueCLI_APP
+	RogueCLI_APP="#${script_dir}"
 
 	#Add env vars to session (iterate from parent to child)
 	path=''
