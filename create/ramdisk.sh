@@ -35,12 +35,12 @@ case "$OSTYPE" in
   	sudo mkdir -p /mnt/$ramdisk
   	sudo mount -t tmpfs -o size=$size,mode=1777 tmpfs /mnt/$ramdisk
    	sudo systemctl daemon-reload
-   	if [ ! -d /mnt/$ramdisk ]; then
+	touch "$ramdisk/.tmp"
+   	if [ ! -d /mnt/$ramdisk ] || [ ! -f /mnt/$ramdisk/.tmp ]; then
     		echo "RAMdisk not created at location /mnt/$ramdisk"
       		exit 1
-    	else
-     		echo "RAMdisk of $1 created at /mnt/$ramdisk"
-     	fi
+	fi
+     	echo "RAMdisk of $1 created at /mnt/$ramdisk"
   ;;
 esac
 
