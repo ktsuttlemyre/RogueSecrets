@@ -1,4 +1,5 @@
 #!/bin/bash
+ls -la /home/shipwash
 
 #set -euo pipefail
 IFS=$'\n\t'
