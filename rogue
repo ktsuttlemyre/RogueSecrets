@@ -220,7 +220,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	else
 		header "Container is root, stepping down to current local user"
       		docker_args+='-v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro '
-		export ENTRYPOINT="chroot --userspec=${PUID:-1000}:${PGID:-1000} / ps aux"
+		# https://github.com/tianon/gosu suggests chroot and setpriv
+		export ENTRYPOINT="chroot --userspec=${PUID:-1000}:${PGID:-1000} /rogue ps aux"
 		##if [ ! -z "${ENTRYPOINT}" ]; then
 		#	if [[ $(jq -r 'if type=="string" then true else false end' <(echo "$ENTRYPOINT")) == true ]]; then
 		#		debugger "Entrypoint is string"
