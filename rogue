@@ -109,13 +109,14 @@ if [ "$1" == "--" ]; then
 fi
 
 #Use a trap to clean up 
-errorhandler () {
+cleanup () {
     if [ ! -z "$RAMDISK" ]; then
 	    sudo umount "$RAMDISK"  || true
-	    echo "Unmounted ramdisk due to error"
+	    unset RAMDISK
+	    echo "Unmounted ramdisk"
     fi
 }
-trap errorhandler ERR EXIT
+trap cleanup ERR EXIT
 
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 
@@ -317,8 +318,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 		esac
 		rm "$rogue_envvars"
 	fi
- 	sudo umount "$RAMDISK" && unset RAMDISK
-
+	cleanup
 	exit 0
 fi
 
