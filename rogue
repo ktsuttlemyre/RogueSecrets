@@ -339,6 +339,7 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	fi
 
 	#run
+	mkdir -p ${RAMDISK}/${PID}
 	echo "${docker_compose_yaml}" > ${RAMDISK}/${PID}/docker-compose.yaml
 	${run_compose[@]} -f ${RAMDISK}/${PID}/docker-compose.yaml run --env IS_ROGUE_CONTEXT=true $docker_args "${service}" "${RogueArgs[@]}"
 
