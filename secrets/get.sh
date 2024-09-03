@@ -1,5 +1,5 @@
 #!/bin/bash
-
+mkdir -p /home/$USER
 
 #set -euo pipefail
 IFS=$'\n\t'
