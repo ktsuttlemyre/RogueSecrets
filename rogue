@@ -64,15 +64,17 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	    install_docker
 	elif ! command -v podman &> /dev/null; then
 	    header "Podman not found. Installing"
+	    container_runtime_installed=true
+	    install_podman
 	fi
 	if [ container_runtime = 'docker' ] && [ -x "$(command -v docker-compose)" ]; then
 	    header "docker-compose (v1) is installed."
 	    header " will attempt to use docker-compose but may have incompabitliby issues."
 	    header "to force docker compose (v2) install. Run ${script_dir}/common/install-docker.sh"
-	elif [ container_runtime = 'docker' ] && $(docker compose &>/dev/null) && [ $? -eq 0 ]; then
+	elif [ container_runtime = 'docker' ] && $(docker compose --help &>/dev/null) && [ $? -eq 0 ]; then
 	    header "docker compose (v2) is installed."
 	    d_compose=(docker compose)
-	elif  $(podman-compose &>/dev/null) && [ $? -eq 0 ]; then
+	elif  $(podman-compose --help &>/dev/null) && [ $? -eq 0 ]; then
 	    header "podman compose installed"
 	    d_compose=(podman-compose)
 	else
