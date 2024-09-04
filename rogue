@@ -325,10 +325,10 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	debugger 
 	if [ -z "${registry}" ]; then
 		# build docker
-		${run_compose[@]} -f ${RAMDISK}/${PID}/docker-compose.yaml build
+		${run_compose[@]} -f ${RAMDISK}/${PID}/docker-compose.yaml $docker_args build
 	else
 		# pull docker
-		${run_compose[@]} -f ${RAMDISK}/${PID}/docker-compose.yaml pull
+		${run_compose[@]} -f ${RAMDISK}/${PID}/docker-compose.yaml $docker_args pull
 	fi
 
 	#get workdir from image
