@@ -17,6 +17,7 @@ services:
         stdin_open: true
         init: true
         tty: true
+        platform: "linux/amd64"
         #this is for podman
         userns_mode: keep-id
         entrypoint: ${ENTRYPOINT}
