@@ -111,7 +111,13 @@ fi
 #Use a trap to clean up 
 cleanup () {
     if [ ! -z "$RAMDISK" ]; then
-	    sudo umount "$RAMDISK"  || true
+	    i_force_kill=5
+	    while ! sudo umount "$RAMDISK"; do
+		echo "Process holding onto RAMDISK is $(fuser -c $RAMDISK)"
+		sleep 5s
+		[ "$i_force_kill" -lt "0" ] && fuser -ck $RAMDISK
+		((i_force_kill--))
+	    done
 	    unset RAMDISK
 	    echo "Unmounted ramdisk"
     fi
