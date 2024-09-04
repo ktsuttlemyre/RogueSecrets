@@ -318,9 +318,9 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	mkdir -p ${RAMDISK}/${PID}
 	echo "${compose_yaml}" > ${RAMDISK}/${PID}/docker-compose.yaml
 
-	if [ container_runtime = 'podman' ]; then
-		docker_args+="--arch=arm64 --platform=linux/arm64"
-	fi
+	#if [ container_runtime = 'podman' ]; then
+	#	docker_args+="--arch=amd64 --platform=linux/amd64"
+	#fi
 
 	debugger 
 	if [ -z "${registry}" ]; then
