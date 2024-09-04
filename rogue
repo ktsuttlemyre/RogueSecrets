@@ -142,7 +142,8 @@ cleanup () {
 }
 trap cleanup ERR EXIT
 
-export DOCKER_DEFAULT_PLATFORM=linux/amd64
+#Moved to compose file
+#export DOCKER_DEFAULT_PLATFORM=linux/amd64
 
 #if image not already here
 #if [ -z "$(docker images -q $project/$image:$tag 2> /dev/null)" ]; then
