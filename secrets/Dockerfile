@@ -1,8 +1,7 @@
 #TODO change to alpine
 # original
 # https://www.reddit.com/r/Bitwarden/comments/xhir0q/how_to_install_bw_cli_in_docker/
-ARG BUILDPLATFORM
-FROM --platform=$BUILDPLATFORM alpine:latest
+FROM alpine:latest
 
 RUN apk update && apk add --no-cache curl --update npm jq bash git && rm -rf /var/cache/apk/*
 
