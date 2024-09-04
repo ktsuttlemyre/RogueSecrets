@@ -1,7 +1,8 @@
 #TODO change to alpine
 # original
 # https://www.reddit.com/r/Bitwarden/comments/xhir0q/how_to_install_bw_cli_in_docker/
-FROM debian:12-slim
+ARG BUILDPLATFORM
+FROM --platform=$BUILDPLATFORM debian:12-slim
 #FROM alpine:latest
 
 RUN apt-get update && apt-get install -y npm jq bash git && rm -rf /var/lib/apt/lists/*
