@@ -342,6 +342,8 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 
 	if [ container_runtime = 'docker' ]; then
 		docker_args+="--remove-orphans "
+	elif [ container_runtime = 'podman' ]; then
+		docker_args=''
 	fi
 
 	#run
