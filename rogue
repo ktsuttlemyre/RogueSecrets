@@ -175,12 +175,11 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	full_path=$(realpath "$inpath")
 	
 	#create ramdisk
-	export RAMDISK="RogueCLI_ramdisk_$$"
 	#TODO run local scripts through rougue cause its neat
 	#IS_ROGUE_CONTEXT=true ./rogue ./create/ramdisk.sh 250M "$RAMDISK" -- local
-	#./rogue ./create/ramdisk.sh 250M "$RAMDISK" -- local
-	./create/ramdisk.sh 250M "$RAMDISK"
-	export RAMDISK="/mnt/$RAMDISK"
+	#./rogue ./create/ramdisk.sh 250M "RogueCLI_ramdisk_$$" -- local
+	./create/ramdisk.sh 250M "RogueCLI_ramdisk_$$"
+	export RAMDISK="/mnt/RogueCLI_ramdisk_$$"
 
 	#https://specifications.freedesktop.org/basedir-spec/latest/
 	export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
