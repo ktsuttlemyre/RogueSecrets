@@ -228,42 +228,42 @@ if [ -z "${IS_ROGUE_CONTEXT}" ]; then
 	ENTRYPOINT="$(echo "$inspected" | jq -r '.[-1].Config.Entrypoint')"
 
 	#https://stackoverflow.com/questions/50549356/how-can-i-see-which-user-launched-a-docker-container
-	CONTAINER_USER=$(docker image inspect -f '{{.Config.User}}' "${registry}${project}/${image}:${tag}")
-	if [ ! -z "${CONTINER_USER}" ]; then
-		header "This image does not use root user!"
-		header "This image does not use root user!"
-		header "This image does not use root user!"
-	else
-		header "Container is root, stepping down to current local user"
-      		docker_args+='-v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro --env USER=$USER '
-		# https://github.com/tianon/gosu suggests chroot and setpriv
-		if [ "$COMMAND" = 'null' ]; then
-			export COMMAND=''
-		elif [ ! -z "${COMMAND}" ]; then
-			if [[ $(jq -r 'if type=="string" then true else false end' <(echo "$COMMAND")) == false ]]; then
-				debugger "COMMAND is array" 
-				export COMMAND=$(jq '. |= join(" ")' <(echo "$COMMAND"))
-			fi
-		fi
-
-		if [ ! -z "${ENTRYPOINT}" ]; then
-			if [ "$ENTRYPOINT" = 'null' ]; then
-				export ENTRYPOINT=''
-			fi
-			
-			if [[ $(jq -r 'if type=="string" then true else false end' <(echo "$ENTRYPOINT")) == true ]]; then
-				debugger "Entrypoint is string"
-				# alternate entrypoint to step down privliage: setpriv --reuid=${PUID:-1000} --regid=${PGID:-1000} --init-groups
-				export COMMAND="-c \"mkdir -p /home/$USER/.config && chown -R $USER /home/$USER && chmod -R 777 /home/$USER && chroot --userspec=${PUID:-1000}:${PGID:-1000} / $ENTRYPOINT $COMMAND\""
-			else
-				debugger "Entrypoint is array" 
-				cmd="$(echo -e "[\"mkdir\", \"-p\", \"/home/$USER/.config\", \"&&\", \"chown\", \"-R\", \"$USER\", \"/home/$USER\", \"&&\", \"chmod\", \"-R\", \"777\", \"/home/$USER\", \"&&\", \"-c\", \"chroot\", \"--userspec=${PUID:-1000}:${PGID:-1000}\", \"/\"]\n${ENTRYPOINT}" | jq -sc 'add')"
-				export COMMAND=$(jq '. |= join(" ")' <(echo "$cmd"))
-			fi
-		fi
-		export ENTRYPOINT='/bin/bash'
-	fi
-	debugger "$CONTAINER_USER"
+#	CONTAINER_USER=$(docker image inspect -f '{{.Config.User}}' "${registry}${project}/${image}:${tag}")
+#	if [ ! -z "${CONTINER_USER}" ]; then
+#		header "This image does not use root user!"
+#		header "This image does not use root user!"
+#		header "This image does not use root user!"
+#	else
+#		header "Container is root, stepping down to current local user"
+#     		docker_args+='-v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro --env USER=$USER '
+#		# https://github.com/tianon/gosu suggests chroot and setpriv
+#		if [ "$COMMAND" = 'null' ]; then
+#			export COMMAND=''
+#		elif [ ! -z "${COMMAND}" ]; then
+#			if [[ $(jq -r 'if type=="string" then true else false end' <(echo "$COMMAND")) == false ]]; then
+#				debugger "COMMAND is array" 
+#				export COMMAND=$(jq '. |= join(" ")' <(echo "$COMMAND"))
+#			fi
+#		fi
+#
+#		if [ ! -z "${ENTRYPOINT}" ]; then
+#			if [ "$ENTRYPOINT" = 'null' ]; then
+#				export ENTRYPOINT=''
+#			fi
+#			
+#			if [[ $(jq -r 'if type=="string" then true else false end' <(echo "$ENTRYPOINT")) == true ]]; then
+#				debugger "Entrypoint is string"
+#				# alternate entrypoint to step down privliage: setpriv --reuid=${PUID:-1000} --regid=${PGID:-1000} --init-groups
+#				export COMMAND="-c \"mkdir -p /home/$USER/.config && chown -R $USER /home/$USER && chmod -R 777 /home/$USER && chroot --userspec=${PUID:-1000}:${PGID:-1000} / $ENTRYPOINT $COMMAND\""
+#			else
+#				debugger "Entrypoint is array" 
+#				cmd="$(echo -e "[\"mkdir\", \"-p\", \"/home/$USER/.config\", \"&&\", \"chown\", \"-R\", \"$USER\", \"/home/$USER\", \"&&\", \"chmod\", \"-R\", \"777\", \"/home/$USER\", \"&&\", \"-c\", \"chroot\", \"--userspec=${PUID:-1000}:${PGID:-1000}\", \"/\"]\n${ENTRYPOINT}" | jq -sc 'add')"
+#				export COMMAND=$(jq '. |= join(" ")' <(echo "$cmd"))
+#			fi
+#		fi
+#		export ENTRYPOINT='/bin/bash'
+#	fi
+#	debugger "$CONTAINER_USER"
 
 	#Generate dynamic docker_compose_yaml (iterate from parent to child)
 	docker_compose_yaml=''
