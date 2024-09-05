@@ -15,5 +15,6 @@ COPY . ./
 
 RUN find . -type f -iname "*.sh" -exec chmod +x {} \;
 RUN chmod +x ./rogue ./roguerun
+RUN chmod -R 777 /home
 
 ENTRYPOINT ["./rogue"]
