@@ -7,9 +7,10 @@ services:
         user: ${PUID:-1000}:${GUID:-1000}
         environment:
           - PUID=${PUID:-1000}
-          - PGID=${GUID:-1000}
+          - PGID=${PGID:-1000}
           #- USER=${USERNAME} #not sure if this should be done?
           - TZ=Etc/UTC
+        user: ${PUID:-1000}:${PGID:-1000}
         restart: unless-stopped
         #network: rogue-gateway_rogue-network
         build:
