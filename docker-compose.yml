@@ -26,12 +26,14 @@ services:
             - /:/host/root:Z
             - ${PWD}:/host/workdir:Z
             - ${PARENT?Variable PARENT directory not set}:/host/parent:Z
-            - ${RAMDISK?Variable RAMDISK not set}/${PID}/memory:/host/memory:Z
-            - ${RAMDISK?Variable RAMDISK not set}/${PID}/session:/host/session:Z
+            - ${RAMDISK?Variable RAMDISK not set}/${PID}/runtime/memory:/host/memory:Z
+            - ${RAMDISK?Variable RAMDISK not set}/${PID}/runtime/session:/host/session:Z
+            #### this is special!! for passwd and group file
+            ####- ${RAMDISK?Variable RAMDISK not set}/${PID}/hostuser:/host/hostuser:Z
             - ${HOME:-~}:/host/home:Z
-            #TODO? - ${DIR_SECRETS}:/host/secrets:Z
-            #TODO? - /host/config:Z
-            #TODO? - /host/data:Z
+            #TODO? - ${RAMDISK?Variable RAMDISK not set}/${PID}/runtime:/host/secrets:Z
+            #TODO? - - ${RAMDISK?Variable RAMDISK not set}/${PID}/runtime/config:/host/config:Z
+            #TODO? - - ${RAMDISK?Variable RAMDISK not set}/${PID}/runtime/data:/host/data:Z
             - ${XDG_CONFIG_HOME?Variable XDG_CONFIG_HOME not set}:/host/config:Z
             - ${XDG_CACHE_HOME?Variable XDG_CACHE_HOME not set}:/host/cache:Z
             - ${XDG_DATA_HOME?Variable XDG_DATA_HOME not set}:/host/data:Z
@@ -39,7 +41,8 @@ services:
             - ${XDG_RUNTIME_DIR?Variable XDG_RUNTIME_DIR not set}:/host/runtime:Z
             - ${RogueCLI_APP?Variable RogueCLI_APP not set}:/RogueCLI:Z
             
-            - ${RAMDISK?Variable RAMDISK not set}/${PID}:/RogueCLI/runtime:Z
+            ### maybe remove due to security?
+            ###- ${RAMDISK?Variable RAMDISK not set}/${PID}/runtime:/RogueCLI/runtime:Z
             - ${RAMDISK?Variable RAMDISK not set}/shared:/RogueCLI/shared:Z
             
             #- ${RogueCLI_DATA?Variable RogueCLI_DATA not set}:/RogueCLI/runtime/data
